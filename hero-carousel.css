@@ -1,0 +1,37 @@
+/* Keep the paper, vermilion and circular display language of the original cover. */
+.hero-art.hero-carousel{min-height:420px;isolation:isolate;--slide-duration:6s}
+.hero-carousel .hero-ring{top:18px;width:310px;height:310px;pointer-events:none}
+.hero-stage{position:absolute;inset:0 18px 153px;overflow:hidden;touch-action:pan-y}
+.hero-slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transform:translateX(28px);transition:opacity .8s ease,transform .8s ease,visibility .8s;pointer-events:none}
+.hero-slide.is-active{opacity:1;visibility:visible;transform:translateX(0);z-index:1}
+.hero-carousel .hero-slide img{width:90%;height:100%;max-height:none;object-fit:contain;object-position:center;align-self:center;filter:drop-shadow(5px 10px 9px #50463112);opacity:0;transition:opacity .35s ease}
+.hero-carousel .hero-slide.is-loaded img{opacity:1}
+.hero-image-message{position:absolute;inset:0;display:grid;place-items:center;padding:25px;font-size:11px;text-align:center;color:var(--muted)}
+.hero-carousel .vertical-type{right:0;top:8px;font-size:11px}
+.hero-carousel .hero-caption{left:4%;right:70px;bottom:55px;padding:0 12px;background:linear-gradient(90deg,#f6f3edf5 70%,#f6f3ed00);min-width:0}
+.hero-caption .hero-kicker{display:flex;align-items:center;gap:10px;font-size:9px;letter-spacing:1.5px}
+.hero-caption #heroEra{color:var(--red);font-size:11px;letter-spacing:1px}
+.hero-caption #heroTitle{font-size:19px;line-height:1.45;letter-spacing:.5px;margin:4px 0;overflow-wrap:anywhere}
+.hero-caption #heroSource{font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+.hero-carousel #heroDetail{min-height:27px;padding:3px 0}
+.hero-carousel .hero-mark{right:0;bottom:60px;font-size:74px;opacity:.8;max-width:100%;white-space:nowrap;pointer-events:none}
+.hero-carousel .hero-mark.is-long{font-size:44px;bottom:75px}
+.hero-controls{position:absolute;left:4%;right:0;bottom:0;z-index:3;border-top:1px solid var(--line);padding-top:7px;display:flex;align-items:center;gap:7px;min-height:42px}
+.hero-controls select{border:0;background:transparent;color:var(--red);font-size:11px;max-width:144px;min-width:0;padding:9px 18px 9px 0;cursor:pointer}
+.hero-controls select option{background:var(--paper);color:var(--ink)}
+.hero-counter{font:11px/1.5 Georgia,serif;letter-spacing:1px;color:var(--muted);white-space:nowrap;margin-right:auto;font-variant-numeric:tabular-nums}
+.hero-controls button{width:32px;height:32px;flex-shrink:0;display:inline-flex;justify-content:center;align-items:center;background:transparent;border:1px solid var(--line);border-radius:50%;color:#77796c;transition:background .2s,color .2s}
+.hero-controls button:hover{background:#ece7db;color:var(--red)}
+.hero-controls button svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.5}
+.hero-controls #heroPlay{width:auto;min-width:52px;border:0;border-radius:2px;gap:5px;font-size:10px;padding:0 4px}
+.hero-controls #heroPlay>span:first-child{font-size:11px}
+.hero-progress{position:absolute;bottom:-1px;left:0;right:0;height:2px;background:#ded8c955;overflow:hidden;pointer-events:none}
+.hero-progress span{display:block;width:100%;height:100%;background:var(--red);transform:scaleX(0);transform-origin:left}
+.hero-carousel.is-playing .hero-progress span{animation:hero-timer var(--slide-duration) linear forwards}
+.hero-visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@keyframes hero-timer{to{transform:scaleX(1)}}
+@media(min-width:1500px){.hero-art.hero-carousel{min-height:450px}.hero-carousel .hero-ring{width:340px;height:340px}}
+@media(max-width:1050px){.hero-carousel .hero-ring{width:260px;height:260px;top:35px}.hero-stage{inset:8px 12px 155px}.hero-caption #heroTitle{font-size:17px}.hero-carousel .hero-caption{right:30px}.hero-controls{gap:4px}.hero-controls select{max-width:112px;font-size:10px}.hero-counter{font-size:10px}.hero-controls button{width:30px;height:30px}.hero-controls #heroPlay{min-width:42px}}
+@media(max-width:760px){.hero{grid-template-columns:1fr;gap:25px}.hero-copy p{max-width:none}.hero-copy p br{display:initial}.hero-art.hero-carousel{min-height:400px;width:100%;max-width:500px;justify-self:center}.hero-stage{inset:0 18px 150px}.hero-carousel .hero-ring{width:250px;height:250px;top:10px}.hero-carousel .hero-caption{left:0;right:55px;bottom:53px;padding-left:12px}.hero-caption #heroTitle{font-size:18px}.hero-caption #heroEra{font-size:11px}.hero-carousel .hero-mark{bottom:70px;font-size:70px}.hero-controls{left:0;gap:9px}.hero-controls select{max-width:145px;font-size:11px}.hero-controls button{height:34px;width:34px}.hero-controls #heroPlay{min-width:48px}.hero-counter{font-size:11px}.hero-caption #heroSource{font-size:10px}.hero-carousel .vertical-type{display:block;font-size:10px}}
+@media(max-width:420px){.hero-art.hero-carousel{min-height:375px}.hero-stage{inset:0 14px 150px}.hero-carousel .hero-ring{width:225px;height:225px}.hero-caption #heroTitle{font-size:16px}.hero-controls{gap:5px}.hero-controls select{max-width:125px}.hero-carousel .hero-mark{font-size:57px}}
+@media(prefers-reduced-motion:reduce){.hero-slide,.hero-carousel .hero-slide img{transition:none;transform:none}.hero-carousel.is-playing .hero-progress span{animation:none}}

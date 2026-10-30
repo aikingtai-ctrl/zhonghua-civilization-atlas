@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN"><head><script id="jintai-zhonghua-cdn-shim">(function(){
+var IS_GH=/github\.io$/i.test(location.hostname||'');
+var CDNS=['https://testingcf.jsdelivr.net/gh/aikingtai-ctrl/zhonghua-civilization-atlas@main/','https://gcore.jsdelivr.net/gh/aikingtai-ctrl/zhonghua-civilization-atlas@main/'];
+var FALLBACK_SVG='data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360" viewBox="0 0 480 360"><rect width="480" height="360" fill="#f3efe6"/><rect x="16" y="16" width="448" height="328" fill="none" stroke="#c8bda8" stroke-width="1.5"/><text x="240" y="168" text-anchor="middle" fill="#5c5040" font-family="Microsoft YaHei,sans-serif" font-size="18">馆藏文物考证条目</text><text x="240" y="202" text-anchor="middle" fill="#8b7d6b" font-family="Microsoft YaHei,sans-serif" font-size="14">点击卡片查阅馆方详细著录与原图出处</text></svg>');
+var _extMap=null;
+function findOrigUrlByPreview(relPath){
+  if(!_extMap){
+    _extMap={};
+    try{
+      var pools=[];
+      if(window.ARCHIVE_DATA&&Array.isArray(window.ARCHIVE_DATA.records))pools.push(window.ARCHIVE_DATA.records);
+      if(Array.isArray(window.EXPANSION_CANDIDATES))pools.push(window.EXPANSION_CANDIDATES);
+      if(window.EXPANSION_CANDIDATES&&Array.isArray(window.EXPANSION_CANDIDATES.items))pools.push(window.EXPANSION_CANDIDATES.items);
+      pools.forEach(function(arr){
+        arr.forEach(function(r){
+          if(!r)return;
+          var k=r.localImage||r.previewUrl;
+          var u=r.imageUrl||r.originalImageUrl;
+          if(k&&u)_extMap[k.replace(/^\.\//,'')]=u;
+        });
+      });
+    }catch(e){}
+  }
+  return _extMap[relPath]||'';
+}
+window.addEventListener('error',function(ev){
+  var el=ev.target;
+  if(!el||el.tagName!=='IMG')return;
+  var cur=el.getAttribute('src')||el.src||'';
+  if(!cur||cur.indexOf('data:image/')===0)return;
+  var step=parseInt(el.getAttribute('data-jt-fb')||'0',10);
+  if(step>=4){el.src=FALLBACK_SVG;return;}
+  el.setAttribute('data-jt-fb',String(step+1));
+  var mRel=cur.match(/((?:assets|images)\/[^?#]+)/);
+  if(mRel&&cur.indexOf('wsrv.nl')===-1){
+    var rel=mRel[1];
+    if(IS_GH&&step===0){el.src=CDNS[0]+rel;return;}
+    if(IS_GH&&step===1){el.src=CDNS[1]+rel;return;}
+    var orig=findOrigUrlByPreview(rel);
+    if(orig){
+      el.src='https://wsrv.nl/?url='+encodeURIComponent(orig)+'&w=960&output=webp';
+      return;
+    }
+  }
+  if(/^https?:\/\//i.test(cur)&&cur.indexOf('wsrv.nl')===-1){
+    el.src='https://wsrv.nl/?url='+encodeURIComponent(cur)+'&w=960&output=webp';
+    return;
+  }
+  el.src=FALLBACK_SVG;
+},true);
+})();</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f6f3ed"><meta name="description" content="西周影像：馆藏实物、考古遗址、铭文拓片与正式文献，一图一据，保留原始断代、图注与许可。"><title>西周影像｜中华文明影像库</title><link rel="stylesheet" href="style.css?v=20261015"><link rel="stylesheet" href="western-zhou.css?v=20261015"><link rel="stylesheet" href="atlas-design.css?v=20261015-design"></head>
+<body class="atlas-standalone"><header class="zhou-header"><a class="brand" href="index.html"><span class="seal">中华<br>文明</span><span>中华文明影像库<small>CHINESE CIVILIZATION ARCHIVE</small></span></a><nav aria-label="主导航"><a href="index.html">影像检索</a><a href="index.html#timeline">历代索引</a><a href="index.html#sources">收录来源</a></nav><a class="secondary" href="western-zhou-reference-pack.json" download>↓ 导出专题资料</a></header>
+<main><div class="atlas-standalone-nav"><a href="index.html#timeline">← 历代索引</a><span>西周</span><a href="#gallery">影像目录</a><a href="#literature">文献书目</a><a href="#coverage">参考边界</a></div><section class="zhou-intro"><div><div class="eyebrow">WESTERN ZHOU · SOURCE BY SOURCE</div><h1>西周<span>专属图库</span></h1><p class="zhou-lead">从青铜礼器与佩玉，到城址、墓葬与铭文。<br>每张图，都回到可核查的原始出处。</p><div class="zhou-actions"><a class="primary" href="#gallery">浏览有源图像 ↓</a><a class="secondary" href="#literature">查找图录与发掘报告 ↗</a></div></div><aside><b>先辨年代，再用图像</b><p>原始著录中的“约”“可能”和跨期范围完整保留。先周、商周之际、西周至春秋的资料另列；现代拓片、考古线图与出土实物明确区分。</p><p>不将后世复原图作为西周原始图证，不把未读到图版的书目计作图片。</p></aside><div class="zhou-stats" id="zhouStats"></div></section>
+<section id="gallery" class="zhou-gallery"><div class="section-heading"><div><div class="eyebrow">THE VISUAL COLLECTION</div><h2>一图一据，可检索的西周</h2></div><button class="secondary" id="exportFiltered">↓ 导出当前结果</button></div><label class="zhou-search"><span>⌕</span><input id="zhouSearch" type="search" placeholder="搜索名称、遗址、机构、藏品号或图注" aria-label="搜索西周图像"></label><div id="zhouTopics" class="zhou-topics" aria-label="按主题筛选"></div><div class="zhou-controls"><label>年代范围<select id="dating"><option value="strict">西周正编</option><option value="all">全部（含跨期与比较资料）</option><option value="boundary">仅跨期与比较资料</option></select></label><label>来源机构<select id="institution"><option value="all">全部机构</option></select></label><label>图像类型<select id="evidence"><option value="all">全部类型</option></select></label><label>图片许可<select id="license"><option value="all">全部许可状态</option><option value="open">已确认开放许可</option><option value="unknown">未确认开放许可</option></select></label><button class="quiet" id="resetFilters">重置筛选</button></div><p id="zhouCount" class="zhou-count" aria-live="polite"></p><div id="zhouCards" class="zhou-cards"></div><p id="zhouEmpty" hidden>没有符合条件的记录，请减少筛选条件。</p><button id="zhouMore" class="load-more">继续浏览 ↓</button></section>
+<section id="literature" class="zhou-reading"><div class="eyebrow">CATALOGUES · EXCAVATION REPORTS · RESEARCH</div><h2>图库文献与正式出版依据</h2><p>每项注明核验层级。检索到书目信息，不等于已通读全书；未见到的页码、图号和 ISBN 不补写。</p><label class="zhou-search"><span>⌕</span><input id="bookSearch" type="search" placeholder="检索周原、丰镐、琉璃河、玉器、铭文等" aria-label="检索文献"></label><p id="bookCount" class="zhou-count" aria-live="polite"></p><div id="zhouBooks" class="zhou-books"></div><h3>已核读 PDF 图版入口</h3><p>下列图版保留原刊页码和图号，可打开原文定位；不计入上方可直接显示的图片数量。</p><div id="zhouPlates" class="zhou-books"></div><h3>著录已核、原图待核的馆藏线索</h3><p>下列 6 条保留官方来源与原始断代；尚未完成原图视觉核验，不计入已核图像数量。</p><div id="zhouSourceReferences" class="zhou-books"></div></section>
+<section id="coverage" class="zhou-reading"><div class="eyebrow">SEARCH COVERAGE & EVIDENCE LIMITS</div><h2>资料覆盖与参考边界</h2><p>本库保留检索结果与排除理由。全网检索不能证明所有馆藏、纸质图版与未公开报告均已覆盖；未取得原始证据的材料不伪装成已完成条目。</p><div id="zhouCoverage" class="zhou-coverage"></div><details open><summary>仍需补查的证据</summary><ul id="zhouGaps"></ul></details><details><summary>跨期、排除与待核线索</summary><div id="zhouExclusions" class="zhou-books"></div></details><p class="zhou-method">同一图片地址只计一次；同一器物不同视角可分别留图，但不等于多件文物。图像真实出处与使用许可分开记录。核验日期：2026年10月15日。</p></section></main>
+<footer><a class="brand" href="index.html">中华文明影像库</a><p>西周 · 每张图都有出处，每处空白如实保留。</p><a href="western-zhou-reference-pack.json" download>下载全部图像索引与文献 ↗</a></footer>
+<dialog id="zhouDialog" aria-labelledby="zhouDetailTitle"><button class="close" id="zhouClose" aria-label="关闭详情">×</button><div id="zhouDetail"></div></dialog><div id="zhouToast" role="status" aria-live="polite"></div><script src="western-zhou-data.js?v=20261015"></script><script src="western-zhou.js?v=20261015"></script></body></html>

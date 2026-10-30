@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><script id="jintai-zhonghua-cdn-shim">(function(){
+var IS_GH=/github\.io$/i.test(location.hostname||'');
+var CDNS=['https://testingcf.jsdelivr.net/gh/aikingtai-ctrl/zhonghua-civilization-atlas@main/','https://gcore.jsdelivr.net/gh/aikingtai-ctrl/zhonghua-civilization-atlas@main/'];
+var FALLBACK_SVG='data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360" viewBox="0 0 480 360"><rect width="480" height="360" fill="#f3efe6"/><rect x="16" y="16" width="448" height="328" fill="none" stroke="#c8bda8" stroke-width="1.5"/><text x="240" y="168" text-anchor="middle" fill="#5c5040" font-family="Microsoft YaHei,sans-serif" font-size="18">馆藏文物考证条目</text><text x="240" y="202" text-anchor="middle" fill="#8b7d6b" font-family="Microsoft YaHei,sans-serif" font-size="14">点击卡片查阅馆方详细著录与原图出处</text></svg>');
+var _extMap=null;
+function findOrigUrlByPreview(relPath){
+  if(!_extMap){
+    _extMap={};
+    try{
+      var pools=[];
+      if(window.ARCHIVE_DATA&&Array.isArray(window.ARCHIVE_DATA.records))pools.push(window.ARCHIVE_DATA.records);
+      if(Array.isArray(window.EXPANSION_CANDIDATES))pools.push(window.EXPANSION_CANDIDATES);
+      if(window.EXPANSION_CANDIDATES&&Array.isArray(window.EXPANSION_CANDIDATES.items))pools.push(window.EXPANSION_CANDIDATES.items);
+      pools.forEach(function(arr){
+        arr.forEach(function(r){
+          if(!r)return;
+          var k=r.localImage||r.previewUrl;
+          var u=r.imageUrl||r.originalImageUrl;
+          if(k&&u)_extMap[k.replace(/^\.\//,'')]=u;
+        });
+      });
+    }catch(e){}
+  }
+  return _extMap[relPath]||'';
+}
+window.addEventListener('error',function(ev){
+  var el=ev.target;
+  if(!el||el.tagName!=='IMG')return;
+  var cur=el.getAttribute('src')||el.src||'';
+  if(!cur||cur.indexOf('data:image/')===0)return;
+  var step=parseInt(el.getAttribute('data-jt-fb')||'0',10);
+  if(step>=4){el.src=FALLBACK_SVG;return;}
+  el.setAttribute('data-jt-fb',String(step+1));
+  var mRel=cur.match(/((?:assets|images)\/[^?#]+)/);
+  if(mRel&&cur.indexOf('wsrv.nl')===-1){
+    var rel=mRel[1];
+    if(IS_GH&&step===0){el.src=CDNS[0]+rel;return;}
+    if(IS_GH&&step===1){el.src=CDNS[1]+rel;return;}
+    var orig=findOrigUrlByPreview(rel);
+    if(orig){
+      el.src='https://wsrv.nl/?url='+encodeURIComponent(orig)+'&w=960&output=webp';
+      return;
+    }
+  }
+  if(/^https?:\/\//i.test(cur)&&cur.indexOf('wsrv.nl')===-1){
+    el.src='https://wsrv.nl/?url='+encodeURIComponent(cur)+'&w=960&output=webp';
+    return;
+  }
+  el.src=FALLBACK_SVG;
+},true);
+})();</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f3f0e7"><meta name="description" content="战国专属视觉参考图库：按秦、楚、齐、燕、韩、赵、魏及相关地域检索实物、遗址和纹样。"><title>战国专属图库 · 中华文明影像库</title><link rel="stylesheet" href="warring-states.css?v=20261015"></head>
+<body>
+<header class="header"><a class="brand" href="index.html"><span class="seal">中华<br>文明</span><span>中华文明影像库<small>CHINESE CIVILIZATION ARCHIVE</small></span></a><nav aria-label="专题导航"><a href="#countries">各国图证</a><a href="#gallery">影像目录</a><a href="#downloads">资料下载</a></nav><a class="back" href="index.html#timeline">历代索引 ↗</a></header>
+<main>
+<section class="hero"><div class="hero-copy"><div class="eyebrow">WARRING STATES · VISUAL REFERENCE</div><h1>战国专属图库</h1><p>秦、楚、齐、燕、韩、赵、魏及相关地域。</p><a class="primary" href="#gallery">进入影像目录 <span>↗</span></a><div class="hero-stats" id="stats" aria-live="polite"><span>正在载入图像…</span></div></div><div class="hero-visual" id="heroVisual"><span class="hero-watermark" aria-hidden="true">战国</span></div></section>
+<section class="countries section" id="countries"><div class="section-heading"><div><div class="eyebrow">SEVEN STATES & REGIONAL CONTEXTS</div><h2>国家与地域</h2></div></div><div class="seven-grid" id="sevenGrid"></div><div class="region-strip"><span>其他国家与地域</span><div id="regionChips"></div></div><section id="stateProfile" class="state-profile" aria-label="国家与地域视觉档案" hidden></section></section>
+<section class="gallery section" id="gallery"><div class="section-heading"><div><div class="eyebrow">THE VISUAL COLLECTION</div><h2 id="galleryTitle">战国影像目录</h2></div><button class="secondary" id="export">↓ 导出当前目录</button></div><div class="search-row"><label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="搜索器物、出土地、纹样、馆藏机构…" aria-label="搜索战国影像"><kbd>/</kbd></label><button class="quiet" id="reset">重置筛选</button></div><div class="filter-row"><label>国家 / 地域<select id="polity" aria-label="国家或地域"><option value="all">全部国家与地域</option></select></label><label>视觉主题<select id="category" aria-label="视觉主题"><option value="all">全部主题</option></select></label><label>年代范围<select id="scope" aria-label="年代范围"><option value="strict">战国</option><option value="all">包含跨期及背景</option><option value="boundary">仅跨期及背景</option></select></label><label>浏览方式<select id="group" aria-label="浏览方式"><option value="images">全部图像</option><option value="objects">每件／组显示一张</option></select></label><label>图片许可<select id="license" aria-label="图片许可"><option value="all">全部许可</option><option value="open">开放许可</option></select></label></div><div class="result-meta"><p id="resultCount" aria-live="polite"></p><span>点击图片查看大图与出处</span></div><div id="cards" class="cards"></div><div id="empty" class="empty" hidden><h3>暂无匹配图像</h3><p>调整筛选条件，或清除筛选。</p><button class="secondary" id="emptyReset">清除筛选</button></div><button id="more" class="load-more" hidden>继续浏览 ↓</button></section>
+<section class="method section" id="downloads"><div class="section-heading"><div><div class="eyebrow">DOWNLOADS</div><h2>资料下载</h2></div><a class="secondary" href="warring-states-reference-pack.json.gz" download>↓ 图像目录与参考资料</a></div></section>
+</main><footer><a href="index.html">中华文明影像库</a><p>战国图像与地域资料</p><span>2026.10.15</span></footer>
+<dialog id="detail"><button class="close" id="close" aria-label="关闭图像详情">×</button><div id="detailContent"></div></dialog><div id="toast" role="status"></div>
+<script src="warring-states-data.js?v=20261015"></script><script src="warring-states.js?v=20261015-correspondence"></script>
+</body></html>

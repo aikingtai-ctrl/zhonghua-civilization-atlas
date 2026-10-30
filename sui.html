@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN"><head><script id="jintai-zhonghua-cdn-shim">(function(){
+var IS_GH=/github\.io$/i.test(location.hostname||'');
+var CDNS=['https://testingcf.jsdelivr.net/gh/aikingtai-ctrl/zhonghua-civilization-atlas@main/','https://gcore.jsdelivr.net/gh/aikingtai-ctrl/zhonghua-civilization-atlas@main/'];
+var FALLBACK_SVG='data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360" viewBox="0 0 480 360"><rect width="480" height="360" fill="#f3efe6"/><rect x="16" y="16" width="448" height="328" fill="none" stroke="#c8bda8" stroke-width="1.5"/><text x="240" y="168" text-anchor="middle" fill="#5c5040" font-family="Microsoft YaHei,sans-serif" font-size="18">馆藏文物考证条目</text><text x="240" y="202" text-anchor="middle" fill="#8b7d6b" font-family="Microsoft YaHei,sans-serif" font-size="14">点击卡片查阅馆方详细著录与原图出处</text></svg>');
+var _extMap=null;
+function findOrigUrlByPreview(relPath){
+  if(!_extMap){
+    _extMap={};
+    try{
+      var pools=[];
+      if(window.ARCHIVE_DATA&&Array.isArray(window.ARCHIVE_DATA.records))pools.push(window.ARCHIVE_DATA.records);
+      if(Array.isArray(window.EXPANSION_CANDIDATES))pools.push(window.EXPANSION_CANDIDATES);
+      if(window.EXPANSION_CANDIDATES&&Array.isArray(window.EXPANSION_CANDIDATES.items))pools.push(window.EXPANSION_CANDIDATES.items);
+      pools.forEach(function(arr){
+        arr.forEach(function(r){
+          if(!r)return;
+          var k=r.localImage||r.previewUrl;
+          var u=r.imageUrl||r.originalImageUrl;
+          if(k&&u)_extMap[k.replace(/^\.\//,'')]=u;
+        });
+      });
+    }catch(e){}
+  }
+  return _extMap[relPath]||'';
+}
+window.addEventListener('error',function(ev){
+  var el=ev.target;
+  if(!el||el.tagName!=='IMG')return;
+  var cur=el.getAttribute('src')||el.src||'';
+  if(!cur||cur.indexOf('data:image/')===0)return;
+  var step=parseInt(el.getAttribute('data-jt-fb')||'0',10);
+  if(step>=4){el.src=FALLBACK_SVG;return;}
+  el.setAttribute('data-jt-fb',String(step+1));
+  var mRel=cur.match(/((?:assets|images)\/[^?#]+)/);
+  if(mRel&&cur.indexOf('wsrv.nl')===-1){
+    var rel=mRel[1];
+    if(IS_GH&&step===0){el.src=CDNS[0]+rel;return;}
+    if(IS_GH&&step===1){el.src=CDNS[1]+rel;return;}
+    var orig=findOrigUrlByPreview(rel);
+    if(orig){
+      el.src='https://wsrv.nl/?url='+encodeURIComponent(orig)+'&w=960&output=webp';
+      return;
+    }
+  }
+  if(/^https?:\/\//i.test(cur)&&cur.indexOf('wsrv.nl')===-1){
+    el.src='https://wsrv.nl/?url='+encodeURIComponent(cur)+'&w=960&output=webp';
+    return;
+  }
+  el.src=FALLBACK_SVG;
+},true);
+})();</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#18342f"><meta name="description" content="隋代专属图库：开皇、仁寿、大业、义宁及皇泰的七个视觉章节，逐图标注原始断代、来源、画面细节和参考边界。"><title>隋代专属图库 · 中华文明影像库</title><link rel="stylesheet" href="sui.css?v=20261015"></head><body>
+<a class="skip" href="#gallery">跳转到图像目录</a><header><a class="brand" href="index.html"><span class="seal">中华<br>文明</span><span>中华文明影像库<small>CHINESE CIVILIZATION ARCHIVE</small></span></a><nav aria-label="专题导航"><a href="#periods">分期画面</a><a href="#gallery">参考图库</a><a href="#literature">文献依据</a></nav><a class="back" href="index.html#era=%E9%9A%8B">返回历代目录 ↗</a></header>
+<main><section class="hero"><div class="hero-copy"><p class="eyebrow">SUI DYNASTY / 581—618 · LUOYANG EPILOGUE TO 619</p><h1>隋<span>南北合流的形与色</span></h1><p class="hero-lead">白瓷、金玉、石窟与新都。<br>沿着七个历史章节，寻找每一幅画面的依据。</p><div class="hero-actions"><a class="primary" href="#gallery">打开隋代图库 ↓</a><a class="secondary" href="#periods">按时期寻找画面 →</a></div><div class="stats" id="stats" aria-live="polite"></div></div><figure class="hero-visual"><img id="heroImage" alt="隋代参考图" referrerpolicy="no-referrer" fetchpriority="high"><figcaption><span id="heroCaption">来自真实遗存的细节</span><button id="heroDetail">查看图像出处 ↗</button></figcaption><span class="hero-mark" aria-hidden="true">隋</span></figure></section>
+<div class="scope-line"><span>开皇 · 仁寿 · 大业 · 义宁 · 皇泰</span><span>七期导览 / 每期三组画面参考</span><span>按独立图像计数，同件多视角另有说明</span></div>
+<section id="periods" class="period-section"><div class="section-head"><div><p class="eyebrow">SEVEN CHAPTERS / DETAILS INTO SCENES</p><h2>每一个时期，都有画面可循。</h2></div><p>先选时期，再读画面细节与出处。<br>场景文字为设计建议，所配图片为实物、壁画或遗址参考。</p></div><div id="periodTabs" class="period-tabs" role="tablist" aria-label="隋代历史分期"></div><div id="periodPanel" class="period-panel" role="tabpanel" tabindex="0"></div></section>
+<section id="gallery" class="gallery"><div class="section-head"><div><p class="eyebrow">THE COLLECTION / ONE IMAGE, ONE SOURCE</p><h2>隋代视觉参考图</h2></div><div class="exports"><button id="showSaved">♡ 我的参考集 <b id="savedCount">0</b></button><button id="exportFiltered">导出筛选目录 ↓</button></div></div><div class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" aria-label="搜索隋代参考图" placeholder="搜索李静训、张盛、仁寿、白瓷、服饰、壁画或馆藏机构…"><button id="clearSearch" aria-label="清除搜索">×</button></div><div id="topicTabs" class="topic-tabs" aria-label="按主题筛选"></div><div class="filter-row"><label>历史阶段<select id="periodFilter"><option value="all">全部阶段</option></select></label><label>对应依据<select id="relationFilter"><option value="all">全部参考</option><option value="direct">明确分期／纪年关联</option><option value="context">同期／延续形制参照</option></select></label><label>资料类型<select id="typeFilter"><option value="all">全部类型</option><option value="artifact">文物与原作图像</option><option value="cross">宽断代跨期</option><option value="site">遗址／建筑现状</option><option value="later">后世拓本与摹本</option></select></label><label>图片许可<select id="rightsFilter"><option value="all">全部许可</option><option value="open">明确开放许可</option><option value="other">需核实授权</option></select></label><button class="quiet" id="reset">重置筛选</button></div><div class="result-line"><p id="resultCount" aria-live="polite"></p><span>点开图片，可查年代、细节与来源</span></div><div id="cards" class="cards"></div><div id="empty" class="empty" hidden><h3>没有符合条件的参考图</h3><p>可改选“全部参考”，或减少附加条件。没有直接图证的阶段仍保留明确标注的形制参照。</p></div><button id="more" class="load-more">继续浏览 ↓</button><p class="count-note" id="countNote"></p></section>
+<section id="literature" class="reading"><div class="section-head"><div><p class="eyebrow">READ THE EVIDENCE / KEEP THE DATES VISIBLE</p><h2>从画面，回到依据。</h2></div><a href="sui-reference-pack.json.gz" download>下载完整图像与分期资料 ↓</a></div><div class="principles"><article><b>01 / 分期</b><h3>并行纪年分开理解</h3><p>617—618年的大业与义宁并行；皇泰作为洛阳续存补章。七期为本图库的检索章节。</p></article><article><b>02 / 年代</b><h3>出土语境与制作年代分列</h3><p>有纪年墓葬可支持时期关联，不能把入葬年份直接改写成随葬品的制造年份。</p></article><article><b>03 / 画面</b><h3>原作、现状与推演有别</h3><p>宗教图像、墓俑、遗址摄影各有用途。场景建议不冒充考古复原，后世重修不作隋代原状。</p></article><article><b>04 / 图片</b><h3>每张图保留出处与许可</h3><p>同图跨期使用只计一次；同物的不同摄影视角分别标注。开放许可与馆方版权资料逐条区分。</p></article></div><p class="chronology-note" id="chronologyNote"></p><div id="sources" class="sources"></div><details class="audit"><summary>图片数量与核验说明</summary><div id="auditContent"></div></details></section></main>
+<footer><a href="index.html">中华文明影像库 ↗</a><p>隋代专属图库 · 以物为据，循迹入画。</p><a href="sui-reference-pack.json.gz" download>完整资料目录 ↓</a></footer><dialog id="detail" aria-labelledby="detailTitle"><button id="closeDetail" class="close" aria-label="关闭图片详情">×</button><div id="detailBody"></div></dialog><div id="toast" role="status" aria-live="polite"></div><script src="sui-data.js?v=20261015"></script><script src="sui.js?v=20261015"></script></body></html>

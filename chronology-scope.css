@@ -1,0 +1,12 @@
+.chron-select-name{border:0;background:transparent;text-align:left;color:inherit;font:inherit;cursor:pointer;padding:6px 4px;border-radius:5px;min-width:0;flex:1}
+.chron-select-name:hover{background:#e8dfcf;color:#79372a}
+.chron-select-name.selected,.chron-select-name[aria-pressed="true"]{background:#f0dfcc;color:#803b2d;font-weight:700}
+.chron-select-name:focus-visible{outline:2px solid #926c3e;outline-offset:2px}
+.atlas-shell .sidebar .chron-select-name:hover{background:#31564e;color:#fff1d6}
+.atlas-shell .sidebar .chron-select-name[aria-pressed="true"]{background:#e7d7ad;color:#173f36}
+.chron-ruler summary small{pointer-events:none}
+.chron-match{line-height:1.6!important;white-space:normal!important}
+.chronology-attribution{border-left:3px solid #9a723f;padding:12px 18px;background:#f5f0e6}
+#chronologyModes[hidden],#xixiaRelatedVisuals[hidden]{display:none!important}
+#chronologyMatchNote{line-height:1.75}
+.xixia-visual-first #chronologyMatchNote{display:block;margin:8px 0 0;font-size:11px}

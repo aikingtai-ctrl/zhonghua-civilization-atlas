@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN"><head><script id="jintai-zhonghua-cdn-shim">(function(){
+var IS_GH=/github\.io$/i.test(location.hostname||'');
+var CDNS=['https://testingcf.jsdelivr.net/gh/aikingtai-ctrl/zhonghua-civilization-atlas@main/','https://gcore.jsdelivr.net/gh/aikingtai-ctrl/zhonghua-civilization-atlas@main/'];
+var FALLBACK_SVG='data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360" viewBox="0 0 480 360"><rect width="480" height="360" fill="#f3efe6"/><rect x="16" y="16" width="448" height="328" fill="none" stroke="#c8bda8" stroke-width="1.5"/><text x="240" y="168" text-anchor="middle" fill="#5c5040" font-family="Microsoft YaHei,sans-serif" font-size="18">馆藏文物考证条目</text><text x="240" y="202" text-anchor="middle" fill="#8b7d6b" font-family="Microsoft YaHei,sans-serif" font-size="14">点击卡片查阅馆方详细著录与原图出处</text></svg>');
+var _extMap=null;
+function findOrigUrlByPreview(relPath){
+  if(!_extMap){
+    _extMap={};
+    try{
+      var pools=[];
+      if(window.ARCHIVE_DATA&&Array.isArray(window.ARCHIVE_DATA.records))pools.push(window.ARCHIVE_DATA.records);
+      if(Array.isArray(window.EXPANSION_CANDIDATES))pools.push(window.EXPANSION_CANDIDATES);
+      if(window.EXPANSION_CANDIDATES&&Array.isArray(window.EXPANSION_CANDIDATES.items))pools.push(window.EXPANSION_CANDIDATES.items);
+      pools.forEach(function(arr){
+        arr.forEach(function(r){
+          if(!r)return;
+          var k=r.localImage||r.previewUrl;
+          var u=r.imageUrl||r.originalImageUrl;
+          if(k&&u)_extMap[k.replace(/^\.\//,'')]=u;
+        });
+      });
+    }catch(e){}
+  }
+  return _extMap[relPath]||'';
+}
+window.addEventListener('error',function(ev){
+  var el=ev.target;
+  if(!el||el.tagName!=='IMG')return;
+  var cur=el.getAttribute('src')||el.src||'';
+  if(!cur||cur.indexOf('data:image/')===0)return;
+  var step=parseInt(el.getAttribute('data-jt-fb')||'0',10);
+  if(step>=4){el.src=FALLBACK_SVG;return;}
+  el.setAttribute('data-jt-fb',String(step+1));
+  var mRel=cur.match(/((?:assets|images)\/[^?#]+)/);
+  if(mRel&&cur.indexOf('wsrv.nl')===-1){
+    var rel=mRel[1];
+    if(IS_GH&&step===0){el.src=CDNS[0]+rel;return;}
+    if(IS_GH&&step===1){el.src=CDNS[1]+rel;return;}
+    var orig=findOrigUrlByPreview(rel);
+    if(orig){
+      el.src='https://wsrv.nl/?url='+encodeURIComponent(orig)+'&w=960&output=webp';
+      return;
+    }
+  }
+  if(/^https?:\/\//i.test(cur)&&cur.indexOf('wsrv.nl')===-1){
+    el.src='https://wsrv.nl/?url='+encodeURIComponent(cur)+'&w=960&output=webp';
+    return;
+  }
+  el.src=FALLBACK_SVG;
+},true);
+})();</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#18201e"><meta name="description" content="西汉专属图库：汉初、文景、武帝、昭宣、元成哀平与王莽摄政六期视觉参考，逐图保留断代、出处和许可。"><title>西汉专属图库 · 中华文明影像库</title><link rel="stylesheet" href="western-han.css?v=20261015-han"></head>
+<body><a class="skip" href="#gallery">跳转到图像目录</a><header><a class="brand" href="index.html"><span class="seal">中华<br>文明</span><span>中华文明影像库<small>CHINESE CIVILIZATION ARCHIVE</small></span></a><nav aria-label="专题导航"><a href="#periods">分期与场景</a><a href="#gallery">图像目录</a><a href="#literature">文献依据</a></nav><a class="back" href="index.html">返回历代图库 ↗</a></header>
+<main><section class="hero"><div class="hero-copy"><p class="eyebrow">WESTERN HAN / A VISUAL SOURCEBOOK</p><h1>西汉<span>大汉的日常与远方</span></h1><p class="hero-lead">从漆木与丝帛，到宫室与边塞。<br>沿着六个历史阶段，寻找可以入画的细节。</p><div class="hero-actions"><a class="primary" href="#gallery">打开西汉图库 ↓</a><a class="secondary" href="#periods">按时期寻找画面 →</a></div><div class="stats" id="stats"><span>正在载入图像目录…</span></div></div><figure class="hero-visual"><img id="heroImage" alt="西汉参考文物" fetchpriority="high"><figcaption><span>从真实遗存出发</span><button id="heroDetail">查看此图出处 ↗</button></figcaption><span class="hero-mark" aria-hidden="true">汉</span></figure></section>
+<div class="scope-line"><span>前206年—公元9年 · 前202年正式称帝</span><span>器物年代、埋藏年代与参考用途分开记录</span><span>独立图像计数，同图跨期不重复累计</span></div>
+<section class="period-section" id="periods"><div class="section-head"><div><p class="eyebrow">SIX CHAPTERS / HISTORY INTO SCENES</p><h2>每一个时期，都有画面依据。</h2></div><p>选择历史阶段，查看空间、人物与道具的细节。<br>画面方案为现代设计建议，依据来自所列实物与文献。</p></div><div id="periodTabs" class="period-tabs" role="tablist" aria-label="西汉六个时期"></div><div id="periodPanel" class="period-panel" role="tabpanel" tabindex="0"></div></section>
+<section class="gallery" id="gallery"><div class="section-head"><div><p class="eyebrow">THE COLLECTION / TRACE EVERY IMAGE</p><h2>西汉视觉参考图</h2></div><div class="exports"><button id="showSaved">♡ 我的参考集 <b id="savedCount">0</b></button><button id="exportFiltered">导出筛选目录 ↓</button></div></div><div id="rulerCollections" class="ruler-collections" aria-label="本期执政者与纪年"></div><div class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" aria-label="搜索西汉图片" placeholder="搜索马王堆、衣袖、漆案、铜灯、汉简、五铢、机构或摄影者…"><button id="clearSearch" aria-label="清除搜索">×</button></div><div id="topicTabs" class="topic-tabs" aria-label="参考主题"></div><div class="filter-row"><label>历史阶段<select id="periodFilter"><option value="all">全部阶段</option></select></label><label>阶段关联<select id="relationFilter"><option value="all">全部关联方式</option><option value="direct">可定位本期的证据</option><option value="context">跨期形制参考</option></select></label><label>来源<select id="sourceFilter"><option value="all">全部来源</option><option value="institution">博物馆／考古机构</option><option value="commons">开放摄影资料</option></select></label><label>图像许可<select id="rightsFilter"><option value="all">全部许可</option><option value="open">已标明开放许可</option><option value="other">需向权利方确认</option></select></label><button class="quiet" id="reset">重置筛选</button></div><div class="result-line"><p id="resultCount" aria-live="polite"></p><span>点击图片，查看图注、年代与来源</span></div><div id="cards" class="cards"></div><div id="empty" class="empty" hidden><h3>没有符合条件的参考图</h3><p>可减少筛选条件，或切换为“全部关联方式”。</p></div><button id="more" class="load-more">继续浏览 ↓</button><p class="count-note" id="countNote"></p></section>
+<section class="reading" id="literature"><div class="section-head"><div><p class="eyebrow">SOURCES / READ BEFORE RECONSTRUCTING</p><h2>从画面回到依据。</h2></div><a href="western-han-reference-pack.json.gz" download>下载完整图像目录与分期资料 ↓</a></div><div class="principles"><article><b>01 / 年代</b><h3>保留每张图的年代边界</h3><p>制作、埋藏和现代拍摄不是同一个时间。分期筛选明确区分本期证据与跨期形制参考，宽断代不会变成某位帝王的专属器物。</p></article><article><b>02 / 画面</b><h3>从实物提取场景细节</h3><p>服饰、器物、空间与生活方式逐项说明。场景文字是现代设计建议；所示图片是实物或遗址参照，不是虚构的历史照片。</p></article><article><b>03 / 计数</b><h3>一张图片只计一次</h3><p>同图不同尺寸与重复文件不增加数量；同一器物不同摄影角度保留来源，图片总量不等于文物件数。跨期和新朝对照不纳入西汉核心图数。</p></article><article><b>04 / 使用</b><h3>每图可回到原始出处</h3><p>记录摄影者、来源页和许可。开放许可与馆方保留权利分别显示；下载目录包含这些信息，引用出处本身不授予复制使用权。</p></article></div><p class="chronology-note" id="chronologyNote"></p><div id="sources" class="sources"></div><details class="audit"><summary>查看图片计数与核验说明</summary><div id="auditContent"></div></details></section></main>
+<footer><a href="index.html">中华文明影像库 ↗</a><p>西汉专属图库 · 器物见生活，遗存见时代。</p><a href="western-han-reference-pack.json.gz" download>完整资料目录 ↓</a></footer><dialog id="detail" aria-labelledby="detailTitle"><button id="closeDetail" class="close" aria-label="关闭图片详情">×</button><div id="detailBody"></div></dialog><div id="toast" role="status" aria-live="polite"></div><script src="western-han-data.js?v=20261015-han"></script><script src="western-han.js?v=20261015-han"></script></body></html>

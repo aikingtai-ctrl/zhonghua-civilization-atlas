@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN"><head><script id="jintai-zhonghua-cdn-shim">(function(){
+var IS_GH=/github\.io$/i.test(location.hostname||'');
+var CDNS=['https://testingcf.jsdelivr.net/gh/aikingtai-ctrl/zhonghua-civilization-atlas@main/','https://gcore.jsdelivr.net/gh/aikingtai-ctrl/zhonghua-civilization-atlas@main/'];
+var FALLBACK_SVG='data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360" viewBox="0 0 480 360"><rect width="480" height="360" fill="#f3efe6"/><rect x="16" y="16" width="448" height="328" fill="none" stroke="#c8bda8" stroke-width="1.5"/><text x="240" y="168" text-anchor="middle" fill="#5c5040" font-family="Microsoft YaHei,sans-serif" font-size="18">馆藏文物考证条目</text><text x="240" y="202" text-anchor="middle" fill="#8b7d6b" font-family="Microsoft YaHei,sans-serif" font-size="14">点击卡片查阅馆方详细著录与原图出处</text></svg>');
+var _extMap=null;
+function findOrigUrlByPreview(relPath){
+  if(!_extMap){
+    _extMap={};
+    try{
+      var pools=[];
+      if(window.ARCHIVE_DATA&&Array.isArray(window.ARCHIVE_DATA.records))pools.push(window.ARCHIVE_DATA.records);
+      if(Array.isArray(window.EXPANSION_CANDIDATES))pools.push(window.EXPANSION_CANDIDATES);
+      if(window.EXPANSION_CANDIDATES&&Array.isArray(window.EXPANSION_CANDIDATES.items))pools.push(window.EXPANSION_CANDIDATES.items);
+      pools.forEach(function(arr){
+        arr.forEach(function(r){
+          if(!r)return;
+          var k=r.localImage||r.previewUrl;
+          var u=r.imageUrl||r.originalImageUrl;
+          if(k&&u)_extMap[k.replace(/^\.\//,'')]=u;
+        });
+      });
+    }catch(e){}
+  }
+  return _extMap[relPath]||'';
+}
+window.addEventListener('error',function(ev){
+  var el=ev.target;
+  if(!el||el.tagName!=='IMG')return;
+  var cur=el.getAttribute('src')||el.src||'';
+  if(!cur||cur.indexOf('data:image/')===0)return;
+  var step=parseInt(el.getAttribute('data-jt-fb')||'0',10);
+  if(step>=4){el.src=FALLBACK_SVG;return;}
+  el.setAttribute('data-jt-fb',String(step+1));
+  var mRel=cur.match(/((?:assets|images)\/[^?#]+)/);
+  if(mRel&&cur.indexOf('wsrv.nl')===-1){
+    var rel=mRel[1];
+    if(IS_GH&&step===0){el.src=CDNS[0]+rel;return;}
+    if(IS_GH&&step===1){el.src=CDNS[1]+rel;return;}
+    var orig=findOrigUrlByPreview(rel);
+    if(orig){
+      el.src='https://wsrv.nl/?url='+encodeURIComponent(orig)+'&w=960&output=webp';
+      return;
+    }
+  }
+  if(/^https?:\/\//i.test(cur)&&cur.indexOf('wsrv.nl')===-1){
+    el.src='https://wsrv.nl/?url='+encodeURIComponent(cur)+'&w=960&output=webp';
+    return;
+  }
+  el.src=FALLBACK_SVG;
+},true);
+})();</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#eae7df"><meta name="description" content="北宋与南宋专属视觉图库：按18位皇帝与全部年号浏览原始馆藏图像、画面细节、断代与出处。"><title>两宋 · 视觉美术参考 | 中华文明影像库</title><link rel="stylesheet" href="song.css?v=20261015"></head>
+<body><header class="site-header"><a class="brand" href="index.html"><span class="seal">中华<br>文明</span><span>中华文明影像库<small>历史图像 · 视觉美术参考</small></span></a><nav aria-label="主导航"><a href="index.html#explore">返回全库 ↗</a><a href="#periods">分期参考</a><a href="#gallery">影像目录</a><a href="#sources">收录说明</a></nav></header>
+<main><section class="hero"><div class="hero-copy"><div class="eyebrow">THE SONG DYNASTIES · 960–1279</div><h1>两宋之间，<br>看见时代的细节。</h1><p>从汴京的街巷，到临安的湖山。<br>沿着帝王与年号，查找有出处的画面、器物与空间。</p><div class="hero-actions"><a class="primary" href="#periods">按时期寻找参考 ↓</a><a class="secondary" href="#gallery">浏览全部图像</a></div><div class="stats" id="stats" aria-live="polite"></div></div><div id="heroVisual" class="hero-visual"></div></section>
+<div class="era-switch" aria-label="朝代筛选"><button data-dynasty="all" class="active">两宋全览 <small>960—1279</small></button><button data-dynasty="northern-song">北宋 <small>汴京 · 960—1127</small></button><button data-dynasty="southern-song">南宋 <small>临安 · 1127—1279</small></button></div>
+<section id="periods" class="period-section"><div class="section-head"><div><div class="eyebrow">PERIOD ATLAS</div><h2>每个时期，都有画面可循</h2></div><p>18 位皇帝 · 全部年号档案<br>明确区分当期证据与时代风貌参考</p></div><div class="period-layout"><aside class="period-nav"><div class="nav-caption">选择帝王与年号</div><div id="periodTree"></div></aside><div class="period-main"><div id="periodDossier"></div><div class="reference-heading"><h3>本期画面参考</h3><span id="referenceNote"></span></div><div id="periodReferences" class="reference-grid"></div></div></div></section>
+<section id="gallery"><div class="section-head"><div><div class="eyebrow">VISUAL COLLECTION</div><h2 id="galleryTitle">两宋影像目录</h2></div><button id="export" class="secondary">导出当前目录 ↓</button></div><div class="search-row"><label class="search-box"><span>⌕</span><input id="search" type="search" placeholder="搜索画名、窑口、器物、馆藏或材质…" aria-label="搜索两宋图像"></label><button id="reset" class="quiet">重置</button></div><div class="filters"><label>断代分组<select id="dynasty"><option value="all">两宋全部</option><option value="northern-song">明确北宋</option><option value="southern-song">明确南宋</option><option value="song-wide">宋代 · 尚未细分</option></select></label><label>画面主题<select id="category"><option value="all">全部主题</option></select></label><label>来源机构<select id="institution"><option value="all">全部机构</option></select></label><label>排列方式<select id="group"><option value="images">全部独立图像</option><option value="objects">每件藏品一图</option></select></label><label>使用许可<select id="license"><option value="all">全部许可</option><option value="open">仅开放图像</option></select></label><label id="datingFilter">与所选时期的关系<select id="periodMode"><option value="all">全部图像</option><option value="exact">断代落在本期</option><option value="overlap">年代范围与本期相交</option></select></label></div><div class="result-line"><p id="resultCount" aria-live="polite"></p><span>点击图片，查看原始断代与出处</span></div><div id="cards" class="cards"></div><div id="empty" class="empty" hidden><h3>没有符合条件的图像</h3><p>可减少筛选条件，或在上方查看本期风貌参考。</p><button class="secondary" id="emptyReset">重置筛选</button></div><button id="more" class="more">继续浏览 ↓</button></section>
+<section id="sources" class="sources"><div><div class="eyebrow">PROVENANCE & COVERAGE</div><h2>从画面，回到依据。</h2><p>将图像、藏品与历史纪年分别核对。<br>宽断代如实保留，精确纪年有据可查。</p><a href="song-reference-pack.json.gz" download class="secondary">下载完整两宋资料包 ↓</a></div><div id="audit"></div></section></main>
+<footer><span>中华文明影像库 · 北宋与南宋</span><span>以真实遗存为本，以明确出处为据。</span><a href="#">返回顶部 ↑</a></footer><dialog id="detail" aria-labelledby="detailTitle"><button id="close" class="close" aria-label="关闭详情">×</button><div id="detailContent"></div></dialog><div id="toast" role="status"></div><script src="song-data.js?v=20261015"></script><script src="song.js?v=20261015"></script></body></html>

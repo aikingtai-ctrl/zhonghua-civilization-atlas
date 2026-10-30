@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN"><head><script id="jintai-zhonghua-cdn-shim">(function(){
+var IS_GH=/github\.io$/i.test(location.hostname||'');
+var CDNS=['https://testingcf.jsdelivr.net/gh/aikingtai-ctrl/zhonghua-civilization-atlas@main/','https://gcore.jsdelivr.net/gh/aikingtai-ctrl/zhonghua-civilization-atlas@main/'];
+var FALLBACK_SVG='data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360" viewBox="0 0 480 360"><rect width="480" height="360" fill="#f3efe6"/><rect x="16" y="16" width="448" height="328" fill="none" stroke="#c8bda8" stroke-width="1.5"/><text x="240" y="168" text-anchor="middle" fill="#5c5040" font-family="Microsoft YaHei,sans-serif" font-size="18">馆藏文物考证条目</text><text x="240" y="202" text-anchor="middle" fill="#8b7d6b" font-family="Microsoft YaHei,sans-serif" font-size="14">点击卡片查阅馆方详细著录与原图出处</text></svg>');
+var _extMap=null;
+function findOrigUrlByPreview(relPath){
+  if(!_extMap){
+    _extMap={};
+    try{
+      var pools=[];
+      if(window.ARCHIVE_DATA&&Array.isArray(window.ARCHIVE_DATA.records))pools.push(window.ARCHIVE_DATA.records);
+      if(Array.isArray(window.EXPANSION_CANDIDATES))pools.push(window.EXPANSION_CANDIDATES);
+      if(window.EXPANSION_CANDIDATES&&Array.isArray(window.EXPANSION_CANDIDATES.items))pools.push(window.EXPANSION_CANDIDATES.items);
+      pools.forEach(function(arr){
+        arr.forEach(function(r){
+          if(!r)return;
+          var k=r.localImage||r.previewUrl;
+          var u=r.imageUrl||r.originalImageUrl;
+          if(k&&u)_extMap[k.replace(/^\.\//,'')]=u;
+        });
+      });
+    }catch(e){}
+  }
+  return _extMap[relPath]||'';
+}
+window.addEventListener('error',function(ev){
+  var el=ev.target;
+  if(!el||el.tagName!=='IMG')return;
+  var cur=el.getAttribute('src')||el.src||'';
+  if(!cur||cur.indexOf('data:image/')===0)return;
+  var step=parseInt(el.getAttribute('data-jt-fb')||'0',10);
+  if(step>=4){el.src=FALLBACK_SVG;return;}
+  el.setAttribute('data-jt-fb',String(step+1));
+  var mRel=cur.match(/((?:assets|images)\/[^?#]+)/);
+  if(mRel&&cur.indexOf('wsrv.nl')===-1){
+    var rel=mRel[1];
+    if(IS_GH&&step===0){el.src=CDNS[0]+rel;return;}
+    if(IS_GH&&step===1){el.src=CDNS[1]+rel;return;}
+    var orig=findOrigUrlByPreview(rel);
+    if(orig){
+      el.src='https://wsrv.nl/?url='+encodeURIComponent(orig)+'&w=960&output=webp';
+      return;
+    }
+  }
+  if(/^https?:\/\//i.test(cur)&&cur.indexOf('wsrv.nl')===-1){
+    el.src='https://wsrv.nl/?url='+encodeURIComponent(cur)+'&w=960&output=webp';
+    return;
+  }
+  el.src=FALLBACK_SVG;
+},true);
+})();</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#243e36"><meta name="description" content="三国、西晋、东晋、十六国与南北朝视觉参考图库。逐图记录年代、来源、画面细节和图像许可。"><title>魏晋南北朝专属图库｜中华文明影像库</title><link rel="stylesheet" href="weijin.css?v=20261015"></head>
+<body><header class="top"><a class="brand" href="index.html"><span class="seal">中华<br>文明</span><span>中华文明影像库<small>CHINESE CIVILIZATION ARCHIVE</small></span></a><nav aria-label="专题导航"><a href="#periods">时期档案</a><a href="#scenes">画面参考</a><a href="#gallery">全部图像</a></nav><a class="text-link" href="weijin-reference-pack.json.gz" download>下载资料包 ↗</a></header>
+<main><section class="hero"><div class="hero-copy"><p class="eyebrow">220 — 589 CE / A VISUAL SOURCEBOOK</p><h1>魏晋南北朝<span>循一物，见一时。</span></h1><p class="intro">从三国并立到南北交融，沿着服饰、器物、<br class="desktop">墓葬与造像，寻找能够落在画面上的历史细节。</p><div class="hero-actions"><a class="primary" href="#periods">按时期寻找参考 ↓</a><a href="#gallery">浏览图像目录 →</a></div><p class="scope-note">三国 · 西晋 · 东晋 · 十六国 · 南北朝<br>综合入口跨越多个并行政权；每张图保留原始断代。</p></div><div class="hero-art"><span class="hero-script" aria-hidden="true">魏晋</span><img id="heroImage" alt="本专题馆藏参考图" fetchpriority="high"><div class="hero-caption"><span>从实物出发</span><button id="heroDetail"></button><small id="heroSource"></small></div></div></section><div id="stats" class="stats" aria-label="本专题图像统计"></div>
+<section id="periods" class="period-section"><div class="heading"><div><p class="eyebrow">01 / PERIODS & CONTEXT</p><h2>同一时代，不同画面。</h2></div><p>先定年代与地域，再取视觉细节。<br>东晋与十六国并行，北魏早期与十六国重叠。</p></div><div id="periodTabs" class="period-tabs" aria-label="选择时期"></div><article id="periodProfile" class="period-profile" aria-live="polite"></article></section>
+<section id="scenes" class="scene-section"><div class="heading"><div><p class="eyebrow">02 / FROM OBJECT TO SCENE</p><h2>让场景，找到依据。</h2></div><p>画面建议与相关原图同时呈现。<br>点击参考图查看细节、原始年代与出处。</p></div><div id="sceneGrid" class="scene-grid"></div></section>
+<section id="gallery" class="gallery-section"><div class="heading"><div><p class="eyebrow">03 / THE IMAGE COLLECTION</p><h2>逐图查阅，逐项取证。</h2></div><button class="outline" id="exportFiltered">导出当前结果 ↓</button></div><div class="toolbar"><label class="search"><span aria-hidden="true">⌕</span><input id="imageSearch" type="search" placeholder="搜索：鸡首壶、陶俑、壁画、北凉、馆藏…" aria-label="搜索图像"></label><button class="outline" id="savedToggle" aria-pressed="false">我的参考集 <span id="savedCount">0</span></button></div><div class="filters"><label>时期<select id="eraFilter"><option value="all">魏晋南北朝 · 全部</option><option>三国</option><option>西晋</option><option>东晋</option><option>十六国</option><option value="南北朝">南北朝</option><option>南朝</option><option>北朝</option><option value="魏晋南北朝">宽断代／跨期</option></select></label><label>画面主题<select id="categoryFilter"><option value="all">全部主题</option></select></label><label>政权<select id="polityFilter"><option value="all">全部政权／未详</option></select></label><label>来源<select id="sourceFilter"><option value="all">全部来源</option></select></label><label>年代依据<select id="datingFilter"><option value="all">全部依据</option><option>明确分期</option><option>宽断代／跨期</option><option>后世传摹</option><option>遗址现状</option></select></label><label>图像许可<select id="rightsFilter"><option value="all">全部许可</option><option value="open">开放许可</option><option value="other">按来源条款使用</option></select></label><button class="reset" id="resetFilters">重置</button></div><div class="results-line"><p id="resultCount" aria-live="polite"></p><p>同一文物的不同照片会标明；综合入口不重复计数。</p></div><div id="imageGrid" class="image-grid"></div><p id="empty" class="empty" hidden>没有符合条件的图片，请放宽时期、主题或检索词。</p><button id="loadMore" class="more">继续浏览 ↓</button></section>
+<section id="sources" class="source-section"><div class="heading"><div><p class="eyebrow">04 / SOURCES & SCOPE</p><h2>每张参考，都有来处。</h2></div><a href="weijin-reference-pack.json.gz" download>下载全部图像索引与分期说明 ↗</a></div><div class="method-grid"><article><span>01 / 图像数量</span><h3>去重后，才计入总数</h3><p id="countPolicy"></p></article><article><span>02 / 画面依据</span><h3>原物、表现与推演</h3><p>陶俑、明器、墓室画与宗教造像表达了各自的功能和观念。它们能提供形制与局部细节，不能直接证明整套生活场景，更不能等同人物写真。</p></article><article><span>03 / 使用来源</span><h3>断代与许可，分别查清</h3><p>保留馆方及图像来源的原始名称、断代与署名。开放图像按其许可使用；未确认开放许可的馆方图片，保留原始来源和权利说明。</p></article></div><div id="sourceList" class="source-list"></div><details class="audit"><summary>查看分期覆盖与计数方式</summary><div id="coverageTable"></div></details></section></main>
+<footer><a href="index.html">← 返回历代图库</a><p>魏晋南北朝 · 视觉美术参考</p><span>资料整理：2026年10月15日</span></footer><dialog id="detailDialog" aria-labelledby="detailTitle"><button id="closeDialog" class="close" aria-label="关闭图像详情">×</button><div id="detailContent"></div></dialog><div id="toast" role="status"></div><script src="weijin-data.js?v=20261015"></script><script src="weijin.js?v=20261015"></script></body></html>
