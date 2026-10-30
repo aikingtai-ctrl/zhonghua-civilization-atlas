@@ -1,6 +1,132 @@
 <!doctype html>
 <html lang="zh-CN">
-<head><script id="jintai-zhonghua-cdn-shim">(function(){
+<head><script id="jt-unified-gate">(function(){
+var H='6e95ff3e55611d24803014d9de77b401f191f198f9372577e58f9aa2e51771d3';
+var k='jt_gate';
+function getSaved(){
+  try{if(localStorage.getItem(k)===H)return true;}catch(e){}
+  try{if(sessionStorage.getItem(k)===H)return true;}catch(e){}
+  return false;
+}
+function saveOk(){
+  try{localStorage.setItem(k,H);}catch(e){}
+  try{sessionStorage.setItem(k,H);}catch(e){}
+}
+if(getSaved()){
+  document.documentElement.setAttribute('data-jt-ok','1');
+  return;
+}
+window.__JT_LOCKED__=true;
+var st=document.createElement('style');
+st.id='jt_gate_css';
+st.textContent='html:not([data-jt-ok="1"]) body{display:none!important}';
+document.documentElement.appendChild(st);
+document.documentElement.style.visibility='hidden';
+var obs=null;
+if(typeof MutationObserver!=='undefined'){
+  obs=new MutationObserver(function(muts){
+    for(var i=0;i<muts.length;i++){
+      var ns=muts[i].addedNodes;
+      for(var j=0;j<ns.length;j++){
+        var n=ns[j];
+        if(!n||!n.tagName)continue;
+        var tg=n.tagName.toUpperCase();
+        if(tg==='SCRIPT'&&n.id!=='jt-unified-gate'){
+          n.type='javascript/blocked';
+          if(n.hasAttribute('src'))n.removeAttribute('src');
+          if(n.parentNode)n.parentNode.removeChild(n);
+        }else if(tg==='LINK'&&/preload/i.test(n.getAttribute('rel')||'')){
+          if(n.parentNode)n.parentNode.removeChild(n);
+        }
+      }
+    }
+  });
+  obs.observe(document.documentElement,{childList:true,subtree:true});
+}
+function shaPure(ascii){
+  function rr(v,a){return(v>>>a)|(v<<(32-a));}
+  var bytes=[],i,j;
+  if(typeof TextEncoder!=='undefined'){
+    bytes=Array.from(new TextEncoder().encode(ascii));
+  }else{
+    for(i=0;i<ascii.length;i++){
+      var c=ascii.charCodeAt(i);
+      if(c<128)bytes.push(c);
+      else if(c<2048)bytes.push(192|(c>>6),128|(c&63));
+      else bytes.push(224|(c>>12),128|((c>>6)&63),128|(c&63));
+    }
+  }
+  var bitLen=bytes.length*8;
+  bytes.push(0x80);
+  while((bytes.length%64)!==56)bytes.push(0);
+  var hi=Math.floor(bitLen/4294967296),lo=bitLen>>>0;
+  bytes.push((hi>>>24)&255,(hi>>>16)&255,(hi>>>8)&255,hi&255,(lo>>>24)&255,(lo>>>16)&255,(lo>>>8)&255,lo&255);
+  var K=[0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+  var H0=[0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
+  for(i=0;i<bytes.length;i+=64){
+    var W=new Array(64);
+    for(j=0;j<16;j++)W[j]=((bytes[i+j*4]<<24)|(bytes[i+j*4+1]<<16)|(bytes[i+j*4+2]<<8)|bytes[i+j*4+3])>>>0;
+    for(j=16;j<64;j++){
+      var s0=rr(W[j-15],7)^rr(W[j-15],18)^(W[j-15]>>>3);
+      var s1=rr(W[j-2],17)^rr(W[j-2],19)^(W[j-2]>>>10);
+      W[j]=(W[j-16]+s0+W[j-7]+s1)>>>0;
+    }
+    var a=H0[0],b=H0[1],c=H0[2],d=H0[3],e=H0[4],f=H0[5],g=H0[6],h=H0[7];
+    for(j=0;j<64;j++){
+      var S1=rr(e,6)^rr(e,11)^rr(e,25),ch=(e&f)^((~e)&g),t1=(h+S1+ch+K[j]+W[j])>>>0;
+      var S0=rr(a,2)^rr(a,13)^rr(a,22),maj=(a&b)^(a&c)^(b&c),t2=(S0+maj)>>>0;
+      h=g;g=f;f=e;e=(d+t1)>>>0;d=c;c=b;b=a;a=(t1+t2)>>>0;
+    }
+    H0[0]=(H0[0]+a)>>>0;H0[1]=(H0[1]+b)>>>0;H0[2]=(H0[2]+c)>>>0;H0[3]=(H0[3]+d)>>>0;
+    H0[4]=(H0[4]+e)>>>0;H0[5]=(H0[5]+f)>>>0;H0[6]=(H0[6]+g)>>>0;H0[7]=(H0[7]+h)>>>0;
+  }
+  return H0.map(function(x){return('00000000'+x.toString(16)).slice(-8);}).join('');
+}
+async function sha(s){
+  try{
+    if(window.crypto&&crypto.subtle&&typeof TextEncoder!=='undefined'){
+      var b=new TextEncoder().encode(s);
+      var d=await crypto.subtle.digest('SHA-256',b);
+      return Array.from(new Uint8Array(d)).map(function(x){return x.toString(16).padStart(2,'0');}).join('');
+    }
+  }catch(e){}
+  return shaPure(s);
+}
+function lockDom(){
+  if(obs){try{obs.disconnect();}catch(e){}obs=null;}
+  document.querySelectorAll('script[src]').forEach(function(s){
+    s.onload=s.onerror=null;
+    if(s.parentNode)s.parentNode.removeChild(s);
+  });
+  if(!document.body){
+    var bd=document.createElement('body');
+    document.documentElement.appendChild(bd);
+  }
+  document.body.className='';
+  document.body.style.cssText='margin:0;background:#f4f2ed;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px';
+  document.body.innerHTML='<div id="jt_lock_box" style="font:19pt/1.65 Microsoft YaHei,PingFang SC,sans-serif;padding:36px 26px;color:#1d3338;width:min(680px,100%);background:#fff;border:2px solid #284b45;border-radius:14px;text-align:center;box-shadow:0 10px 28px rgba(0,0,0,.08)"><div style="font-size:22.5pt;font-weight:bold;color:#1d3338;margin-bottom:10px">金泰 AI · 中华文明影像库</div><div style="font-size:15.5pt;color:#4a5d54;margin-bottom:22px">请输入统一访问密码进入系统（手机微信 / 浏览器验证一次，四站自动通用）</div><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;max-width:500px;margin:0 auto"><input id="jt_pw_box" type="password" placeholder="请输入访问密码" autocomplete="current-password" style="flex:1;min-width:210px;font:17pt Microsoft YaHei,sans-serif;padding:11px 14px;border:1.5px solid #6f857b;border-radius:8px;background:#fff;color:#263a40"><button id="jt_pw_btn" type="button" style="font:bold 17pt Microsoft YaHei,sans-serif;padding:11px 26px;background:#284b45;color:#fff;border:none;border-radius:8px;cursor:pointer">验证进入</button></div><div id="jt_pw_err" style="font-size:15pt;color:#8a1c1c;min-height:28px;margin-top:12px"></div></div>';
+  document.documentElement.setAttribute('data-jt-ok','1');
+  document.documentElement.style.visibility='visible';
+  var inp=document.getElementById('jt_pw_box'),btn=document.getElementById('jt_pw_btn'),err=document.getElementById('jt_pw_err');
+  async function tryIn(){
+    var v=(inp.value||'').trim();
+    if(!v){err.textContent='请输入访问密码';return;}
+    var h=await sha(v);
+    if(h===H){saveOk();location.reload();}
+    else{err.textContent='密码不正确，请核对后重试';inp.value='';inp.focus();}
+  }
+  if(btn)btn.onclick=tryIn;
+  if(inp){
+    inp.onkeydown=function(e){if(e.key==='Enter')tryIn();};
+    setTimeout(function(){try{inp.focus();}catch(e){}},60);
+  }
+}
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded',lockDom,{once:true});
+}else{
+  lockDom();
+}
+})();</script><script id="jintai-zhonghua-cdn-shim">(function(){
 var IS_GH=/github\.io$/i.test(location.hostname||'');
 var CDNS=['https://testingcf.jsdelivr.net/gh/aikingtai-ctrl/zhonghua-civilization-atlas@main/','https://gcore.jsdelivr.net/gh/aikingtai-ctrl/zhonghua-civilization-atlas@main/'];
 var FALLBACK_SVG='data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360" viewBox="0 0 480 360"><rect width="480" height="360" fill="#f3efe6"/><rect x="16" y="16" width="448" height="328" fill="none" stroke="#c8bda8" stroke-width="1.5"/><text x="240" y="168" text-anchor="middle" fill="#5c5040" font-family="Microsoft YaHei,sans-serif" font-size="18">馆藏文物考证条目</text><text x="240" y="202" text-anchor="middle" fill="#8b7d6b" font-family="Microsoft YaHei,sans-serif" font-size="14">点击卡片查阅馆方详细著录与原图出处</text></svg>');
