@@ -409,9 +409,11 @@ def sync_documentary(site_dir: Path, auto_push: bool = True) -> dict:
         return {"site": "documentary", "status": "upstream_skipped", "http": [st_h, st_p1]}
 
     clean_html = strip_cf_challenge(b_h.decode("utf-8"))
+    # Strip dynamic SSR timestamp (countedAt ISO string) for stable change detection
+    norm_html_for_fp = re.sub(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z", "TS", clean_html)
     p1 = json.loads(b_p1.decode("utf-8"))
-    fp_meta = json.dumps({"stats": p1.get("stats"), "countedAt": p1.get("countedAt"), "facets": p1.get("facets"), "p1_ids": [f.get("id") for f in p1.get("films", [])]}, sort_keys=True)
-    fp = sha256_bytes(clean_html.encode("utf-8") + b"|" + fp_meta.encode("utf-8"))
+    fp_meta = json.dumps({"stats": p1.get("stats"), "facets": p1.get("facets"), "pages": p1.get("pagination", {}).get("pages"), "p1_films": p1.get("films", [])}, ensure_ascii=False, sort_keys=True)
+    fp = sha256_bytes(norm_html_for_fp.encode("utf-8") + b"|" + fp_meta.encode("utf-8"))
 
     state_p = site_dir / ".sync_state.json"
     if state_p.is_file():
