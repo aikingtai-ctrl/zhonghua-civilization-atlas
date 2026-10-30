@@ -1,0 +1,47 @@
+name: Auto Sync Upstream (zhonghua)
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: auto-sync-zhonghua
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Python & Node
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run incremental upstream sync & unified gate check
+        run: python scripts/sync_upstream.py --only zhonghua --repo-dir . --no-push
+
+      - name: Commit, Push & Purge China CDN if updated
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if ! git diff --cached --quiet; then
+            CHANGED=$(git diff --cached --name-only | head -n 20)
+            git commit -m "chore(auto-sync): sync latest upstream updates from zhonghua"
+            git pull --rebase origin main
+            git push origin HEAD:main
+            for f in $CHANGED; do
+              curl -fsSL "https://purge.jsdelivr.net/gh/aikingtai-ctrl/zhonghua-civilization-atlas@main/$f" >/dev/null || true
+            done
+          else
+            echo "Already up to date."
+          fi

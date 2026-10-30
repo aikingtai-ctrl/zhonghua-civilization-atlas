@@ -139,23 +139,14 @@ function findOrigUrlByPreview(relPath){
       if(window.ARCHIVE_DATA&&Array.isArray(window.ARCHIVE_DATA.records))pools.push(window.ARCHIVE_DATA.records);
       if(Array.isArray(window.EXPANSION_CANDIDATES))pools.push(window.EXPANSION_CANDIDATES);
       if(window.EXPANSION_CANDIDATES&&Array.isArray(window.EXPANSION_CANDIDATES.items))pools.push(window.EXPANSION_CANDIDATES.items);
-      pools.forEach(function(arr){
-        arr.forEach(function(r){
-          if(!r)return;
-          var k=r.localImage||r.previewUrl;
-          var u=r.imageUrl||r.originalImageUrl;
-          if(k&&u)_extMap[k.replace(/^\.\//,'')]=u;
-        });
-      });
+      pools.forEach(function(arr){arr.forEach(function(r){if(!r)return;var k=r.localImage||r.previewUrl;var u=r.imageUrl||r.originalImageUrl;if(k&&u)_extMap[k.replace(/^\.\//,'')]=u;});});
     }catch(e){}
   }
   return _extMap[relPath]||'';
 }
 window.addEventListener('error',function(ev){
-  var el=ev.target;
-  if(!el||el.tagName!=='IMG')return;
-  var cur=el.getAttribute('src')||el.src||'';
-  if(!cur||cur.indexOf('data:image/')===0)return;
+  var el=ev.target;if(!el||el.tagName!=='IMG')return;
+  var cur=el.getAttribute('src')||el.src||'';if(!cur||cur.indexOf('data:image/')===0)return;
   var step=parseInt(el.getAttribute('data-jt-fb')||'0',10);
   if(step>=4){el.src=FALLBACK_SVG;return;}
   el.setAttribute('data-jt-fb',String(step+1));
@@ -165,14 +156,10 @@ window.addEventListener('error',function(ev){
     if(IS_GH&&step===0){el.src=CDNS[0]+rel;return;}
     if(IS_GH&&step===1){el.src=CDNS[1]+rel;return;}
     var orig=findOrigUrlByPreview(rel);
-    if(orig){
-      el.src='https://wsrv.nl/?url='+encodeURIComponent(orig)+'&w=960&output=webp';
-      return;
-    }
+    if(orig){el.src='https://wsrv.nl/?url='+encodeURIComponent(orig)+'&w=960&output=webp';return;}
   }
   if(/^https?:\/\//i.test(cur)&&cur.indexOf('wsrv.nl')===-1){
-    el.src='https://wsrv.nl/?url='+encodeURIComponent(cur)+'&w=960&output=webp';
-    return;
+    el.src='https://wsrv.nl/?url='+encodeURIComponent(cur)+'&w=960&output=webp';return;
   }
   el.src=FALLBACK_SVG;
 },true);
