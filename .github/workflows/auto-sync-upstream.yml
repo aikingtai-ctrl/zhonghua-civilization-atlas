@@ -7,21 +7,25 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 concurrency:
-  group: auto-sync-zhonghua
+  group: "pages"
   cancel-in-progress: false
 
 jobs:
   sync:
     runs-on: ubuntu-latest
+    outputs:
+      updated: ${{ steps.push_changes.outputs.updated }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
-      - name: Set up Python & Node
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -30,18 +34,50 @@ jobs:
         run: python scripts/sync_upstream.py --only zhonghua --repo-dir . --no-push
 
       - name: Commit, Push & Purge China CDN if updated
+        id: push_changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
           if ! git diff --cached --quiet; then
-            CHANGED=$(git diff --cached --name-only | head -n 20)
+            CHANGED=$(git diff --cached --name-only | head -n 25)
             git commit -m "chore(auto-sync): sync latest upstream updates from zhonghua"
             git pull --rebase origin main
             git push origin HEAD:main
             for f in $CHANGED; do
               curl -fsSL "https://purge.jsdelivr.net/gh/aikingtai-ctrl/zhonghua-civilization-atlas@main/$f" >/dev/null || true
             done
+            echo "updated=true" >> "$GITHUB_OUTPUT"
           else
             echo "Already up to date."
+            echo "updated=false" >> "$GITHUB_OUTPUT"
           fi
+
+      - name: Setup Pages
+        if: steps.push_changes.outputs.updated == 'true' || github.event_name == 'workflow_dispatch'
+        uses: actions/configure-pages@v5
+
+      - name: Stage static site for Pages
+        if: steps.push_changes.outputs.updated == 'true' || github.event_name == 'workflow_dispatch'
+        run: |
+          mkdir -p _site
+          rsync -a --exclude='.git' --exclude='.github' --exclude='scripts' --exclude='_site' ./ _site/
+          touch _site/.nojekyll
+
+      - name: Upload Pages artifact
+        if: steps.push_changes.outputs.updated == 'true' || github.event_name == 'workflow_dispatch'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    if: needs.sync.outputs.updated == 'true' || github.event_name == 'workflow_dispatch'
+    needs: sync
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
