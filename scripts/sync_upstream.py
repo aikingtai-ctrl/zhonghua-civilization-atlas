@@ -299,6 +299,16 @@ def purge_jsdelivr(repo_name: str, rel_paths: list[str]):
             pass
 
 
+def git_prepare_repo(repo_dir: Path, auto_push: bool):
+    if not auto_push or not (repo_dir / ".git").is_dir():
+        return
+    if (repo_dir / ".git" / "rebase-merge").exists() or (repo_dir / ".git" / "rebase-apply").exists():
+        subprocess.run(["git", "rebase", "--abort"], cwd=str(repo_dir), capture_output=True)
+    subprocess.run(["git", "pull", "--rebase", "-X", "ours", "origin", "main"], cwd=str(repo_dir), capture_output=True)
+    if (repo_dir / ".git" / "rebase-merge").exists() or (repo_dir / ".git" / "rebase-apply").exists():
+        subprocess.run(["git", "rebase", "--abort"], cwd=str(repo_dir), capture_output=True)
+
+
 def git_push_if_changed(repo_dir: Path, repo_name: str, msg: str, auto_push: bool) -> list[str]:
     if not (repo_dir / ".git").is_dir():
         return []
@@ -310,7 +320,9 @@ def git_push_if_changed(repo_dir: Path, repo_name: str, msg: str, auto_push: boo
     changed_files = [ln.split(None, 1)[-1].strip('"') for ln in lines]
     if auto_push:
         subprocess.run(["git", "commit", "-m", msg], cwd=str(repo_dir), check=True)
-        subprocess.run(["git", "pull", "--rebase", "origin", "main"], cwd=str(repo_dir), capture_output=True)
+        subprocess.run(["git", "pull", "--rebase", "-X", "theirs", "origin", "main"], cwd=str(repo_dir), capture_output=True)
+        if (repo_dir / ".git" / "rebase-merge").exists() or (repo_dir / ".git" / "rebase-apply").exists():
+            subprocess.run(["git", "rebase", "--abort"], cwd=str(repo_dir), capture_output=True)
         subprocess.run(["git", "push", "origin", "HEAD:main"], cwd=str(repo_dir), check=True, timeout=300)
         purge_jsdelivr(repo_name, changed_files)
     return changed_files
@@ -333,6 +345,7 @@ window.fetch=async function(input,init){var urlStr=typeof input==='string'?input
 
 
 def sync_shengcang(site_dir: Path, auto_push: bool = True) -> dict:
+    git_prepare_repo(site_dir, auto_push)
     base = "https://shengcang-sound-library.fondcream1.chatgpt.site"
     st_h, b_h = fetch_bytes(base + "/")
     st_a, b_a = fetch_bytes(base + "/api/sounds")
@@ -403,6 +416,7 @@ window.fetch=async function(input,init){var urlStr=typeof input==='string'?input
 
 
 def sync_documentary(site_dir: Path, auto_push: bool = True) -> dict:
+    git_prepare_repo(site_dir, auto_push)
     base = "https://documentary-classroom-library.fondcream1.chatgpt.site"
     st_h, b_h = fetch_bytes(base + "/")
     st_p1, b_p1 = fetch_bytes(base + "/api/library?page=1")
@@ -552,6 +566,7 @@ def norm_zh_rel(base_doc: str, raw_ref: str):
 
 
 def sync_zhonghua(site_dir: Path, auto_push: bool = True) -> dict:
+    git_prepare_repo(site_dir, auto_push)
     host = "zhonghua-civilization-atlas.fondcream1.chatgpt.site"
     base = f"https://{host}/"
 
@@ -676,9 +691,8 @@ def sync_history_site1() -> dict:
     pub = Path(r"C:\Users\KingT\jintai-internal\中国历史文化图库\每日更新\publish_checkout_20261012")
     if not hist_mgr.is_file() or not pub.is_dir():
         return {"site": "history", "status": "skipped_not_local"}
-    if cat_sync.is_file():
-        subprocess.run([sys.executable, str(cat_sync)], check=True)
-    subprocess.run([sys.executable, str(hist_mgr)], check=True)
+    sync_ext = hist_mgr.parent / "sync_external_and_verify.py"
+    subprocess.run([sys.executable, str(sync_ext)], check=True)
     tracked_targets = [
         "index.html", "browser.html", "d1_idx", "d2_idx",
         "portal.html", "图库总入口.html", "arch5680.html", "myth5000.html",
@@ -690,8 +704,6 @@ def sync_history_site1() -> dict:
     existing_targets = [t for t in tracked_targets if (pub / t).exists()]
     st = subprocess.run(["git", "-C", str(pub), "status", "--porcelain", "--"] + existing_targets, capture_output=True, text=True)
     if st.stdout.strip():
-        sync_ext = hist_mgr.parent / "sync_external_and_verify.py"
-        subprocess.run([sys.executable, str(sync_ext)], check=True)
         subprocess.run(["git", "-C", str(pub), "add", "--"] + existing_targets, check=True)
         subprocess.run(["git", "-C", str(pub), "commit", "-m", "sync(auto): refresh domestic compact index, specialist category pages & WeChat gate"], check=True)
         subprocess.run(["git", "-C", str(pub), "push", "origin", "HEAD:main"], check=True, timeout=240)
