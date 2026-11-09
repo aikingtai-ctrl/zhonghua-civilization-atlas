@@ -103,6 +103,18 @@
   q('#expansionRemaining').textContent=fmt(remaining);
   q('#expansionProgressBar').style.width=Math.min(100,current/target*100).toFixed(2)+'%';
   q('#expansionProgressNote').textContent='现有目录规模 '+(current/target*100).toFixed(1)+'%（未完成全库质量复核） · '+records.filter(r=>r.openLicense).length.toLocaleString('zh-CN')+' 张标记为开放许可 · '+records.filter(r=>!r.openLicense).length.toLocaleString('zh-CN')+' 张仍需按来源政策核实 · '+new Set(records.map(r=>r.institution)).size.toLocaleString('zh-CN')+' 家来源机构';
+  const latestDaily=window.ARCHIVE_DATA.dailyImports?.at(-1);
+  let dailySummary=q('#expansionPanel [data-expansion-daily]');
+  if(latestDaily&&/^\d{4}-\d{2}-\d{2}$/.test(latestDaily.date)&&Number.isInteger(latestDaily.netNewImages)&&latestDaily.netNewImages>0){
+   if(!dailySummary){dailySummary=document.createElement('aside');dailySummary.className='daily-batch-summary';dailySummary.dataset.expansionDaily='';dailySummary.setAttribute('aria-label','当日扩库');q('#expansionProgressNote').after(dailySummary)}
+   const today=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai'}).format(new Date());
+   const heading=document.createElement('strong');heading.textContent=(latestDaily.date===today?'今日':latestDaily.date)+'新增 '+fmt(latestDaily.netNewImages)+' 张';
+   const dayRows=records.filter(r=>r.batch===latestDaily.date&&r.status==='verified');
+   const reviewCounts=[['ai','AI视觉复核'],['automatic','自动检查'],['human','人工复核']].map(([type,label])=>{const count=dayRows.filter(r=>r.verification?.reviewerType===type).length;return count?label+' '+fmt(count)+' 张':null}).filter(Boolean);
+   const detail=document.createElement('span');detail.textContent=reviewCounts.join(' · ');
+   const browse=document.createElement('a');browse.href='?batch='+encodeURIComponent(latestDaily.date)+'#explore';browse.textContent='浏览当日新增 →';
+   dailySummary.replaceChildren(heading,...(reviewCounts.length?[detail]:[]),browse);
+  }else if(dailySummary)dailySummary.remove();
   q('#expansionGroups').innerHTML=expansionPlan.groups.map((group,index)=>{
    const count=records.filter(r=>group.eras.includes(r.era)).length,needed=Math.max(group.target-count,0),ratio=Math.min(100,count/group.target*100);
    return '<article class="expansion-group"><div class="expansion-group-head"><span class="expansion-index">'+String(index+1).padStart(2,'0')+'</span><div><h2>'+e(group.name)+'</h2><p>'+e(group.eras.join(' · '))+'</p></div><strong>'+fmt(count)+' <small>/ '+fmt(group.target)+'</small></strong></div><div class="expansion-bar"><span style="width:'+ratio.toFixed(2)+'%"></span></div><div class="expansion-group-foot"><span>现有目录 '+fmt(count)+' 张</span><b>'+ (needed ? '待补 '+fmt(needed)+' 张' : '已达到配额') +'</b></div><p class="expansion-group-note">'+e(group.note)+'</p></article>';

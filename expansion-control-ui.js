@@ -130,6 +130,7 @@
       tbody.replaceChildren();
       filtered.slice((page - 1) * perPage, page * perPage).forEach(function (b) {
         var tr = el('tr'); var name = el('td'); name.appendChild(el('strong', 'ac-batch-id', b.batchId)); name.appendChild(el('small', 'ac-batch-source', b.provider + ' · ' + b.date));
+        if (Number(b.transferredImports)) name.appendChild(el('small', 'ac-batch-source', n(b.transferredImports) + ' 条已转至其他批次入库；不重复计数'));
         if (b.failureReasons && b.failureReasons.length) {
           var details = el('details', 'ac-failure'); details.appendChild(el('summary', '', '展开失败原因（' + b.failureReasons.length + ' 类）'));
           var reasons = el('ul'); b.failureReasons.forEach(function (r) { reasons.appendChild(el('li', '', r)); }); details.appendChild(reasons); name.appendChild(details);
