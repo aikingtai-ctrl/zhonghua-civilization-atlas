@@ -20,6 +20,19 @@
     var minutes = Math.max(0, Math.round((Date.now() - time) / 60000));
     return { text: minutes < 30 ? '数据新鲜（约 ' + minutes + ' 分钟前）' : '需刷新（约 ' + minutes + ' 分钟前）', stale: minutes >= 30 };
   }
+  function collectionProgress(value) {
+    var id = function (v) { return typeof v === 'string' && /^met-\d{4}-\d{2}-\d{2}-\d{3}$/.test(v); };
+    var sha = function (v) { return typeof v === 'string' && /^[a-f0-9]{64}$/.test(v); };
+    var count = function (v) { return Number.isSafeInteger(v) && v >= 0 && v <= 100; };
+    var reasons = ['complete', 'bounded-run', 'attempt-limit', 'provider-hold', 'shared-provider-hold', 'shared-guard', 'consecutive-network-failures', 'STOP'];
+    if (!value || value.schemaVersion !== 1 || !count(value.requested) || !value.requested || !count(value.attempted) || !count(value.unattempted) || value.attempted + value.unattempted !== value.requested || !reasons.includes(value.stopReason) || !sha(value.manifestSha256) || !sha(value.outcomesSha256)) return null;
+    if (value.resumedFrom && (!id(value.resumedFrom.batchId) || !sha(value.resumedFrom.manifestSha256) || !sha(value.resumedFrom.outcomesSha256))) return null;
+    if (value.continuedBy !== undefined) {
+      if (!Array.isArray(value.continuedBy) || value.continuedBy.length > 100 || new Set(value.continuedBy.map(function (c) { return c && c.batchId; })).size !== value.continuedBy.length || !count(value.resumed) || !count(value.remainingUnstarted) || value.resumed + value.remainingUnstarted !== value.unattempted) return null;
+      if (!value.continuedBy.every(function (c) { return c && id(c.batchId) && count(c.requested) && c.requested > 0 && count(c.attempted) && count(c.unattempted) && c.attempted + c.unattempted === c.requested && sha(c.manifestSha256) && sha(c.outcomesSha256); }) || value.continuedBy.reduce(function (n, c) { return n + c.attempted; }, 0) !== value.resumed) return null;
+    }
+    return value;
+  }
   function mount() {
     var anchor = document.getElementById('expansionQueue');
     if (!anchor || document.getElementById('atlasControlConsole')) return;
@@ -53,6 +66,27 @@
       setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
     });
     head.appendChild(download); section.appendChild(head);
+    var trace = data.releaseTraceability;
+    if (trace && trace.latest && trace.dailyPackage) {
+      var traceBox = el('section', 'ac-release-trace');
+      traceBox.setAttribute('aria-label', '发布版本与每日包追溯');
+      traceBox.appendChild(el('h3', '', '本次发布追溯'));
+      var release = trace.latest;
+      var pkg = trace.dailyPackage;
+      var releaseLine = el('p', 'ac-release-line');
+      releaseLine.appendChild(el('strong', '', '线上 v' + release.deploymentVersion + ' · ' + (release.status === 'succeeded' ? '部署成功' : release.status)));
+      releaseLine.appendChild(el('span', '', '源提交 ' + String(release.sourceCommit || '').slice(0, 12) + '…'));
+      releaseLine.appendChild(el('span', '', '更新时间 ' + date(release.updatedAt)));
+      traceBox.appendChild(releaseLine);
+      var packageLine = el('p', 'ac-release-line');
+      packageLine.appendChild(el('strong', '', '对应每日包 ' + pkg.date + ' · ' + n(pkg.records) + ' 条'));
+      packageLine.appendChild(el('span', '', '已核验 ' + n(pkg.verifiedRecords) + ' 条 · ' + n(pkg.batchCount) + ' 个批次'));
+      if (typeof pkg.packageHref === 'string' && /^[a-z0-9][a-z0-9._/-]{2,160}$/.test(pkg.packageHref)) {
+        var packageLink = el('a', '', '下载每日包 ↗'); packageLink.href = pkg.packageHref; packageLink.target = '_blank'; packageLink.rel = 'noopener noreferrer'; packageLine.appendChild(packageLink);
+      }
+      traceBox.appendChild(packageLine);
+      section.appendChild(traceBox);
+    }
     var metrics = el('div', 'ac-metrics');
     [
       ['主目录唯一记录', data.totals.records, '含历史目录，数量不代表已全库复核'],
@@ -213,7 +247,8 @@
       var term = search.value.trim().toLocaleLowerCase();
       var filtered = batches.filter(function (b) {
         var lineage = b.reconciliation || {};
-        return (!provider.value || b.provider === provider.value) && (!status.value || b.status === status.value) && (!term || [b.batchId, b.provider, b.status, lineage.originalBatchId, lineage.sourceManifestSha256, lineage.originalAcceptedSha256, lineage.run].concat(b.failureReasons || [], (b.collectionExclusionReasons || []).map(function (reason) { return reason.code; }), (b.collectionEligibilityConditions || []).map(function (finding) { return Object.hasOwn(conditionLabels, finding.condition) ? finding.condition + ' ' + conditionLabels[finding.condition] : ''; })).join(' ').toLocaleLowerCase().includes(term));
+        var progress = collectionProgress(b.collectionProgress), linked = progress ? [progress.manifestSha256, progress.outcomesSha256, progress.resumedFrom && progress.resumedFrom.batchId].concat((progress.continuedBy || []).map(function (c) { return c.batchId; })) : [];
+        return (!provider.value || b.provider === provider.value) && (!status.value || b.status === status.value) && (!term || [b.batchId, b.provider, b.status, lineage.originalBatchId, lineage.sourceManifestSha256, lineage.originalAcceptedSha256, lineage.run].concat(linked, b.failureReasons || [], (b.collectionExclusionReasons || []).map(function (reason) { return reason.code; }), (b.collectionEligibilityConditions || []).map(function (finding) { return Object.hasOwn(conditionLabels, finding.condition) ? finding.condition + ' ' + conditionLabels[finding.condition] : ''; })).join(' ').toLocaleLowerCase().includes(term));
       });
       var pages = Math.max(1, Math.ceil(filtered.length / perPage)); page = Math.min(page, pages);
       tbody.replaceChildren();
@@ -225,6 +260,14 @@
           name.appendChild(el('small', 'ac-batch-source', '按原日期保留，未重复计为本日采集；来源清单 SHA ' + String(lineage.sourceManifestSha256 || '').slice(0, 12) + '… · 原接收 SHA ' + String(lineage.originalAcceptedSha256 || '').slice(0, 12) + '…'));
         }
         if (Number(b.transferredImports)) name.appendChild(el('small', 'ac-batch-source', n(b.transferredImports) + ' 条已转至其他批次入库；不重复计数'));
+        var progress = collectionProgress(b.collectionProgress);
+        if (progress) {
+          var stopLabels = { complete: '完成', 'bounded-run': '达到本轮运行时限', 'attempt-limit': '达到本轮尝试上限', 'provider-hold': '来源暂停', 'shared-provider-hold': '工作区来源限制', 'shared-guard': '工作区采集门禁停止', 'consecutive-network-failures': '连续网络失败后停止', STOP: '收到停止指令' };
+          name.appendChild(el('small', 'ac-batch-source ac-collection-progress', '实际启动 ' + n(progress.attempted) + '/' + n(progress.requested) + ' 项 · 未启动 ' + n(progress.unattempted) + ' 项（不计失败） · 停止原因：' + stopLabels[progress.stopReason]));
+          if (progress.resumedFrom) name.appendChild(el('small', 'ac-batch-source', '断点续采自 ' + progress.resumedFrom.batchId + '；仅承接父批未启动项'));
+          (progress.continuedBy || []).forEach(function (child) { name.appendChild(el('small', 'ac-batch-source', '续批 ' + child.batchId + ' · 实际启动 ' + n(child.attempted) + '/' + n(child.requested) + ' 项')); });
+          if (progress.continuedBy && progress.continuedBy.length) name.appendChild(el('small', 'ac-batch-source', '直接续批实际启动 ' + n(progress.resumed) + ' 项；父批原未启动数保留，未由这些续批启动 ' + n(progress.remainingUnstarted) + ' 项'));
+        }
         if (Number(b.collectionExcluded)) {
           name.appendChild(el('small', 'ac-batch-source', '采集未形成候选 ' + n(b.collectionExcluded) + ' 次（含排重／范围／本地问题），其中重复 ' + n(b.collectionDuplicateCount) + ' 次；按采集事件计数'));
           var exclusions = el('details', 'ac-failure');
