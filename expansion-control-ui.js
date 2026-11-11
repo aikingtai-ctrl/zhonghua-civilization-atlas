@@ -106,15 +106,41 @@
     queueBox.appendChild(el('p', '', '计划队列 ' + n(queue.planned) + ' · ' + (queue.status || '未提供')));
     if (queue.reason) queueBox.appendChild(el('p', 'ac-note', queue.reason));
     if (queue.nextAction) queueBox.appendChild(el('p', 'ac-next-action', '下一步：' + queue.nextAction));
+    var csv = data.metCsvInventory;
+    if (csv && csv.schemaVersion === 1 && csv.metadataOnly === true && csv.status === 'completed' && csv.actualImageAttempts === 0 && csv.candidates === 0 && csv.imported === 0 && csv.counts && Array.isArray(csv.coverage) && csv.coverage.length === 9 && Number.isFinite(Date.parse(csv.finishedAt || '')) && /^[a-f0-9]{64}$/.test(csv.reportSha256 || '')) {
+      var csvBox = el('details', 'ac-csv-inventory');
+      csvBox.appendChild(el('summary', '', 'CSV元数据预筛，不是图像入库'));
+      csvBox.appendChild(el('p', 'ac-note', '已完成 · 预筛完成时间（北京时间） ' + date(csv.finishedAt) + '；以下数字均为该次预筛快照，不代表当前未尝试数量。'));
+      var csvMetrics = el('div', 'ac-metrics');
+      [
+        ['解析元数据行', csv.counts.parsedRows, '完整固定快照解析完成'],
+        ['快照公共领域 China 元数据', csv.counts.publicDomainChinaRows, 'CSV 标记 Is Public Domain=True、Culture=China'],
+        ['预筛时未尝试', csv.counts.unattemptedAtDiscovery, '已排除预筛时三工作区的历史来源身份'],
+        ['本次选中线索', csv.counts.selectedAtDiscovery, '仅供另行请求对象 API，不计入候选或入库']
+      ].forEach(function (metric) {
+        var box = el('div', 'ac-metric');
+        box.appendChild(el('span', 'ac-metric-label', metric[0]));
+        box.appendChild(el('strong', '', n(metric[1])));
+        box.appendChild(el('small', '', metric[2])); csvMetrics.appendChild(box);
+      });
+      csvBox.appendChild(csvMetrics);
+      csvBox.appendChild(el('p', 'ac-note', '全时期规划桶（含跨期／待细分），按快照规则预分组；不作为正式断代或覆盖统计。预筛时历史已知 ' + n(csv.counts.historyKnownAtDiscovery) + ' 条。'));
+      csv.coverage.forEach(function (group) {
+        csvBox.appendChild(el('p', 'ac-note', group.planningGroup + ' · 快照公共领域 China 元数据 ' + n(group.publicDomainChinaRows) + ' · 预筛时历史已知 ' + n(group.historyKnownAtDiscovery) + ' · 预筛时未尝试 ' + n(group.unattemptedAtDiscovery) + ' · 本次选中 ' + n(group.selectedAtDiscovery)));
+      });
+      csvBox.appendChild(el('p', 'ac-note', 'CSV 快照里的公共领域标记不证明当前图像许可、可访问性或入库资格；每张图像仍须另行核对最新官方对象 API、原图、版权和审核。'));
+      csvBox.appendChild(el('small', 'ac-note', '预筛报告 SHA-256 ' + csv.reportSha256));
+      queueBox.appendChild(csvBox);
+    }
     var discovery = data.discoveryLeads || {};
     if (Number(discovery.count)) {
       var leadBox = el('details', 'ac-discovery-leads');
       leadBox.appendChild(el('summary', '', '官方来源线索核对 ' + n(discovery.count) + ' 条（不计入候选／正式入库）'));
       leadBox.appendChild(el('p', 'ac-note', discovery.note || '官方来源发现线索仅供后续采集复核，不计入候选或正式入库。'));
-      leadBox.appendChild(el('p', 'ac-note', '已有目录 ' + n(discovery.alreadyCataloged) + ' · 已在待审队列 ' + n(discovery.pending) + ' · 尚未采集 ' + n(discovery.uncollected) + ' · 来源待核 ' + n(discovery.invalid)));
+      leadBox.appendChild(el('p', 'ac-note', '已有目录 ' + n(discovery.alreadyCataloged) + ' · 已在待审队列 ' + n(discovery.pending) + ' · 已尝试未形成候选 ' + n(discovery.attemptedNoCandidate) + ' · 尚未采集 ' + n(discovery.uncollected) + ' · 来源待核 ' + n(discovery.invalid)));
       (discovery.entries || []).forEach(function (lead) {
         var row = el('p', 'ac-note');
-        var leadLabels = { 'already-cataloged': '已有目录／需按需补充复核', 'pending-candidate': '已有待审候选', 'uncollected': '尚未采集', 'invalid-source': '来源待核' };
+        var leadLabels = { 'already-cataloged': '已有目录／需按需补充复核', 'pending-candidate': '已有待审候选', 'attempted-no-candidate': '已尝试未形成候选', 'uncollected': '尚未采集', 'invalid-source': '来源待核' };
         row.appendChild(el('strong', '', (leadLabels[lead.resolvedStatus] || '状态待核') + ' · '));
         var url = String(lead.objectUrl || '');
         if (/^https:\/\/[^\s]+$/i.test(url)) {
@@ -125,6 +151,10 @@
         if (lead.reason) row.appendChild(el('small', 'ac-note', ' · ' + lead.reason));
         if (lead.catalogRecordIds && lead.catalogRecordIds.length) row.appendChild(el('small', 'ac-note', ' · 对应目录 ID：' + lead.catalogRecordIds.join('、')));
         if (lead.candidateIds && lead.candidateIds.length) row.appendChild(el('small', 'ac-note', ' · 对应候选 ID：' + lead.candidateIds.join('、')));
+        (lead.actualAttempts || []).forEach(function (attempt) {
+          var labels = { 'eligibility-exclusion': '资格排除', 'network-failure': '网络／HTTP 失败', 'duplicate-exclusion': '重复排除', 'interrupted': '采集中断', 'source-or-local-failure': '来源／本地问题' };
+          row.appendChild(el('small', 'ac-note', ' · 实际报告：' + attempt.reportFile + '；批次 ' + attempt.batchId + '；' + (labels[attempt.classification] || '原因待核') + ' · ' + attempt.code + (attempt.httpStatus ? ' · HTTP ' + attempt.httpStatus : '') + (attempt.metadataHttpStatus === 200 ? '；采集回执记录元数据 HTTP 200' : '') + '；结束时间 ' + date(attempt.finishedAt)));
+        });
         leadBox.appendChild(row);
       });
       queueBox.appendChild(leadBox);
@@ -132,6 +162,7 @@
     queueBox.appendChild(el('small', 'ac-note', '本页为只读快照；重试、限流和断点续采须在采集脚本执行后重新生成快照。'));
     state.appendChild(queueBox);
     var holdBox = el('div', 'ac-holds'); holdBox.appendChild(el('h3', '', '来源暂停与待复查'));
+    holdBox.appendChild(el('p', 'ac-note', '以下为本构建快照记录；采集前仍须检查各工作区的当前来源限制，未记录暂停不等于来源全部可用。'));
     var holds = data.holds || [];
     if (!holds.length) holdBox.appendChild(el('p', 'ac-note', '当前快照未记录来源暂停；这不等同于各来源可用性检测通过。'));
     holds.forEach(function (hold) {
@@ -141,7 +172,21 @@
       row.appendChild(el('small', '', '记录时间：' + date(hold.at)));
       if (hold.retryAfter) row.appendChild(el('small', '', '下次复查：' + date(hold.retryAfter)));
       holdBox.appendChild(row);
-    }); state.appendChild(holdBox); section.appendChild(state);
+    });
+    var history = data.holdHistory || [];
+    if (history.length) {
+      var historyBox = el('details', 'ac-hold-history');
+      historyBox.appendChild(el('summary', '', '历史来源限制（' + n(history.length) + ' 条，已由后续状态取代）'));
+      history.forEach(function (hold) {
+        var row = el('div', 'ac-note');
+        row.appendChild(el('strong', '', hold.provider + ' · 历史记录'));
+        row.appendChild(el('p', '', hold.reason));
+        row.appendChild(el('small', '', '原记录时间：' + date(hold.at) + '；后续状态时间：' + date(hold.currentAt)));
+        historyBox.appendChild(row);
+      });
+      holdBox.appendChild(historyBox);
+    }
+    state.appendChild(holdBox); section.appendChild(state);
     var tableHead = el('div', 'ac-subheading'); tableHead.appendChild(el('h3', '', '批次运行记录')); section.appendChild(tableHead);
     var tools = el('div', 'ac-tools');
     function field(label, node) { var wrapper = el('label', 'ac-field'); wrapper.appendChild(el('span', '', label)); wrapper.appendChild(node); tools.appendChild(wrapper); return node; }

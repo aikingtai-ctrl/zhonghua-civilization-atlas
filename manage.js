@@ -9,9 +9,15 @@
   function text(value, fallback = '未注明') { return value === null || value === undefined || value === '' ? fallback : String(value); }
   function count(value) { return Number.isSafeInteger(value) && value >= 0 ? String(value) : '—'; }
   function timestamp(value) { if (!value) return '—'; const date = new Date(value); return Number.isFinite(date.getTime()) ? date.toISOString().replace('T', ' ').replace(/\.000Z$/, 'Z').replace(/Z$/, ' UTC') : '时间未注明'; }
-  function parseObjectIds(value) {
+  function modePayload(mode = 'regular') {
+    if (mode === 'regular') return {};
+    if (mode === 'bulk') return {mode:'bulk'};
+    throw new Error('请选择常规模式或批量模式。');
+  }
+  function parseObjectIds(value, mode = 'regular') {
+    const limit = modePayload(mode).mode === 'bulk' ? 100 : 50;
     const parts = String(value).trim().split(/[\s,，、;；]+/).filter(Boolean);
-    if (!parts.length || parts.length > 50) throw new Error('请输入 1–50 个正整数对象编号。');
+    if (!parts.length || parts.length > limit) throw new Error('请输入 1–' + limit + ' 个正整数对象编号。');
     if (parts.some(part => !/^[1-9]\d*$/.test(part) || !Number.isSafeInteger(Number(part)))) throw new Error('仅接受当前来源的正整数对象 ID，不接受 URL、馆藏登记号、小数或其他文字。');
     return [...new Set(parts.map(Number))];
   }
@@ -62,7 +68,7 @@
   function holdText(hold) { return text(hold && (hold.reason || hold.message || [hold.code,hold.httpStatus && 'HTTP ' + hold.httpStatus,hold.holdUntil && '保留至 ' + timestamp(hold.holdUntil)].filter(Boolean).join(' · ')),'来源限制尚未解除；相关批次不可重试。'); }
   function createController(document, fetchFn) {
     const byId = id => document.getElementById(id);
-    const state = {authorized:false,provider:'met',publicationProvider:'met',summary:null,publicationSummary:null,publicationBuildReport:null,publicationBuildReportError:'',batches:[],items:[],imports:[],publications:[],publicationDetails:new Map(),publicationEpoch:0,publicationLoading:false,busy:false,loading:false,epoch:0,batchesOffset:0,itemsOffset:0,importsOffset:0,publicationsOffset:0,importsBatchId:'',importDates:new Map(),limit:20,batchesTotal:0,itemsTotal:0,importsTotal:0,publicationsTotal:0};
+    const state = {authorized:false,provider:'met',publicationProvider:'met',summary:null,publicationSummary:null,publicationBuildReport:null,publicationBuildReportError:'',batches:[],items:[],imports:[],publications:[],publicationDetails:new Map(),publicationEpoch:0,publicationLoading:false,busy:false,loading:false,epoch:0,batchesOffset:0,itemsOffset:0,importsOffset:0,publicationsOffset:0,importsBatchId:'',importDates:new Map(),importModes:new Map(),limit:20,batchesTotal:0,itemsTotal:0,importsTotal:0,publicationsTotal:0};
     function node(tag, className, value) { const el = document.createElement(tag); if (className) el.className = className; if (value !== undefined) el.textContent = String(value); return el; }
     function showNotice(message, error) { const box = byId('notice'); box.textContent = message; box.className = 'notice' + (error ? ' error' : ''); box.hidden = !message; }
     function renderCreationView() {
@@ -70,8 +76,12 @@
       byId('cma-view-fields').hidden = !cma; byId('cma-view-mode').disabled = !cma;
       byId('cma-alt-field').hidden = !alternate; byId('cma-alt-number').disabled = !cma || !alternate;
     }
+    function renderCreationMode() {
+      const limit = byId('batch-mode').value === 'bulk' ? 100 : 50;
+      byId('create-description').textContent = state.provider === 'cma' ? '输入 1–' + limit + ' 个 CMA API 数字对象 ID（例如 98298）；馆藏登记号如 1917.974 不能用于创建任务。' : '输入 1–' + limit + ' 个大都会艺术博物馆对象编号，使用空格、逗号或换行分隔。';
+    }
     function setAccess(authenticated, reason) {
-      state.authorized = false; state.epoch++; state.publicationEpoch++; state.publicationLoading = false; state.summary = null; state.publicationSummary = null; state.batches = []; state.items = []; state.imports = []; state.publications = []; state.publicationDetails.clear(); state.importDates.clear(); state.importsBatchId = ''; state.batchesTotal = state.itemsTotal = state.importsTotal = state.publicationsTotal = 0;
+      state.authorized = false; state.epoch++; state.publicationEpoch++; state.publicationLoading = false; state.summary = null; state.publicationSummary = null; state.batches = []; state.items = []; state.imports = []; state.publications = []; state.publicationDetails.clear(); state.importDates.clear(); state.importModes.clear(); state.importsBatchId = ''; state.batchesTotal = state.itemsTotal = state.importsTotal = state.publicationsTotal = 0;
       byId('workspace').hidden = true; byId('refresh').hidden = true; byId('access').hidden = false;
       byId('access-title').textContent = authenticated ? '此账号没有管理权限' : '登录后继续';
       byId('access-message').textContent = reason || (authenticated ? '仅获授权的管理员可访问采集队列与审核记录。' : '使用本站 ChatGPT 登录验证身份。登录成功后将返回此工作台。');
@@ -124,6 +134,10 @@
       const form = node('form','import-form'), label = node('label','','发布日期'), input = node('input');
       input.type = 'date'; input.name = 'publicationDate'; input.required = true; input.min = '0001-01-01'; input.max = '9999-12-31'; input.value = state.importDates.get(batch.id) || ''; label.append(input); form.append(label);
       input.addEventListener('input',() => state.importDates.set(batch.id,input.value));
+      const modeLabel = node('label','','入库模式'), mode = node('select'); mode.name = 'mode'; mode.disabled = state.busy;
+      for (const [value,title] of [['regular','常规 · 最多 50 条'],['bulk','批量 · 最多 100 条']]) { const option = node('option','',title); option.value = value; mode.append(option); }
+      mode.value = state.importModes.get(batch.id) || 'regular'; modeLabel.append(mode); form.append(modeLabel);
+      mode.addEventListener('change',() => state.importModes.set(batch.id,mode.value));
       const revisionValid = Number.isSafeInteger(batch.revision) && batch.revision >= 0;
       const pendingReview = (batch.counts || batch).pending;
       const awaitingReview = Number.isSafeInteger(pendingReview) && pendingReview > 0;
@@ -136,8 +150,9 @@
       form.addEventListener('submit',async event => {
         event.preventDefault(); if (state.busy || state.loading || !revisionValid || awaitingReview) return;
         state.importDates.set(batch.id,input.value);
-        let date; try { date = publicationDate(input.value); error.hidden = true; } catch (failure) { error.textContent = failure.message; error.hidden = false; input.focus(); return; }
-        await mutate('/batches/' + encodeURIComponent(batch.id) + '/import',{expectedRevision:batch.revision,publicationDate:date},'正式入库申请已加入队列，等待本机入库执行器。审核清单已冻结；本地入库与发布仍以各阶段回执和核验为准。');
+        let date, selectedMode; try { date = publicationDate(input.value); selectedMode = modePayload(mode.value); const limit = selectedMode.mode === 'bulk' ? 100 : 50; if ((batch.counts || batch).approved > limit) throw new Error('当前审核通过数量超过 ' + limit + ' 条；请明确选择批量模式，单次仍最多 100 条。'); error.hidden = true; } catch (failure) { error.textContent = failure.message; error.hidden = false; input.focus(); return; }
+        state.importModes.set(batch.id,mode.value);
+        await mutate('/batches/' + encodeURIComponent(batch.id) + '/import',{expectedRevision:batch.revision,publicationDate:date,...selectedMode},'正式入库申请已加入队列，等待本机入库执行器。审核清单已冻结；本地入库与发布仍以各阶段回执和核验为准。');
       });
       return form;
     }
@@ -148,6 +163,7 @@
         const card = node('article','batch-card'), head = node('div','batch-head'); head.append(node('span','batch-id',text(batch.id)),badge(batch.status)); card.append(head);
         const meta = node('dl','batch-meta');
         const details = [['游标',count(batch.cursor) + ' / ' + count(batch.objectIds && batch.objectIds.length)],['租约截止',timestamp(batch.leaseUntil || batch.leaseExpiresAt)],['下次重试',timestamp(batch.nextAttemptAt || batch.nextRetryAt)],['创建时间',timestamp(batch.createdAt)]];
+        details.unshift(['采集模式',batch.mode === 'bulk' ? '批量 · 最多 100 个对象' : '常规 · 最多 50 个对象']);
         if (state.provider === 'cma') details.unshift(['所选视图',viewLabel(batch.viewId)]);
         const c = batch.counts || batch; details.push(['成功候选',count(c.collected ?? c.successCandidates)],['失败请求',count(c.failedRequests)],['待审核',count(c.pending)],['审核通过',count(c.approved)],['本地正式入库',count(c.imported)]);
         for (const [label,value] of details) { const group = node('div'); field(group,label,value); meta.append(group); } card.append(meta);
@@ -180,7 +196,7 @@
         const verified = !!publication && Number.isSafeInteger(c.published) && c.published > 0 && !!verifiedAt;
         status.textContent = verified ? '发布已核验 · 见版本与时间' : IMPORT_LABELS[job.status] || text(job.status,'状态未注明'); head.append(node('span','batch-id',text(job.id)),status); card.append(head);
         const pendingPublish = Number.isSafeInteger(c.imported) && c.imported >= 0 && Number.isSafeInteger(c.published) && c.published >= 0 && c.published <= c.imported ? c.imported - c.published : undefined;
-        for (const [label,value] of [['采集批次',job.batchId],['本地批次',job.localBatchId],['发布日期',job.publicationDate],['审核通过（冻结）',count(c.approved)],['严格接收',count(c.accepted)],['本地正式入库',count(c.imported)],['待发布',count(pendingPublish)],['已核验发布',count(c.published)],['租约截止',timestamp(job.leaseUntil)],['创建时间',timestamp(job.createdAt)]]) { const group = node('div'); field(group,label,value); meta.append(group); }
+        for (const [label,value] of [['入库模式',job.mode === 'bulk' ? '批量 · 最多 100 条' : '常规 · 最多 50 条'],['采集批次',job.batchId],['本地批次',job.localBatchId],['发布日期',job.publicationDate],['审核通过（冻结）',count(c.approved)],['严格接收',count(c.accepted)],['本地正式入库',count(c.imported)],['待发布',count(pendingPublish)],['已核验发布',count(c.published)],['租约截止',timestamp(job.leaseUntil)],['创建时间',timestamp(job.createdAt)]]) { const group = node('div'); field(group,label,value); meta.append(group); }
         card.append(meta);
         const manifest = node('div','hash'); manifest.append(node('b','','FROZEN MANIFEST SHA-256'),node('span','',text(job.manifestSha256,'尚未提供清单指纹'))); card.append(manifest);
         const received = verified ? '已保存发布核验回执；截至 ' + timestamp(verifiedAt) + '，对应部署版本 ' + text(publication.nativeReceipt?.versionNumber) + '。后续版本须重新核验。' : job.importedReceipt ? '已保存本地入库回执；仍待构建和发布核验。' : job.stage === 'imported' ? '本地入库阶段已完成；仍待构建和发布核验。' : job.acceptedReceipt || job.stage === 'accepted' ? '已保存严格接收回执；等待本地正式入库。' : '尚未确认严格接收或本地入库回执；等待本机入库执行器。';
@@ -335,11 +351,11 @@
     }
     async function selectProvider(provider) {
       if (!['met','cma'].includes(provider) || provider === state.provider) return;
-      state.provider = provider; state.epoch++; state.loading = false; state.busy = false; state.summary = null; state.batches = []; state.items = []; state.imports = []; state.importDates.clear(); state.importsBatchId = ''; state.batchesOffset = state.itemsOffset = state.importsOffset = 0; state.batchesTotal = state.itemsTotal = state.importsTotal = 0;
+      state.provider = provider; state.epoch++; state.loading = false; state.busy = false; state.summary = null; state.batches = []; state.items = []; state.imports = []; state.importDates.clear(); state.importModes.clear(); state.importsBatchId = ''; state.batchesOffset = state.itemsOffset = state.importsOffset = 0; state.batchesTotal = state.itemsTotal = state.importsTotal = 0;
       byId('provider-select').value = provider; byId('provider-title').textContent = '当前来源：' + (provider === 'cma' ? 'CMA 克利夫兰艺术博物馆' : 'Met 大都会艺术博物馆');
       byId('overview-title').textContent = (provider === 'cma' ? 'CMA' : 'Met') + ' 来源队列概览';
       byId('create-title').textContent = '从 ' + (provider === 'cma' ? 'CMA' : 'Met') + ' 官方对象开始';
-      byId('create-description').textContent = provider === 'cma' ? '输入 1–50 个 CMA API 数字对象 ID（例如 98298）；馆藏登记号如 1917.974 不能用于创建任务。' : '输入 1–50 个大都会艺术博物馆对象编号，使用空格、逗号或换行分隔。';
+      byId('batch-mode').value = 'regular'; renderCreationMode();
       byId('ids-help').textContent = provider === 'cma' ? '仅接受 CMA API 正整数 ID；重复编号会合并。需官方中国藏品与 CC0 图像；登记号和 URL 不可提交。' : '仅接受正整数编号；重复编号会合并。URL 不可提交。';
       byId('object-ids').value = ''; byId('object-ids').placeholder = provider === 'cma' ? '例如：98298' : '例如：39666, 39901'; byId('ids-error').hidden = true; byId('imports-batch-id').value = ''; byId('imports-filter-status').textContent = ''; byId('hold-message').hidden = true; byId('updated-at').textContent = '尚未刷新';
       byId('cma-view-mode').value = 'primary'; byId('cma-alt-number').value = '1'; renderCreationView();
@@ -353,7 +369,8 @@
       byId('provider-select').value = state.provider; byId('provider-select').addEventListener('change',() => selectProvider(byId('provider-select').value));
       byId('publication-provider-select').value = state.publicationProvider; byId('publication-provider-select').addEventListener('change',() => selectPublicationProvider(byId('publication-provider-select').value)); byId('publications-refresh').addEventListener('click',refreshPublications);
       byId('cma-view-mode').value = 'primary'; byId('cma-alt-number').value = '1'; byId('cma-view-mode').addEventListener('change',renderCreationView); renderCreationView();
-      byId('batch-form').addEventListener('submit',async event => { event.preventDefault(); if (state.busy || state.loading) return; let value; try { const objectIds = parseObjectIds(byId('object-ids').value); value = {objectIds,...(state.provider === 'cma' ? {viewId:creationViewId(byId('cma-view-mode').value,byId('cma-alt-number').value)} : {})}; byId('ids-error').hidden = true; } catch (error) { byId('ids-error').textContent = error.message; byId('ids-error').hidden = false; byId('object-ids').focus(); return; } await mutate('/batches',value,'批次已加入队列，等待本机执行器采集。'); });
+      byId('batch-mode').value = 'regular'; byId('batch-mode').addEventListener('change',renderCreationMode); renderCreationMode();
+      byId('batch-form').addEventListener('submit',async event => { event.preventDefault(); if (state.busy || state.loading) return; let value; try { const objectIds = parseObjectIds(byId('object-ids').value,byId('batch-mode').value); value = {objectIds,...modePayload(byId('batch-mode').value),...(state.provider === 'cma' ? {viewId:creationViewId(byId('cma-view-mode').value,byId('cma-alt-number').value)} : {})}; byId('ids-error').hidden = true; } catch (error) { byId('ids-error').textContent = error.message; byId('ids-error').hidden = false; byId('object-ids').focus(); return; } await mutate('/batches',value,'批次已加入队列，等待本机执行器采集。'); });
       for (const kind of ['batches','items','imports']) for (const direction of ['prev','next']) byId(kind + '-' + direction).addEventListener('click',async () => { if (state.busy || state.loading) return; state[kind + 'Offset'] = Math.max(0,state[kind + 'Offset'] + (direction === 'next' ? state.limit : -state.limit)); await refresh(); });
       for (const direction of ['prev','next']) byId('publications-' + direction).addEventListener('click',async () => { if (state.publicationLoading || !state.authorized) return; state.publicationsOffset = Math.max(0,state.publicationsOffset + (direction === 'next' ? state.limit : -state.limit)); await refreshPublications(); });
       byId('imports-filter-form').addEventListener('submit',async event => { event.preventDefault(); await filterImports(byId('imports-batch-id').value.trim()); });
@@ -363,7 +380,7 @@
     }
     return {start,state,refresh,refreshPublications,mutate,selectProvider,selectPublicationProvider};
   }
-  const exported = {parseObjectIds,creationViewId,viewLabel,publicationDate,officialUrl,text,count,timestamp,errorMessage,isHeld,holdText,createController,publicationProviders:PUBLICATION_PROVIDERS};
+  const exported = {parseObjectIds,modePayload,creationViewId,viewLabel,publicationDate,officialUrl,text,count,timestamp,errorMessage,isHeld,holdText,createController,publicationProviders:PUBLICATION_PROVIDERS};
   if (typeof module === 'object' && module.exports) module.exports = exported;
   else { root.AtlasControlUI = Object.freeze(exported); if (root.document) createController(root.document,root.fetch.bind(root)).start(); }
 })(typeof globalThis === 'object' ? globalThis : this);
