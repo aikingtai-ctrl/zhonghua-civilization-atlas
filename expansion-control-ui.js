@@ -1,6 +1,7 @@
 /* Read-only operational view. All state comes from the generated audit snapshot. */
 (function () {
   'use strict';
+  var conditionLabels = { explicitChina: '馆方未明确标注中国归属', publicDomain: '馆方未明确标注公共领域', officialOriginalImage: '官方原图链接条件未满足' };
   function el(tag, className, text) {
     var node = document.createElement(tag);
     if (className) node.className = className;
@@ -167,7 +168,7 @@
       var term = search.value.trim().toLocaleLowerCase();
       var filtered = batches.filter(function (b) {
         var lineage = b.reconciliation || {};
-        return (!provider.value || b.provider === provider.value) && (!status.value || b.status === status.value) && (!term || [b.batchId, b.provider, b.status, lineage.originalBatchId, lineage.sourceManifestSha256, lineage.originalAcceptedSha256, lineage.run].concat(b.failureReasons || [], (b.collectionExclusionReasons || []).map(function (reason) { return reason.code; })).join(' ').toLocaleLowerCase().includes(term));
+        return (!provider.value || b.provider === provider.value) && (!status.value || b.status === status.value) && (!term || [b.batchId, b.provider, b.status, lineage.originalBatchId, lineage.sourceManifestSha256, lineage.originalAcceptedSha256, lineage.run].concat(b.failureReasons || [], (b.collectionExclusionReasons || []).map(function (reason) { return reason.code; }), (b.collectionEligibilityConditions || []).map(function (finding) { return Object.hasOwn(conditionLabels, finding.condition) ? finding.condition + ' ' + conditionLabels[finding.condition] : ''; })).join(' ').toLocaleLowerCase().includes(term));
       });
       var pages = Math.max(1, Math.ceil(filtered.length / perPage)); page = Math.min(page, pages);
       tbody.replaceChildren();
@@ -185,6 +186,12 @@
           exclusions.appendChild(el('summary', '', '展开采集排除与本地问题'));
           var exclusionList = el('ul');
           (b.collectionExclusionReasons || []).forEach(function (reason) { exclusionList.appendChild(el('li', '', reason.code + ' · ' + n(reason.count) + ' 次')); });
+          if (Number(b.eligibilityEvidenceEvents)) {
+            exclusionList.appendChild(el('li', '', '已取得成功的元数据响应并核对资格 ' + n(b.eligibilityEvidenceEvents) + ' 次；同次检查可能有多项条件未满足：'));
+            (b.collectionEligibilityConditions || []).forEach(function (finding) {
+              if (Object.hasOwn(conditionLabels, finding.condition)) exclusionList.appendChild(el('li', '', conditionLabels[finding.condition] + ' · ' + n(finding.count) + ' 次'));
+            });
+          }
           exclusions.appendChild(exclusionList); name.appendChild(exclusions);
         }
         if (b.failureReasons && b.failureReasons.length) {
