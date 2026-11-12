@@ -68,7 +68,7 @@
   function holdText(hold) { return text(hold && (hold.reason || hold.message || [hold.code,hold.httpStatus && 'HTTP ' + hold.httpStatus,hold.holdUntil && '保留至 ' + timestamp(hold.holdUntil)].filter(Boolean).join(' · ')),'来源限制尚未解除；相关批次不可重试。'); }
   function createController(document, fetchFn) {
     const byId = id => document.getElementById(id);
-    const state = {authorized:false,provider:'met',publicationProvider:'met',summary:null,publicationSummary:null,publicationBuildReport:null,publicationBuildReportError:'',batches:[],items:[],imports:[],publications:[],publicationDetails:new Map(),publicationEpoch:0,publicationLoading:false,busy:false,loading:false,epoch:0,batchesOffset:0,itemsOffset:0,importsOffset:0,publicationsOffset:0,importsBatchId:'',importDates:new Map(),importModes:new Map(),limit:20,batchesTotal:0,itemsTotal:0,importsTotal:0,publicationsTotal:0};
+    const state = {authorized:false,provider:'met',publicationProvider:'met',summary:null,publicationSummary:null,publicationBuildReport:null,publicationBuildReportError:'',batches:[],items:[],imports:[],publications:[],publicationDetails:new Map(),publicationEpoch:0,publicationLoading:false,busy:false,loading:false,epoch:0,batchesOffset:0,itemsOffset:0,importsOffset:0,publicationsOffset:0,importsBatchId:'',batchStatusFilter:'',itemFilters:{q:'',era:'',category:'',institution:''},importDates:new Map(),importModes:new Map(),limit:20,batchesTotal:0,itemsTotal:0,importsTotal:0,publicationsTotal:0};
     function node(tag, className, value) { const el = document.createElement(tag); if (className) el.className = className; if (value !== undefined) el.textContent = String(value); return el; }
     function showNotice(message, error) { const box = byId('notice'); box.textContent = message; box.className = 'notice' + (error ? ' error' : ''); box.hidden = !message; }
     function renderCreationView() {
@@ -130,6 +130,8 @@
       if (state.busy || state.loading || !state.authorized) return;
       state.importsBatchId = batchId; state.importsOffset = 0; byId('imports-batch-id').value = batchId; await refresh();
     }
+    async function applyBatchFilter(status) { if (state.busy || state.loading || !state.authorized) return; state.batchStatusFilter = status; state.batchesOffset = 0; await refresh(); }
+    async function applyItemFilter(filters) { if (state.busy || state.loading || !state.authorized) return; state.itemFilters = {...filters}; state.itemsOffset = 0; await refresh(); }
     function importForm(batch) {
       const form = node('form','import-form'), label = node('label','','发布日期'), input = node('input');
       input.type = 'date'; input.name = 'publicationDate'; input.required = true; input.min = '0001-01-01'; input.max = '9999-12-31'; input.value = state.importDates.get(batch.id) || ''; label.append(input); form.append(label);
@@ -337,7 +339,9 @@
       if (!state.authorized || state.loading) { await publicationRefresh; return; } state.loading = true; const epoch = state.epoch;
       byId('refresh').disabled = true; byId('workspace').setAttribute('aria-busy','true'); for (const button of byId('workspace').querySelectorAll('button')) button.disabled = true;
       try {
-        const results = await Promise.all([api('/summary'),api('/batches?limit=' + state.limit + '&offset=' + state.batchesOffset),api('/items?limit=' + state.limit + '&offset=' + state.itemsOffset),api('/imports?limit=' + state.limit + '&offset=' + state.importsOffset + (state.importsBatchId ? '&batchId=' + encodeURIComponent(state.importsBatchId) : ''))]);
+        const batchFilters = state.batchStatusFilter ? '&status=' + encodeURIComponent(state.batchStatusFilter) : '';
+        const itemFilters = Object.entries(state.itemFilters).filter(([,value]) => value).map(([key,value]) => '&' + key + '=' + encodeURIComponent(value)).join('');
+        const results = await Promise.all([api('/summary'),api('/batches?limit=' + state.limit + '&offset=' + state.batchesOffset + batchFilters),api('/items?limit=' + state.limit + '&offset=' + state.itemsOffset + itemFilters),api('/imports?limit=' + state.limit + '&offset=' + state.importsOffset + (state.importsBatchId ? '&batchId=' + encodeURIComponent(state.importsBatchId) : ''))]);
         if (!state.authorized || epoch !== state.epoch) return; renderSummary(results[0]); renderImports(results[3]); renderBatches(results[1]); renderItems(results[2]);
       } catch (error) { if (epoch === state.epoch) { const prior = byId('notice').textContent; showNotice((prior ? prior + ' 状态刷新未完成：' : '') + error.message,true); } }
       finally { if (epoch === state.epoch) { state.loading = false; byId('workspace').setAttribute('aria-busy','false'); byId('refresh').disabled = state.busy; byId('create-batch').disabled = state.busy; if (state.authorized) { renderPublications({items:state.publications,total:state.publicationsTotal}); renderImports({items:state.imports,total:state.importsTotal}); renderBatches({items:state.batches,total:state.batchesTotal}); renderItems({items:state.items,total:state.itemsTotal}); } } }
@@ -351,7 +355,7 @@
     }
     async function selectProvider(provider) {
       if (!['met','cma'].includes(provider) || provider === state.provider) return;
-      state.provider = provider; state.epoch++; state.loading = false; state.busy = false; state.summary = null; state.batches = []; state.items = []; state.imports = []; state.importDates.clear(); state.importModes.clear(); state.importsBatchId = ''; state.batchesOffset = state.itemsOffset = state.importsOffset = 0; state.batchesTotal = state.itemsTotal = state.importsTotal = 0;
+      state.provider = provider; state.epoch++; state.loading = false; state.busy = false; state.summary = null; state.batches = []; state.items = []; state.imports = []; state.importDates.clear(); state.importModes.clear(); state.importsBatchId = ''; state.batchStatusFilter = ''; state.itemFilters = {q:'',era:'',category:'',institution:''}; state.batchesOffset = state.itemsOffset = state.importsOffset = 0; state.batchesTotal = state.itemsTotal = state.importsTotal = 0;
       byId('provider-select').value = provider; byId('provider-title').textContent = '当前来源：' + (provider === 'cma' ? 'CMA 克利夫兰艺术博物馆' : 'Met 大都会艺术博物馆');
       byId('overview-title').textContent = (provider === 'cma' ? 'CMA' : 'Met') + ' 来源队列概览';
       byId('create-title').textContent = '从 ' + (provider === 'cma' ? 'CMA' : 'Met') + ' 官方对象开始';
@@ -375,6 +379,10 @@
       for (const direction of ['prev','next']) byId('publications-' + direction).addEventListener('click',async () => { if (state.publicationLoading || !state.authorized) return; state.publicationsOffset = Math.max(0,state.publicationsOffset + (direction === 'next' ? state.limit : -state.limit)); await refreshPublications(); });
       byId('imports-filter-form').addEventListener('submit',async event => { event.preventDefault(); await filterImports(byId('imports-batch-id').value.trim()); });
       byId('imports-clear-filter').addEventListener('click',() => filterImports(''));
+      byId('batch-filter-form').addEventListener('submit',async event => { event.preventDefault(); await applyBatchFilter(byId('batch-status-filter').value); });
+      byId('batch-filter-clear').addEventListener('click',async () => { byId('batch-status-filter').value = ''; await applyBatchFilter(''); });
+      byId('items-filter-form').addEventListener('submit',async event => { event.preventDefault(); await applyItemFilter(Object.fromEntries(['q','era','category','institution'].map(key => [key, byId('item-filter-' + key).value.trim()]))); });
+      byId('items-filter-clear').addEventListener('click',async () => { for (const key of ['q','era','category','institution']) byId('item-filter-' + key).value = ''; await applyItemFilter({q:'',era:'',category:'',institution:''}); });
       try { const session = await api('/session'); if (session.authenticated !== true || session.authorized !== true) { setAccess(session.authenticated === true); return; } state.authorized = true; byId('access').hidden = true; byId('workspace').hidden = false; byId('refresh').hidden = false; await refresh(); }
       catch (error) { if (error.status !== 401 && error.status !== 403) { byId('access-title').textContent = '暂时无法核验身份'; byId('access-message').textContent = error.message; byId('refresh').hidden = false; byId('refresh').textContent = '重新核验'; byId('refresh').addEventListener('click',() => root.location.reload(),{once:true}); } }
     }
