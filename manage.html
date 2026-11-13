@@ -127,9 +127,27 @@ if(document.readyState==='loading'){
 }else{
   lockDom();
 }
-})();</script><script id="jintai-zhonghua-cdn-shim">(function(){
+})();</script><style>a[href*="signin-with-chatgpt"]{display:none!important}</style><script id="jintai-zhonghua-cdn-shim">(function(){
+var BASE=new URL('.',location.href).pathname;if(BASE.slice(-1)!=='/')BASE+='/';window.__JT_BASE__=BASE;
 var IS_GH=/github\.io$/i.test(location.hostname||'');
+var RAW='https://raw.githubusercontent.com/aikingtai-ctrl/zhonghua-civilization-atlas/main/';
 var CDNS=['https://testingcf.jsdelivr.net/gh/aikingtai-ctrl/zhonghua-civilization-atlas@main/','https://gcore.jsdelivr.net/gh/aikingtai-ctrl/zhonghua-civilization-atlas@main/'];
+if(typeof window.fetch==='function'){
+  var origFetch=window.fetch.bind(window);
+  window.fetch=function(input,init){
+    var urlStr=typeof input==='string'?input:(input&&input.url?input.url:String(input));
+    try{
+      var u=new URL(urlStr,location.origin);
+      if(u.origin===location.origin&&!/chatgpt\.site$/i.test(location.hostname||'')&&u.pathname.indexOf('/api/atlas-control/')===0){
+        return Promise.resolve(new Response(JSON.stringify({ok:false,authenticated:false,readOnlyMirror:true,message:'国内静态镜像站为只读浏览模式'}),{status:200,headers:{'content-type':'application/json; charset=utf-8'}}));
+      }
+      if(u.origin===location.origin&&u.pathname.charAt(0)==='/'&&u.pathname.indexOf(BASE)!==0&&u.pathname.indexOf('/api/')!==0&&u.pathname.indexOf('/publications')!==0){
+        return origFetch(BASE+u.pathname.slice(1)+u.search,init);
+      }
+    }catch(e){}
+    return origFetch(input,init);
+  };
+}
 var FALLBACK_SVG='data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360" viewBox="0 0 480 360"><rect width="480" height="360" fill="#f3efe6"/><rect x="16" y="16" width="448" height="328" fill="none" stroke="#c8bda8" stroke-width="1.5"/><text x="240" y="168" text-anchor="middle" fill="#5c5040" font-family="Microsoft YaHei,sans-serif" font-size="18">馆藏文物考证条目</text><text x="240" y="202" text-anchor="middle" fill="#8b7d6b" font-family="Microsoft YaHei,sans-serif" font-size="14">点击卡片查阅馆方详细著录与原图出处</text></svg>');
 var _extMap=null;
 function findOrigUrlByPreview(relPath){
@@ -154,8 +172,8 @@ window.addEventListener('error',function(ev){
   var mRel=cur.match(/((?:assets|images)\/[^?#]+)/);
   if(mRel&&cur.indexOf('wsrv.nl')===-1){
     var rel=mRel[1];
-    if(IS_GH&&step===0){el.src=CDNS[0]+rel;return;}
-    if(IS_GH&&step===1){el.src=CDNS[1]+rel;return;}
+    if(IS_GH&&step===0){el.src=RAW+rel;return;}
+    if(IS_GH&&step===1){el.src=CDNS[0]+rel;return;}
     var orig=findOrigUrlByPreview(rel);
     if(orig){el.src='https://wsrv.nl/?url='+encodeURIComponent(orig)+'&w=960&output=webp';return;}
   }
@@ -169,14 +187,14 @@ window.addEventListener('error',function(ev){
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="referrer" content="no-referrer">
   <title>采集与审核工作台 · 中华文明图谱</title>
-  <link rel="stylesheet" href="/manage.css?v=0d00ba5ee38e">
-  <script src="/manage.js?v=7aa2787fb98b" defer></script>
-<script id="atlasVersionNotice" defer src="/site-version-ui.js?v=1df5aa2d1482"></script><meta id="atlasSnapshotRevision" name="atlas-snapshot-revision" content="2fc1b227adf6b09b33f7bfde9e54b951482cf3ba73f7788acc16bb81eb1c1a5b"></head>
+  <link rel="stylesheet" href="./manage.css?v=0d00ba5ee38e">
+  <script src="./manage.js?v=7aa2787fb98b" defer></script>
+<script id="atlasVersionNotice" defer src="./site-version-ui.js?v=1df5aa2d1482"></script><meta id="atlasSnapshotRevision" name="atlas-snapshot-revision" content="630712fe23fc72dd73140bf3a7f6bd26332233bbb5049560338a7545bd43babf"></head>
 <body>
   <a class="skip" href="#main">跳转到工作台</a>
   <header class="masthead">
-    <a class="brand" href="/"><span class="seal" aria-hidden="true">文明<br>图谱</span><span>中华文明图谱<small>COLLECTION CONTROL</small></span></a>
-    <a class="back-link" href="/">返回图谱 <span aria-hidden="true">↗</span></a>
+    <a class="brand" href="./"><span class="seal" aria-hidden="true">文明<br>图谱</span><span>中华文明图谱<small>COLLECTION CONTROL</small></span></a>
+    <a class="back-link" href="./">返回图谱 <span aria-hidden="true">↗</span></a>
   </header>
   <main id="main" tabindex="-1">
     <div class="page-heading"><div><p class="eyebrow">藏品采集 · 独立审核</p><h1>采集与审核工作台</h1><p class="lede">把官方来源整理为可核验的候选记录，每一步留下依据。</p></div><button id="refresh" class="secondary" type="button" hidden>刷新状态</button></div>

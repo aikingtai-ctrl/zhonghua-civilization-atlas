@@ -126,9 +126,27 @@ if(document.readyState==='loading'){
 }else{
   lockDom();
 }
-})();</script><script id="jintai-zhonghua-cdn-shim">(function(){
+})();</script><style>a[href*="signin-with-chatgpt"]{display:none!important}</style><script id="jintai-zhonghua-cdn-shim">(function(){
+var BASE=new URL('.',location.href).pathname;if(BASE.slice(-1)!=='/')BASE+='/';window.__JT_BASE__=BASE;
 var IS_GH=/github\.io$/i.test(location.hostname||'');
+var RAW='https://raw.githubusercontent.com/aikingtai-ctrl/zhonghua-civilization-atlas/main/';
 var CDNS=['https://testingcf.jsdelivr.net/gh/aikingtai-ctrl/zhonghua-civilization-atlas@main/','https://gcore.jsdelivr.net/gh/aikingtai-ctrl/zhonghua-civilization-atlas@main/'];
+if(typeof window.fetch==='function'){
+  var origFetch=window.fetch.bind(window);
+  window.fetch=function(input,init){
+    var urlStr=typeof input==='string'?input:(input&&input.url?input.url:String(input));
+    try{
+      var u=new URL(urlStr,location.origin);
+      if(u.origin===location.origin&&!/chatgpt\.site$/i.test(location.hostname||'')&&u.pathname.indexOf('/api/atlas-control/')===0){
+        return Promise.resolve(new Response(JSON.stringify({ok:false,authenticated:false,readOnlyMirror:true,message:'国内静态镜像站为只读浏览模式'}),{status:200,headers:{'content-type':'application/json; charset=utf-8'}}));
+      }
+      if(u.origin===location.origin&&u.pathname.charAt(0)==='/'&&u.pathname.indexOf(BASE)!==0&&u.pathname.indexOf('/api/')!==0&&u.pathname.indexOf('/publications')!==0){
+        return origFetch(BASE+u.pathname.slice(1)+u.search,init);
+      }
+    }catch(e){}
+    return origFetch(input,init);
+  };
+}
 var FALLBACK_SVG='data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360" viewBox="0 0 480 360"><rect width="480" height="360" fill="#f3efe6"/><rect x="16" y="16" width="448" height="328" fill="none" stroke="#c8bda8" stroke-width="1.5"/><text x="240" y="168" text-anchor="middle" fill="#5c5040" font-family="Microsoft YaHei,sans-serif" font-size="18">馆藏文物考证条目</text><text x="240" y="202" text-anchor="middle" fill="#8b7d6b" font-family="Microsoft YaHei,sans-serif" font-size="14">点击卡片查阅馆方详细著录与原图出处</text></svg>');
 var _extMap=null;
 function findOrigUrlByPreview(relPath){
@@ -153,8 +171,8 @@ window.addEventListener('error',function(ev){
   var mRel=cur.match(/((?:assets|images)\/[^?#]+)/);
   if(mRel&&cur.indexOf('wsrv.nl')===-1){
     var rel=mRel[1];
-    if(IS_GH&&step===0){el.src=CDNS[0]+rel;return;}
-    if(IS_GH&&step===1){el.src=CDNS[1]+rel;return;}
+    if(IS_GH&&step===0){el.src=RAW+rel;return;}
+    if(IS_GH&&step===1){el.src=CDNS[0]+rel;return;}
     var orig=findOrigUrlByPreview(rel);
     if(orig){el.src='https://wsrv.nl/?url='+encodeURIComponent(orig)+'&w=960&output=webp';return;}
   }
@@ -163,7 +181,7 @@ window.addEventListener('error',function(ev){
   }
   el.src=FALLBACK_SVG;
 },true);
-})();</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f4f1e8"><meta name="description" content="金代专属视觉图库：从上京到中都、汴京，按阶段、帝王与年号寻找器物、人物、建筑、纹样参考。每张图片保留真实断代、来源和参考边界。"><title>金代专属图库｜中华文明影像库</title><link rel="stylesheet" href="spring-autumn.css?v=e5e5e1c5a60d"><link rel="stylesheet" href="jin.css?v=b3875e5a612d"><script id="atlasVersionNotice" defer src="/site-version-ui.js?v=1df5aa2d1482"></script><meta id="atlasSnapshotRevision" name="atlas-snapshot-revision" content="2fc1b227adf6b09b33f7bfde9e54b951482cf3ba73f7788acc16bb81eb1c1a5b"></head>
+})();</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f4f1e8"><meta name="description" content="金代专属视觉图库：从上京到中都、汴京，按阶段、帝王与年号寻找器物、人物、建筑、纹样参考。每张图片保留真实断代、来源和参考边界。"><title>金代专属图库｜中华文明影像库</title><link rel="stylesheet" href="spring-autumn.css?v=e5e5e1c5a60d"><link rel="stylesheet" href="jin.css?v=b3875e5a612d"><script id="atlasVersionNotice" defer src="./site-version-ui.js?v=1df5aa2d1482"></script><meta id="atlasSnapshotRevision" name="atlas-snapshot-revision" content="630712fe23fc72dd73140bf3a7f6bd26332233bbb5049560338a7545bd43babf"></head>
 <body><header class="top"><a class="brand" href="index.html"><span class="seal">中华<br>文明</span><span>中华文明影像库<small>CHINESE CIVILIZATION ARCHIVE</small></span></a><nav aria-label="专题导航"><a href="#periods">分期与场景</a><a href="#gallery">图像目录</a><a href="#literature">来源与核验</a></nav><a class="outline small" href="jin-reference-pack.json.gz" download>下载资料包 ↓</a></header>
 <main><section class="hero"><div class="hero-copy"><p class="eyebrow">JURCHEN JIN · 1115–1234</p><h1>金代<span>由北地，入中原。</span></h1><p class="lead">从上京的起点，到中都的营建，<br>沿器物、人物与建筑，寻找一个时代的画面。</p><div class="hero-actions"><a class="primary" href="#periods">按时期寻找参考 ↓</a><a href="#gallery">浏览全部图像 →</a></div><p class="hero-note">女真金朝专题。四个历史阶段、十位统治者与逐项年号目录；每个时期均有具名参考图，准确区分纪年实证与跨期参照。</p></div><div class="hero-object"><span class="hero-script" aria-hidden="true">大<br>金</span><img id="heroImage" alt="金代藏品视觉参考" fetchpriority="high"><div class="hero-caption"><span>金代选藏</span><button id="heroDetail"></button><small id="heroSource"></small></div></div></section><div class="stats" id="stats" aria-label="图库统计"></div>
 <section class="state-section" id="periods"><div class="heading"><div><p class="eyebrow">FOUR CHAPTERS OF A DYNASTY</p><h2>每一时期，都有画面可循。</h2></div><p>先看历史语境，再选具体帝王与年号。<br>每张参考图都说明与所选时期的关系。</p></div><div class="phase-grid" id="phaseGrid"></div><div class="country-layout"><aside class="state-nav"><p class="eyebrow">十位统治者</p><div id="rulerList" class="ruler-list"></div><label class="reign-label">细化到年号<select id="reignSelect" aria-label="年号选择"></select></label><p class="nav-note">继位与改元分别列出。年号采用传统纪年年份，公历交界见依据说明。</p></aside><article class="country-profile" id="periodProfile" aria-live="polite"></article></div></section>

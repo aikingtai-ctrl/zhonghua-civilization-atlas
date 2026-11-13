@@ -126,9 +126,27 @@ if(document.readyState==='loading'){
 }else{
   lockDom();
 }
-})();</script><script id="jintai-zhonghua-cdn-shim">(function(){
+})();</script><style>a[href*="signin-with-chatgpt"]{display:none!important}</style><script id="jintai-zhonghua-cdn-shim">(function(){
+var BASE=new URL('.',location.href).pathname;if(BASE.slice(-1)!=='/')BASE+='/';window.__JT_BASE__=BASE;
 var IS_GH=/github\.io$/i.test(location.hostname||'');
+var RAW='https://raw.githubusercontent.com/aikingtai-ctrl/zhonghua-civilization-atlas/main/';
 var CDNS=['https://testingcf.jsdelivr.net/gh/aikingtai-ctrl/zhonghua-civilization-atlas@main/','https://gcore.jsdelivr.net/gh/aikingtai-ctrl/zhonghua-civilization-atlas@main/'];
+if(typeof window.fetch==='function'){
+  var origFetch=window.fetch.bind(window);
+  window.fetch=function(input,init){
+    var urlStr=typeof input==='string'?input:(input&&input.url?input.url:String(input));
+    try{
+      var u=new URL(urlStr,location.origin);
+      if(u.origin===location.origin&&!/chatgpt\.site$/i.test(location.hostname||'')&&u.pathname.indexOf('/api/atlas-control/')===0){
+        return Promise.resolve(new Response(JSON.stringify({ok:false,authenticated:false,readOnlyMirror:true,message:'国内静态镜像站为只读浏览模式'}),{status:200,headers:{'content-type':'application/json; charset=utf-8'}}));
+      }
+      if(u.origin===location.origin&&u.pathname.charAt(0)==='/'&&u.pathname.indexOf(BASE)!==0&&u.pathname.indexOf('/api/')!==0&&u.pathname.indexOf('/publications')!==0){
+        return origFetch(BASE+u.pathname.slice(1)+u.search,init);
+      }
+    }catch(e){}
+    return origFetch(input,init);
+  };
+}
 var FALLBACK_SVG='data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360" viewBox="0 0 480 360"><rect width="480" height="360" fill="#f3efe6"/><rect x="16" y="16" width="448" height="328" fill="none" stroke="#c8bda8" stroke-width="1.5"/><text x="240" y="168" text-anchor="middle" fill="#5c5040" font-family="Microsoft YaHei,sans-serif" font-size="18">馆藏文物考证条目</text><text x="240" y="202" text-anchor="middle" fill="#8b7d6b" font-family="Microsoft YaHei,sans-serif" font-size="14">点击卡片查阅馆方详细著录与原图出处</text></svg>');
 var _extMap=null;
 function findOrigUrlByPreview(relPath){
@@ -153,8 +171,8 @@ window.addEventListener('error',function(ev){
   var mRel=cur.match(/((?:assets|images)\/[^?#]+)/);
   if(mRel&&cur.indexOf('wsrv.nl')===-1){
     var rel=mRel[1];
-    if(IS_GH&&step===0){el.src=CDNS[0]+rel;return;}
-    if(IS_GH&&step===1){el.src=CDNS[1]+rel;return;}
+    if(IS_GH&&step===0){el.src=RAW+rel;return;}
+    if(IS_GH&&step===1){el.src=CDNS[0]+rel;return;}
     var orig=findOrigUrlByPreview(rel);
     if(orig){el.src='https://wsrv.nl/?url='+encodeURIComponent(orig)+'&w=960&output=webp';return;}
   }
@@ -163,7 +181,7 @@ window.addEventListener('error',function(ev){
   }
   el.src=FALLBACK_SVG;
 },true);
-})();</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#eae7df"><meta name="description" content="北宋与南宋专属视觉图库：按18位皇帝与全部年号浏览原始馆藏图像、画面细节、断代与出处。"><title>两宋 · 视觉美术参考 | 中华文明影像库</title><link rel="stylesheet" href="song.css?v=c490b9dff477"><script id="atlasVersionNotice" defer src="/site-version-ui.js?v=1df5aa2d1482"></script><meta id="atlasSnapshotRevision" name="atlas-snapshot-revision" content="2fc1b227adf6b09b33f7bfde9e54b951482cf3ba73f7788acc16bb81eb1c1a5b"></head>
+})();</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#eae7df"><meta name="description" content="北宋与南宋专属视觉图库：按18位皇帝与全部年号浏览原始馆藏图像、画面细节、断代与出处。"><title>两宋 · 视觉美术参考 | 中华文明影像库</title><link rel="stylesheet" href="song.css?v=c490b9dff477"><script id="atlasVersionNotice" defer src="./site-version-ui.js?v=1df5aa2d1482"></script><meta id="atlasSnapshotRevision" name="atlas-snapshot-revision" content="630712fe23fc72dd73140bf3a7f6bd26332233bbb5049560338a7545bd43babf"></head>
 <body><header class="site-header"><a class="brand" href="index.html"><span class="seal">中华<br>文明</span><span>中华文明影像库<small>历史图像 · 视觉美术参考</small></span></a><nav aria-label="主导航"><a href="index.html#explore">返回全库 ↗</a><a href="#periods">分期参考</a><a href="#gallery">影像目录</a><a href="#sources">收录说明</a></nav></header>
 <main><section class="hero"><div class="hero-copy"><div class="eyebrow">THE SONG DYNASTIES · 960–1279</div><h1>两宋之间，<br>看见时代的细节。</h1><p>从汴京的街巷，到临安的湖山。<br>沿着帝王与年号，查找有出处的画面、器物与空间。</p><div class="hero-actions"><a class="primary" href="#periods">按时期寻找参考 ↓</a><a class="secondary" href="#gallery">浏览全部图像</a></div><div class="stats" id="stats" aria-live="polite"></div></div><div id="heroVisual" class="hero-visual"></div></section>
 <div class="era-switch" aria-label="朝代筛选"><button data-dynasty="all" class="active">两宋全览 <small>960—1279</small></button><button data-dynasty="northern-song">北宋 <small>汴京 · 960—1127</small></button><button data-dynasty="southern-song">南宋 <small>临安 · 1127—1279</small></button></div>

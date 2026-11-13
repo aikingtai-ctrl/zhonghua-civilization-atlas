@@ -227,11 +227,12 @@ def patch_vite_preload_js(js_text: str) -> str:
     return js_text
 
 
-def discover_and_download_vinext_assets(base_url: str, html_text: str, site_dir: Path):
+def discover_and_download_vinext_assets(base_url: str, html_text: str, site_dir: Path) -> set[str]:
     queue = set()
     for m in re.findall(r'["\'](/(?:_next/static|images)/[^"\'\\?#]+|/favicon\.[A-Za-z0-9]+)', html_text):
         queue.add(m)
     downloaded = set()
+    reachable_rel = set()
     while queue:
         batch = sorted(queue - downloaded)
         if not batch:
@@ -245,7 +246,9 @@ def discover_and_download_vinext_assets(base_url: str, html_text: str, site_dir:
                 downloaded.add(rel)
                 if st != 200:
                     continue
-                local_p = site_dir / rel.lstrip("/")
+                clean_rel = rel.lstrip("/")
+                reachable_rel.add(clean_rel)
+                local_p = site_dir / clean_rel
                 local_p.parent.mkdir(parents=True, exist_ok=True)
                 if rel.endswith(".js"):
                     jt = data.decode("utf-8", errors="ignore")
@@ -270,6 +273,15 @@ def discover_and_download_vinext_assets(base_url: str, html_text: str, site_dir:
                     local_p.write_bytes(data)
                 else:
                     local_p.write_bytes(data)
+    # Prune retired unreachable _next/static files so hashed rebuilds never bloat Git / Pages
+    next_static = site_dir / "_next" / "static"
+    if next_static.is_dir() and reachable_rel:
+        for existing_f in sorted(next_static.rglob("*")):
+            if existing_f.is_file():
+                rel_s = existing_f.relative_to(site_dir).as_posix()
+                if rel_s not in reachable_rel:
+                    existing_f.unlink(missing_ok=True)
+    return reachable_rel
 
 
 def rewrite_vinext_html(html_text: str, gate_tag: str, shim_tag: str) -> str:
@@ -280,6 +292,9 @@ def rewrite_vinext_html(html_text: str, gate_tag: str, shim_tag: str) -> str:
     out = out.replace('href="/favicon.svg"', 'href="./favicon.svg"')
     out = out.replace('"/images/', '"./images/')
     out = out.replace('\\"/images/', '\\"./images/')
+    out = out.replace('"/catalogue-', '"./catalogue-')
+    out = out.replace("'/catalogue-", "'./catalogue-")
+    out = out.replace('\\"/catalogue-', '\\"./catalogue-')
     out = out.replace('"/collection-workflow.md"', '"./collection-workflow.md"')
     out = out.replace('\\"/collection-workflow.md\\"', '\\"./collection-workflow.md\\"')
     out = out.replace('"/reconciliation-template.csv"', '"./reconciliation-template.csv"')
@@ -331,16 +346,18 @@ def git_push_if_changed(repo_dir: Path, repo_name: str, msg: str, auto_push: boo
 # ------------------------------------------------------------------------------
 # 1. Shengcang Incremental Sync
 # ------------------------------------------------------------------------------
+SHIM_REV = "20261113d1"
 SC_SHIM = """<style>a[href*="signin-with-chatgpt"]{display:none!important}</style><script id="jintai-shengcang-shim">(function(){
 var BASE=new URL('.',location.href).pathname;if(BASE.slice(-1)!=='/')BASE+='/';window.__JT_BASE__=BASE;
 var IS_GH=/github\\.io$/i.test(location.hostname||'');
+var RAW='https://raw.githubusercontent.com/aikingtai-ctrl/shengcang-sound-library/main/';
 var CDNS=['https://testingcf.jsdelivr.net/gh/aikingtai-ctrl/shengcang-sound-library@main/','https://gcore.jsdelivr.net/gh/aikingtai-ctrl/shengcang-sound-library@main/'];
-function resolveMedia(rel){if(!rel||typeof rel!=='string')return rel;var clean=rel.replace(/^\\.\\//,'').replace(/^\\//,'');if(!/^(audio|images)\\//.test(clean))return rel;return IS_GH?(CDNS[0]+clean):(BASE+clean);}
-window.addEventListener('error',function(ev){var el=ev.target;if(!el||!el.tagName)return;var tag=el.tagName.toUpperCase();if(tag!=='AUDIO'&&tag!=='SOURCE'&&tag!=='IMG')return;var cur=el.getAttribute('src')||el.src||'';var m=cur.match(/(?:shengcang-sound-library@main\\/|\\/)((?:audio|images)\\/[^?#]+)/);if(!m)return;var clean=m[1];var step=parseInt(el.getAttribute('data-jt-fb')||'0',10);var cands=IS_GH?[CDNS[1]+clean,BASE+clean]:[CDNS[0]+clean,CDNS[1]+clean];if(step<cands.length){el.setAttribute('data-jt-fb',String(step+1));el.src=cands[step];if(tag==='AUDIO'&&typeof el.load==='function')el.load();}},true);
+function resolveMedia(rel){if(!rel||typeof rel!=='string')return rel;var clean=rel.replace(/^\\.\\//,'').replace(/^\\//,'');if(!/^(audio|images)\\//.test(clean))return rel;return BASE+clean;}
+window.addEventListener('error',function(ev){var el=ev.target;if(!el||!el.tagName)return;var tag=el.tagName.toUpperCase();if(tag!=='AUDIO'&&tag!=='SOURCE'&&tag!=='IMG')return;var cur=el.getAttribute('src')||el.src||'';var m=cur.match(/(?:shengcang-sound-library(?:@main|\\/main)\\/|\\/)((?:audio|images)\\/[^?#]+)/);if(!m)return;var clean=m[1];var step=parseInt(el.getAttribute('data-jt-fb')||'0',10);var cands=IS_GH?[RAW+clean,CDNS[0]+clean,CDNS[1]+clean]:[CDNS[0]+clean,RAW+clean];if(step<cands.length){el.setAttribute('data-jt-fb',String(step+1));el.src=cands[step];if(tag==='AUDIO'&&typeof el.load==='function')el.load();}},true);
 document.addEventListener('click',function(ev){var a=ev.target&&ev.target.closest?ev.target.closest('a'):null;if(!a)return;var hr=a.getAttribute('href')||'';if(hr.indexOf('signin-with-chatgpt')!==-1){ev.preventDefault();return;}if(/^\\/(audio|images)\\//.test(hr)){a.setAttribute('href',resolveMedia(hr));}},true);
 var _dbPromise=null;var origFetch=window.fetch.bind(window);window.__jtOrigFetch=origFetch;
-function getSoundsDB(){if(_dbPromise)return _dbPromise;var cb='?t='+Math.floor(Date.now()/300000);var urls=IS_GH?[CDNS[0]+'data/sounds.json'+cb,CDNS[1]+'data/sounds.json'+cb,BASE+'data/sounds.json'+cb]:[BASE+'data/sounds.json'+cb,CDNS[0]+'data/sounds.json'+cb];_dbPromise=(async function(){for(var i=0;i<urls.length;i++){try{var r=await origFetch(urls[i]);if(r.ok){var d=await r.json();var arr=Array.isArray(d)?d:(d.sounds||[]);arr.forEach(function(it){if(it.src)it.src=resolveMedia(it.src);if(Array.isArray(it.variants))it.variants.forEach(function(v){if(v&&v.src)v.src=resolveMedia(v.src);});});return Array.isArray(d)?{sounds:arr,raw:arr}:{sounds:arr,raw:d};}}catch(e){}}return {sounds:[],raw:{sounds:[]}};})();return _dbPromise;}
-window.fetch=async function(input,init){var urlStr=typeof input==='string'?input:(input&&input.url?input.url:String(input));var u;try{u=new URL(urlStr,location.origin);}catch(e){return origFetch(input,init);}var p=u.pathname;var idxApi=p.indexOf('/api/sounds');if(idxApi!==-1){var method=((init&&init.method)||(input&&input.method)||'GET').toUpperCase();if(method!=='GET')return new Response(JSON.stringify({error:'国内直连只读镜像节点'}),{status:400,headers:{'Content-Type':'application/json;charset=utf-8'}});if(u.searchParams.get('community')==='1')return new Response(JSON.stringify({sounds:[]}),{status:200,headers:{'Content-Type':'application/json;charset=utf-8'}});var db=await getSoundsDB();var after=p.slice(idxApi+'/api/sounds'.length);if(after&&after!=='/'){var sid=decodeURIComponent(after.replace(/^\\//,''));var found=db.sounds.find(function(x){return String(x.id)===sid;});if(found)return new Response(JSON.stringify(found),{status:200,headers:{'Content-Type':'application/json;charset=utf-8'}});return new Response(JSON.stringify({error:'Not found'}),{status:404,headers:{'Content-Type':'application/json;charset=utf-8'}});}return new Response(JSON.stringify(db.raw),{status:200,headers:{'Content-Type':'application/json;charset=utf-8'}});}if(/^\\/(audio|images)\\//.test(p)&&u.origin===location.origin)return origFetch(resolveMedia(p),init);return origFetch(input,init);};
+function getSoundsDB(){if(_dbPromise)return _dbPromise;var cb='?t='+Math.floor(Date.now()/300000);var urls=IS_GH?[BASE+'data/sounds.json'+cb,RAW+'data/sounds.json'+cb,CDNS[0]+'data/sounds.json'+cb]:[BASE+'data/sounds.json'+cb,CDNS[0]+'data/sounds.json'+cb];_dbPromise=(async function(){for(var i=0;i<urls.length;i++){try{var r=await origFetch(urls[i]);if(r.ok){var d=await r.json();var arr=Array.isArray(d)?d:(d.sounds||[]);arr.forEach(function(it){if(it.src)it.src=resolveMedia(it.src);if(Array.isArray(it.variants))it.variants.forEach(function(v){if(v&&v.src)v.src=resolveMedia(v.src);});});return Array.isArray(d)?{sounds:arr,raw:arr}:{sounds:arr,raw:d};}}catch(e){}}return {sounds:[],raw:{sounds:[]}};})();return _dbPromise;}
+window.fetch=async function(input,init){var urlStr=typeof input==='string'?input:(input&&input.url?input.url:String(input));var u;try{u=new URL(urlStr,location.origin);}catch(e){return origFetch(input,init);}var p=u.pathname;var idxApi=p.indexOf('/api/sounds');if(idxApi!==-1){var method=((init&&init.method)||(input&&input.method)||'GET').toUpperCase();if(method!=='GET')return new Response(JSON.stringify({error:'国内直连只读镜像节点'}),{status:400,headers:{'Content-Type':'application/json;charset=utf-8'}});if(u.searchParams.get('community')==='1')return new Response(JSON.stringify({sounds:[]}),{status:200,headers:{'Content-Type':'application/json;charset=utf-8'}});var db=await getSoundsDB();var after=p.slice(idxApi+'/api/sounds'.length);if(after&&after!=='/'){var sid=decodeURIComponent(after.replace(/^\\//,''));var found=db.sounds.find(function(x){return String(x.id)===sid;});if(found)return new Response(JSON.stringify(found),{status:200,headers:{'Content-Type':'application/json;charset=utf-8'}});return new Response(JSON.stringify({error:'Not found'}),{status:404,headers:{'Content-Type':'application/json;charset=utf-8'}});}return new Response(JSON.stringify(db.raw),{status:200,headers:{'Content-Type':'application/json;charset=utf-8'}});}if(u.origin===location.origin&&p.indexOf(BASE)!==0&&(/^\\/(audio|images)\\//.test(p)||/^\\/catalogue-[A-Za-z0-9_.-]+\\.json$/.test(p)))return origFetch(BASE+p.slice(1)+u.search,init);return origFetch(input,init);};
 })();</script>"""
 
 
@@ -353,12 +370,14 @@ def sync_shengcang(site_dir: Path, auto_push: bool = True) -> dict:
         return {"site": "shengcang", "status": "upstream_skipped", "http": [st_h, st_a]}
 
     clean_html = strip_cf_challenge(b_h.decode("utf-8"))
+    cat_refs = sorted(set(re.findall(r"/catalogue-[A-Za-z0-9_.-]+\.json", clean_html)))
     api_data = json.loads(b_a.decode("utf-8"))
     norm_sounds = json.dumps(api_data, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
-    fp = sha256_bytes(clean_html.encode("utf-8") + b"|" + norm_sounds)
+    fp = sha256_bytes(clean_html.encode("utf-8") + b"|" + norm_sounds + b"|" + SHIM_REV.encode("ascii"))
 
+    cats_present = all((site_dir / cr.lstrip("/")).is_file() for cr in cat_refs)
     state_p = site_dir / ".sync_state.json"
-    if state_p.is_file():
+    if state_p.is_file() and cats_present:
         try:
             if json.loads(state_p.read_text(encoding="utf-8")).get("fingerprint") == fp:
                 return {"site": "shengcang", "status": "up-to-date"}
@@ -368,6 +387,53 @@ def sync_shengcang(site_dir: Path, auto_push: bool = True) -> dict:
     discover_and_download_vinext_assets(base, clean_html, site_dir)
     (site_dir / "data").mkdir(parents=True, exist_ok=True)
     (site_dir / "data" / "sounds.json").write_bytes(norm_sounds)
+
+    # Download sharded full catalogue manifest + parts & prune retired catalogue-*.json
+    active_cat_files = set()
+    for cr in cat_refs:
+        sc_st, sc_b = fetch_bytes(base + cr, retries=4, timeout=40)
+        if sc_st != 200 or not sc_b:
+            continue
+        cname = cr.lstrip("/")
+        active_cat_files.add(cname)
+        manifest_obj = json.loads(sc_b.decode("utf-8"))
+        parts = manifest_obj.get("parts") if isinstance(manifest_obj, dict) else None
+        if isinstance(parts, list) and parts:
+            def dl_cat_part(pinfo):
+                purl = pinfo.get("url", "")
+                if not purl:
+                    return None
+                pname = purl.lstrip("/")
+                ps, pb = fetch_bytes(base + purl, retries=4, timeout=45)
+                if ps == 200 and pb:
+                    try:
+                        pobj = json.loads(pb.decode("utf-8"))
+                        if isinstance(pobj, dict) and isinstance(pobj.get("columns"), list) and "src" in pobj["columns"]:
+                            sidx = pobj["columns"].index("src")
+                            for row in pobj.get("rows") or []:
+                                if isinstance(row, list) and len(row) > sidx and isinstance(row[sidx], str) and row[sidx].startswith("/audio/"):
+                                    row[sidx] = "." + row[sidx]
+                            pb = json.dumps(pobj, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+                    except Exception:
+                        pass
+                    (site_dir / pname).write_bytes(pb)
+                    return pname
+                return None
+
+            with concurrent.futures.ThreadPoolExecutor(max_workers=8) as ex:
+                for got_name in ex.map(dl_cat_part, parts):
+                    if got_name:
+                        active_cat_files.add(got_name)
+            for pinfo in parts:
+                if isinstance(pinfo.get("url"), str) and pinfo["url"].startswith("/catalogue-"):
+                    pinfo["url"] = "." + pinfo["url"]
+            sc_b = json.dumps(manifest_obj, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+        (site_dir / cname).write_bytes(sc_b)
+
+    if active_cat_files:
+        for old_cat in sorted(site_dir.glob("catalogue-*.json")):
+            if old_cat.name not in active_cat_files:
+                old_cat.unlink(missing_ok=True)
 
     items = api_data["sounds"] if isinstance(api_data, dict) and "sounds" in api_data else api_data
     audio_paths = set()
@@ -407,10 +473,11 @@ def sync_shengcang(site_dir: Path, auto_push: bool = True) -> dict:
 DOC_SHIM = """<style>a[href*="signin-with-chatgpt"]{display:none!important}</style><script id="jintai-doc-shim">(function(){
 var BASE=new URL('.',location.href).pathname;if(BASE.slice(-1)!=='/')BASE+='/';window.__JT_BASE__=BASE;
 var IS_GH=/github\\.io$/i.test(location.hostname||'');
+var RAW='https://raw.githubusercontent.com/aikingtai-ctrl/documentary-classroom-library/main/';
 var CDNS=['https://testingcf.jsdelivr.net/gh/aikingtai-ctrl/documentary-classroom-library@main/','https://gcore.jsdelivr.net/gh/aikingtai-ctrl/documentary-classroom-library@main/'];
 document.addEventListener('click',function(ev){var a=ev.target&&ev.target.closest?ev.target.closest('a'):null;if(!a)return;var hr=a.getAttribute('href')||'';if(hr.indexOf('signin-with-chatgpt')!==-1){ev.preventDefault();return;}if(hr==='/collection-workflow.md'||hr==='/reconciliation-template.csv')a.setAttribute('href',BASE+hr.slice(1));},true);
 var _dbPromise=null;var origFetch=window.fetch.bind(window);
-function _js(v){return Array.isArray(v)?v.join(' '):(v==null?'':String(v));}function getDocDB(){if(_dbPromise)return _dbPromise;var cb='?t='+Math.floor(Date.now()/300000);var urls=[BASE+'data/library_full.json'+cb,CDNS[0]+'data/library_full.json'+cb,CDNS[1]+'data/library_full.json'+cb];_dbPromise=(async function(){for(var i=0;i<urls.length;i++){try{var r=await origFetch(urls[i]);if(r.ok){var d=await r.json();(d.films||[]).forEach(function(f,idx){if(f._order==null)f._order=idx;var parts=[f.id,f.title,f.originalTitle,_js(f.aliases),f.year,f.country,f.director,f.region,f.period,f.topic,f.method,f.form,f.summary,f.teaching,f.research,_js(f.courses),_js(f.knowledge)];f._q=parts.filter(Boolean).join(' ').toLowerCase();var ym=String(f.year||'').match(/\\d{4}/);f._yr=ym?parseInt(ym[0],10):9999;f._dec=ym?String(Math.floor(parseInt(ym[0],10)/10)*10):'';});return d;}}catch(e){}}return {stats:{total:4353,published:0,pending:2853,formal:null},target:20000,countedAt:'',facets:{region:[],topic:[],decades:[]},films:[]};})();return _dbPromise;}
+function _js(v){return Array.isArray(v)?v.join(' '):(v==null?'':String(v));}function getDocDB(){if(_dbPromise)return _dbPromise;var cb='?t='+Math.floor(Date.now()/300000);var urls=[BASE+'data/library_full.json'+cb,RAW+'data/library_full.json'+cb,CDNS[0]+'data/library_full.json'+cb,CDNS[1]+'data/library_full.json'+cb];_dbPromise=(async function(){for(var i=0;i<urls.length;i++){try{var r=await origFetch(urls[i]);if(r.ok){var d=await r.json();(d.films||[]).forEach(function(f,idx){if(f._order==null)f._order=idx;var parts=[f.id,f.title,f.originalTitle,_js(f.aliases),f.year,f.country,f.director,f.region,f.period,f.topic,f.method,f.form,f.summary,f.teaching,f.research,_js(f.courses),_js(f.knowledge)];f._q=parts.filter(Boolean).join(' ').toLowerCase();var ym=String(f.year||'').match(/\\d{4}/);f._yr=ym?parseInt(ym[0],10):9999;f._dec=ym?String(Math.floor(parseInt(ym[0],10)/10)*10):'';});return d;}}catch(e){}}return {stats:{total:4353,published:0,pending:2853,formal:null},target:20000,countedAt:'',facets:{region:[],topic:[],decades:[]},films:[]};})();return _dbPromise;}
 window.fetch=async function(input,init){var urlStr=typeof input==='string'?input:(input&&input.url?input.url:String(input));var u;try{u=new URL(urlStr,location.origin);}catch(e){return origFetch(input,init);}if(u.pathname.indexOf('/api/library')!==-1){var method=((init&&init.method)||(input&&input.method)||'GET').toUpperCase();if(method!=='GET')return new Response(JSON.stringify({error:'国内直连只读教学节点'}),{status:400,headers:{'Content-Type':'application/json;charset=utf-8'}});var db=await getDocDB();if(u.searchParams.get('export')==='1')return new Response(JSON.stringify(db),{status:200,headers:{'Content-Type':'application/json;charset=utf-8'}});var fid=u.searchParams.get('id');if(fid){var found=(db.films||[]).find(function(x){return String(x.id)===String(fid);});if(found)return new Response(JSON.stringify({film:found}),{status:200,headers:{'Content-Type':'application/json;charset=utf-8'}});return new Response(JSON.stringify({error:'未找到该影片记录'}),{status:404,headers:{'Content-Type':'application/json;charset=utf-8'}});}var q=(u.searchParams.get('q')||'').trim().toLowerCase();var terms=q?q.split(/\\s+/).filter(Boolean):[];var dec=u.searchParams.get('decade')||'';var reg=u.searchParams.get('region')||'';var top=u.searchParams.get('topic')||'';var sort=u.searchParams.get('sort')||'year';var page=Math.max(1,parseInt(u.searchParams.get('page')||'1',10)||1);var pageSize=24;var list=(db.films||[]).filter(function(f){if(dec&&f._dec!==dec)return false;if(reg&&f.region!==reg)return false;if(top&&f.topic!==top)return false;if(terms.length){for(var i=0;i<terms.length;i++){if(f._q.indexOf(terms[i])===-1)return false;}}return true;}).slice();if(sort==='title')list.sort(function(a,b){return (a.title||'').localeCompare(b.title||'','zh-CN');});else list.sort(function(a,b){return (a._order-b._order);});var total=list.length;var pages=Math.max(1,Math.ceil(total/pageSize));if(page>pages)page=pages;var slice=list.slice((page-1)*pageSize,page*pageSize);return new Response(JSON.stringify({user:null,films:slice,stats:db.stats,target:db.target,countedAt:db.countedAt,facets:db.facets,pagination:{page:page,pageSize:pageSize,total:total,pages:pages}}),{status:200,headers:{'Content-Type':'application/json;charset=utf-8'}});}return origFetch(input,init);};
 })();</script>"""
 
@@ -428,7 +495,7 @@ def sync_documentary(site_dir: Path, auto_push: bool = True) -> dict:
     norm_html_for_fp = re.sub(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z", "TS", clean_html)
     p1 = json.loads(b_p1.decode("utf-8"))
     fp_meta = json.dumps({"stats": p1.get("stats"), "facets": p1.get("facets"), "pages": p1.get("pagination", {}).get("pages"), "p1_films": p1.get("films", [])}, ensure_ascii=False, sort_keys=True)
-    fp = sha256_bytes(norm_html_for_fp.encode("utf-8") + b"|" + fp_meta.encode("utf-8"))
+    fp = sha256_bytes(norm_html_for_fp.encode("utf-8") + b"|" + fp_meta.encode("utf-8") + b"|" + SHIM_REV.encode("ascii"))
 
     state_p = site_dir / ".sync_state.json"
     if state_p.is_file():
@@ -506,9 +573,27 @@ def sync_documentary(site_dir: Path, auto_push: bool = True) -> dict:
 # ------------------------------------------------------------------------------
 # 3. Zhonghua Civilization Atlas Incremental Sync
 # ------------------------------------------------------------------------------
-ZH_SHIM = """<script id="jintai-zhonghua-cdn-shim">(function(){
+ZH_SHIM = """<style>a[href*="signin-with-chatgpt"]{display:none!important}</style><script id="jintai-zhonghua-cdn-shim">(function(){
+var BASE=new URL('.',location.href).pathname;if(BASE.slice(-1)!=='/')BASE+='/';window.__JT_BASE__=BASE;
 var IS_GH=/github\\.io$/i.test(location.hostname||'');
+var RAW='https://raw.githubusercontent.com/aikingtai-ctrl/zhonghua-civilization-atlas/main/';
 var CDNS=['https://testingcf.jsdelivr.net/gh/aikingtai-ctrl/zhonghua-civilization-atlas@main/','https://gcore.jsdelivr.net/gh/aikingtai-ctrl/zhonghua-civilization-atlas@main/'];
+if(typeof window.fetch==='function'){
+  var origFetch=window.fetch.bind(window);
+  window.fetch=function(input,init){
+    var urlStr=typeof input==='string'?input:(input&&input.url?input.url:String(input));
+    try{
+      var u=new URL(urlStr,location.origin);
+      if(u.origin===location.origin&&!/chatgpt\\.site$/i.test(location.hostname||'')&&u.pathname.indexOf('/api/atlas-control/')===0){
+        return Promise.resolve(new Response(JSON.stringify({ok:false,authenticated:false,readOnlyMirror:true,message:'国内静态镜像站为只读浏览模式'}),{status:200,headers:{'content-type':'application/json; charset=utf-8'}}));
+      }
+      if(u.origin===location.origin&&u.pathname.charAt(0)==='/'&&u.pathname.indexOf(BASE)!==0&&u.pathname.indexOf('/api/')!==0&&u.pathname.indexOf('/publications')!==0){
+        return origFetch(BASE+u.pathname.slice(1)+u.search,init);
+      }
+    }catch(e){}
+    return origFetch(input,init);
+  };
+}
 var FALLBACK_SVG='data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360" viewBox="0 0 480 360"><rect width="480" height="360" fill="#f3efe6"/><rect x="16" y="16" width="448" height="328" fill="none" stroke="#c8bda8" stroke-width="1.5"/><text x="240" y="168" text-anchor="middle" fill="#5c5040" font-family="Microsoft YaHei,sans-serif" font-size="18">馆藏文物考证条目</text><text x="240" y="202" text-anchor="middle" fill="#8b7d6b" font-family="Microsoft YaHei,sans-serif" font-size="14">点击卡片查阅馆方详细著录与原图出处</text></svg>');
 var _extMap=null;
 function findOrigUrlByPreview(relPath){
@@ -533,8 +618,8 @@ window.addEventListener('error',function(ev){
   var mRel=cur.match(/((?:assets|images)\\/[^?#]+)/);
   if(mRel&&cur.indexOf('wsrv.nl')===-1){
     var rel=mRel[1];
-    if(IS_GH&&step===0){el.src=CDNS[0]+rel;return;}
-    if(IS_GH&&step===1){el.src=CDNS[1]+rel;return;}
+    if(IS_GH&&step===0){el.src=RAW+rel;return;}
+    if(IS_GH&&step===1){el.src=CDNS[0]+rel;return;}
     var orig=findOrigUrlByPreview(rel);
     if(orig){el.src='https://wsrv.nl/?url='+encodeURIComponent(orig)+'&w=960&output=webp';return;}
   }
@@ -581,10 +666,14 @@ def sync_zhonghua(site_dir: Path, auto_push: bool = True) -> dict:
             if pf.endswith(".html"):
                 b_p = strip_cf_challenge(b_p.decode("utf-8", "ignore")).encode("utf-8")
             probe_parts.append(sha256_bytes(b_p))
-    quick_fp = "|".join(probe_parts)
+    quick_fp = "|".join(probe_parts + [SHIM_REV])
 
     state_p = site_dir / ".sync_state.json"
-    if state_p.is_file():
+    required_aux = (
+        (site_dir / "site-version.json").is_file()
+        and (site_dir / "publication-proofs" / "build-report.json").is_file()
+    )
+    if state_p.is_file() and required_aux:
         try:
             if json.loads(state_p.read_text(encoding="utf-8")).get("quick_fp") == quick_fp:
                 return {"site": "zhonghua", "status": "up-to-date"}
@@ -593,7 +682,7 @@ def sync_zhonghua(site_dir: Path, auto_push: bool = True) -> dict:
 
     text_exts = {".html", ".css", ".js", ".json", ".md", ".svg", ".txt"}
     asset_exts = {".webp", ".jpg", ".jpeg", ".png", ".gif", ".svg", ".ico", ".woff", ".woff2"}
-    to_visit = {"index.html"}
+    to_visit = {"index.html", "site-version.json", "publication-proofs/build-report.json"}
     visited = set()
     discovered_media = set()
     gate_tag = make_gate_script("金泰 AI · 中华文明影像库")
@@ -616,22 +705,37 @@ def sync_zhonghua(site_dir: Path, auto_push: bool = True) -> dict:
             txt = b.decode("utf-8", errors="ignore")
             if ext == ".html":
                 clean_h = strip_cf_challenge(txt)
+                clean_h = re.sub(r'<style>a\[href\*="signin-with-chatgpt"\][^<]*</style>', '', clean_h, flags=re.S)
                 clean_h = re.sub(r'<script id="jt-unified-gate">.*?</script>', '', clean_h, flags=re.S)
                 clean_h = re.sub(r'<script id="jintai-zhonghua-cdn-shim">.*?</script>', '', clean_h, flags=re.S)
+                for ref in re.findall(r'(?:src|href)=["\']([^"\']+)["\']', clean_h, flags=re.I):
+                    nr = norm_zh_rel(rel, ref)
+                    if nr and not nr.startswith("signin-with-chatgpt"):
+                        rext = os.path.splitext(nr)[1].lower()
+                        if rext in text_exts:
+                            to_visit.add(nr)
+                        elif rext in asset_exts:
+                            discovered_media.add(nr)
+                # Rewrite root-relative src="/..." and href="/..." (including bare href="/") to "./..." for GitHub Pages subpath hosting
+                rel_prefix = "./" if "/" not in rel else ("../" * rel.count("/"))
+                clean_h = re.sub(
+                    r'\bhref=(["\'])/\1',
+                    lambda m_: f'href={m_.group(1)}{rel_prefix}{m_.group(1)}',
+                    clean_h,
+                    flags=re.I,
+                )
+                clean_h = re.sub(
+                    r'\b(src|href)=(["\'])/(?!/|signin-with-chatgpt)([^"\']+)\2',
+                    lambda m_: f'{m_.group(1)}={m_.group(2)}{rel_prefix}{m_.group(3)}{m_.group(2)}',
+                    clean_h,
+                    flags=re.I,
+                )
                 patched_h, n = re.subn(r"(<head\b[^>]*>)", r"\1" + gate_tag + ZH_SHIM, clean_h, count=1, flags=re.I)
                 if n == 1:
                     lp = site_dir / rel
                     lp.parent.mkdir(parents=True, exist_ok=True)
                     lp.write_bytes(patched_h.encode("utf-8"))
                     check_html_js_syntax(lp)
-                for ref in re.findall(r'(?:src|href)=["\']([^"\']+)["\']', clean_h, flags=re.I):
-                    nr = norm_zh_rel(rel, ref)
-                    if nr:
-                        rext = os.path.splitext(nr)[1].lower()
-                        if rext in text_exts:
-                            to_visit.add(nr)
-                        elif rext in asset_exts:
-                            discovered_media.add(nr)
             else:
                 # Never overwrite gigantic >90MB files (GitHub limit)
                 if len(b) < 90 * 1024 * 1024:
@@ -680,6 +784,26 @@ def sync_zhonghua(site_dir: Path, auto_push: bool = True) -> dict:
         with concurrent.futures.ThreadPoolExecutor(max_workers=24) as ex:
             list(ex.map(dl_media, missing_media))
 
+    # Align <meta name="atlas-snapshot-revision"> in all synced HTML pages with site-version.json so freshly opened tabs never enter a false update-banner loop
+    sv_path = site_dir / "site-version.json"
+    if sv_path.is_file():
+        try:
+            sv_rev = json.loads(sv_path.read_text(encoding="utf-8")).get("revision", "")
+            if re.fullmatch(r"[0-9a-f]{64}", sv_rev):
+                for hp in site_dir.rglob("*.html"):
+                    if ".git" in hp.parts:
+                        continue
+                    htxt = hp.read_text(encoding="utf-8", errors="ignore")
+                    hnew = re.sub(
+                        r'(<meta\b[^>]*\bname=["\']atlas-snapshot-revision["\'][^>]*\bcontent=["\'])[0-9a-f]{64}(["\'])',
+                        rf"\g<1>{sv_rev}\2",
+                        htxt,
+                    )
+                    if hnew != htxt:
+                        hp.write_bytes(hnew.encode("utf-8"))
+        except Exception:
+            pass
+
     state_p.write_text(json.dumps({"quick_fp": quick_fp, "docs": len(visited), "new_media": len(missing_media)}, indent=2), encoding="utf-8")
     changed = git_push_if_changed(site_dir, "zhonghua-civilization-atlas", f"sync(auto): upstream zhonghua atlas ({len(visited)} docs)", auto_push)
     return {"site": "zhonghua", "status": "updated" if changed else "up-to-date", "changed_files": len(changed), "new_media": len(missing_media)}
@@ -695,10 +819,11 @@ def sync_history_site1() -> dict:
     subprocess.run([sys.executable, str(sync_ext)], check=True)
     tracked_targets = [
         "index.html", "browser.html", "d1_idx", "d2_idx",
-        "portal.html", "图库总入口.html", "arch5680.html", "myth5000.html",
-        "epics.html", "zhiguai31.html", "zhiguai57.html", "hongloumeng.html",
-        "liaozhai.html", "聊斋志异角色与全场景专集.html", "dynasty2000.html",
-        "websearch5000.html", "figures.html", "sources.html", "影视来源目录.html",
+        "portal.html", "图库总入口.html", "arch5680.html", "arch_data", "myth5000.html", "myth_data",
+        "epics.html", "epics_data", "zhiguai31.html", "zhiguai_data", "zhiguai57.html", "hongloumeng.html", "hongloumeng_data",
+        "liaozhai.html", "聊斋志异角色与全场景专集.html", "聊斋志异角色场景法器全谱专集.html", "liaozhai_data",
+        "dynasty2000.html", "dynasty_data", "websearch5000.html", "websearch_data",
+        "figures.html", "figures_data", "sources.html", "影视来源目录.html",
         "更新记录.html", "changelog.html", "00_每日更新总目录.html", "每日更新/00_每日更新总目录.html",
     ]
     existing_targets = [t for t in tracked_targets if (pub / t).exists()]

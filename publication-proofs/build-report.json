@@ -1,0 +1,2261 @@
+{
+  "schemaVersion": 1,
+  "projectId": "appgprj_6acf2570ea648191b792eef0f38dd1c6",
+  "buildId": "92b0a108-9aa5-4675-b725-04f7dffe6889",
+  "builtAt": "2026-11-13T02:29:52.017Z",
+  "catalogSha256": "bd7dcff9fd671a03cd1064514bcbeb44a85bbfd29636bb5a1ace4c9bf6e3cc57",
+  "indexSha256": "0fb844963f0a4d890f3d3b14db57053a4f97817ada2ca46863794ddcea19cd58",
+  "proofs": 278,
+  "records": 6986,
+  "unsupported": [],
+  "unpublished": [],
+  "unverified": [],
+  "unverifiedRecords": [
+    {
+      "id": "si-b547c5920f0bd5fcb551",
+      "provider": "si",
+      "localBatchId": "si-2026-11-03-004",
+      "sourceRecordSha256": "cda049aced41e2bbc242176fd66ab5720e7bd914e7579284a61479df37a7706b",
+      "imageSha256": "2914ebe782e8be7191df478ffe60e897b01da6a539dc0301464593fca04ac353",
+      "title": "Stand",
+      "sourceUrl": "https://collection.cooperhewitt.org/view/objects/asitem/id/144672",
+      "issues": [
+        "CHNDM馆所或制作归属不确定"
+      ]
+    }
+  ],
+  "partialBatches": [
+    {
+      "provider": "si",
+      "localBatchId": "si-2026-11-03-004",
+      "verifiedRecords": 3,
+      "heldRecords": 1
+    }
+  ],
+  "entries": [
+    {
+      "provider": "aic",
+      "localBatchId": "aic-2026-10-27-001",
+      "publicationDate": "2026-10-27",
+      "proofPath": "/publication-proofs/aic/aic-2026-10-27-001.json",
+      "proofSha256": "f1a65afe2e8a26a6d6dcb0e92ba5fc2a8a6475dfc54f997e89f02270aa157487",
+      "recordCount": 18
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-2026-10-27-002",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/aic/aic-2026-10-27-002.json",
+      "proofSha256": "8470cc8a7a64922afdacb27d30b71b12ea6ed027c52e1666dfb494dcea6b9741",
+      "recordCount": 48
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-2026-10-27-003",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/aic/aic-2026-10-27-003.json",
+      "proofSha256": "618eafe47c4a3f6d2c0f7e8c912d6eb452420ba011e32228af0e322412bf55e5",
+      "recordCount": 43
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-2026-10-27-004",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/aic/aic-2026-10-27-004.json",
+      "proofSha256": "e102fa69ba4442f3d566f24228a09c8502e734af2ffdb54b934418daa3bdb803",
+      "recordCount": 37
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-2026-10-27-005",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/aic/aic-2026-10-27-005.json",
+      "proofSha256": "f4337086901dd7489c51878bd5262842d8db99313d3b4b0c99d1891877b5faf7",
+      "recordCount": 3
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-2026-10-27-006",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/aic/aic-2026-10-27-006.json",
+      "proofSha256": "943c9ff4d50449e9916229186454c062c9b03a8723aa9e6b341bc7cc6eeaeb2d",
+      "recordCount": 49
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-2026-10-27-007",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/aic/aic-2026-10-27-007.json",
+      "proofSha256": "a9960b81446e90900dbcb95092c112510941f31abfdbd23921f8c9630090d426",
+      "recordCount": 31
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-2026-10-27-008",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/aic/aic-2026-10-27-008.json",
+      "proofSha256": "5291875ca81dfd63acee1b3e879b102143ff77ddd466b9b3f784ac3f58df9a77",
+      "recordCount": 43
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-2026-10-27-009",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/aic/aic-2026-10-27-009.json",
+      "proofSha256": "0ac6f638bcb27a422eb7fc4ce08037356789be33858a9ebd914db8dda84f8a93",
+      "recordCount": 41
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-2026-10-27-010",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/aic/aic-2026-10-27-010.json",
+      "proofSha256": "000b14ee5e04232de9949bf3083a258b57b0d4a1b8513ae83b9da9e36ee014de",
+      "recordCount": 23
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-2026-10-27-011",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/aic/aic-2026-10-27-011.json",
+      "proofSha256": "69262910a6b11f7eeccff88e1d53eda0e4d496fa23f27aebcf2961570c8d94f3",
+      "recordCount": 25
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-2026-11-09-001",
+      "publicationDate": "2026-11-09",
+      "proofPath": "/publication-proofs/aic/aic-2026-11-09-001.json",
+      "proofSha256": "2a800af2e39ec8d3a885f2f80f7b4f55073f3264d18f882992e6c630eb42efc0",
+      "recordCount": 10
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-001",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-001.json",
+      "proofSha256": "226a7f32fed22af0955a83b0f18293224b217963c073ad018b5d5a6297643de1",
+      "recordCount": 17
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-002",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-002.json",
+      "proofSha256": "e33f0b52af9a3269e1482869b15641dc4635ce725615dfd87a263572ddf6ca38",
+      "recordCount": 17
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-003",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-003.json",
+      "proofSha256": "41566a745eca740f3be75bbed8117bb0cbf0314e71922e1f9564ef1fb855cce3",
+      "recordCount": 17
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-004",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-004.json",
+      "proofSha256": "535818cb5d2019678327a1a01879ef45f553a465133a565b964845d90f6547a0",
+      "recordCount": 15
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-005",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-005.json",
+      "proofSha256": "5bc79d2c98d022be8d2b6e654f431d0e2e285a2cad0e867a16a2b049eabed53b",
+      "recordCount": 15
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-006",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-006.json",
+      "proofSha256": "dcf6733a895e33918559f57cce8ca4cccbd036d28b04277091de344c3cff6e2f",
+      "recordCount": 14
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-007",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-007.json",
+      "proofSha256": "7f325c046d506342322c1adc005093e2d4ef327d625751b0a69cab0c5b5f41e9",
+      "recordCount": 14
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-008",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-008.json",
+      "proofSha256": "f59b67940466025ddc03e53597fb7a090ce629f0a992ee986a4c1993683cc869",
+      "recordCount": 14
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-009",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-009.json",
+      "proofSha256": "be683c5befcbed4ae39a33494de84b31456009e6a6025a6d1beefef4f33b2676",
+      "recordCount": 13
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-010",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-010.json",
+      "proofSha256": "f9ef84ffae42f9ea7008001fd33958bebeb07e6f6861c6dd78c9607310006d08",
+      "recordCount": 13
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-011",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-011.json",
+      "proofSha256": "4989a353749d003cac320a3d04847451b0c11da2803cc2b410bb09f64ad4fa57",
+      "recordCount": 13
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-012",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-012.json",
+      "proofSha256": "58d388614333a27c369f11c8fc158716a235cf31520a2e1c6043d96e82bc102b",
+      "recordCount": 13
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-013",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-013.json",
+      "proofSha256": "720bac947adec89d75f8248594855911ffbfeca6772ee98f930540955c8754a6",
+      "recordCount": 12
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-014",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-014.json",
+      "proofSha256": "df8b1edc887786a52f6cee73f8188c0e8681339a8996c0ab83b98d4f3534d19d",
+      "recordCount": 11
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-015",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-015.json",
+      "proofSha256": "b2f50f30d0eded8900e5dcdb855fdf7012ede926f7787902c17d7c2cd838d1d7",
+      "recordCount": 11
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-016",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-016.json",
+      "proofSha256": "cc8502c9cba06d3f284b3ba2c9332515d3befba2b3af989f75b4bc804d9127d8",
+      "recordCount": 10
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-017",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-017.json",
+      "proofSha256": "815a1b482f44c682abc05b0df94f4e4a1f8f4e22d012d149d34554ee98360748",
+      "recordCount": 9
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-018",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-018.json",
+      "proofSha256": "0b6a0d25d1136fb58fcd6603ba88382d902d03ca6db3c175db8ad4d84635aff3",
+      "recordCount": 8
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-019",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-019.json",
+      "proofSha256": "add0008a600d8056d05dd778eb77c8d0246e8e8ff6a717bb9a66b871773d8fb1",
+      "recordCount": 8
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-020",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-020.json",
+      "proofSha256": "9ddb1e899616912b0f4636944195186f41d525538c2c66c9894ac9bc87c785f7",
+      "recordCount": 8
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-021",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-021.json",
+      "proofSha256": "424d1f8c8e26fb1ccd75ca8439f2752651e82378ff85407b8f4b00c564cad79e",
+      "recordCount": 8
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-022",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-022.json",
+      "proofSha256": "64618125ce396a1db92198a627a4d4ce1be5110834e2955b595f3dee260af8b4",
+      "recordCount": 6
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-023",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-023.json",
+      "proofSha256": "00c0dd9d498edca942bdad5a41680341652a6a213f57627bfb9cd7806124e60b",
+      "recordCount": 5
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-024",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-024.json",
+      "proofSha256": "4d409d3d6052b0aa6c64a352a9a065a2ac1e0b73df958f5af34bbc1b19f1b63e",
+      "recordCount": 4
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-025",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-025.json",
+      "proofSha256": "c5cb7cb4e47e1c4eb74372598bb3540cd8f0ec5af3ad2de161172c572287391c",
+      "recordCount": 4
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-026",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-026.json",
+      "proofSha256": "e865441058ee1415bf5fc972eb3343d010fda613e316ca0b27e28ef5127d7b8b",
+      "recordCount": 4
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-027",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-027.json",
+      "proofSha256": "029234f25bf00cc2b4d18ed28fb59934075355e0565685aad9e46ea5079a715b",
+      "recordCount": 4
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-028",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-028.json",
+      "proofSha256": "ac95126ad5a640b404d14c2733e219c424d384f6e96858727a2ebdbcc5d6558e",
+      "recordCount": 3
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-029",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-029.json",
+      "proofSha256": "6764a2b772153af9bbcc481dcda8064dd2042f24793d4e2dd63cd5c6ca829101",
+      "recordCount": 2
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-030",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-030.json",
+      "proofSha256": "ec771c18ac78a7e86e8b5bcfa7137061b246af3ca1c4bafadd098cec26098070",
+      "recordCount": 2
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-031",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-031.json",
+      "proofSha256": "ed85b396fdfacd1503a08d02657a1770e248f7419df06d0fb7fda38257e80e89",
+      "recordCount": 1
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-032",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-032.json",
+      "proofSha256": "16152d1025a56ca1c8a060f8f5cde593a185a10e0aeb21bf2388a5ad6fe98e09",
+      "recordCount": 1
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-033",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-033.json",
+      "proofSha256": "d01e7a16281e8f88d198dac3d383f5dbc102f92d2b2c438fef48c29df32bc240",
+      "recordCount": 1
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-034",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-034.json",
+      "proofSha256": "4e702216cf4a08d11118726a768e5ac986e1ec4b6f1c92c83e876cf45c6d7f47",
+      "recordCount": 1
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-035",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-035.json",
+      "proofSha256": "039bc84707fd0123f05085f06ed2812ab2a95f0c09ff3a0f93db5b6436b21a32",
+      "recordCount": 1
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-036",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-036.json",
+      "proofSha256": "d8fae13b56d3dc15d75d7acbffa3dbab89aff90c32e9d372f807ed714ac56164",
+      "recordCount": 1
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-037",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-037.json",
+      "proofSha256": "be9195f1a2bc8d92403c8db1207882d85b2b98d27877dcff5d593f3ecae659f7",
+      "recordCount": 1
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-038",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-038.json",
+      "proofSha256": "fa27144068f117824afb36de30b56d98525899d2b2d0575e9fcebc58e896461f",
+      "recordCount": 1
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-039",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-039.json",
+      "proofSha256": "3aa84fb7086ac2e97536e6ebd19e485763b9c94fae9caf62895fd5a368f741f4",
+      "recordCount": 1
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-10-30-040",
+      "publicationDate": "2026-10-30",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-040.json",
+      "proofSha256": "fccbc66b1af54c39119dd356cfd4bb7d95bc3a36ecf020f81af4cc84efc2d601",
+      "recordCount": 1
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-11-09-001",
+      "publicationDate": "2026-11-09",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-11-09-001.json",
+      "proofSha256": "db09e31ba0bc7667cb10922288898c60e57abb718776b8e41e4e1f93842d3db0",
+      "recordCount": 20
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-11-09-002",
+      "publicationDate": "2026-11-09",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-11-09-002.json",
+      "proofSha256": "062ada55aef95dfed3a26f6c9de75a1a041b452e52719bd33926c780b67a7d56",
+      "recordCount": 3
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-11-09-003",
+      "publicationDate": "2026-11-09",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-11-09-003.json",
+      "proofSha256": "e719db9b2de8db3f02b8fd499163c43886ec4b56acf7a325b081257b9e2723dd",
+      "recordCount": 16
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-11-09-004",
+      "publicationDate": "2026-11-09",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-11-09-004.json",
+      "proofSha256": "d24635b63d31d1247899fc8e8f01994eb358bab3c7e1bfd03ed8b92a065395de",
+      "recordCount": 18
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-11-09-005",
+      "publicationDate": "2026-11-09",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-11-09-005.json",
+      "proofSha256": "117e77836eade1e8958cf16f88c6411c2caed605af381b4f1c150ac6e30afd5c",
+      "recordCount": 11
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-11-09-006",
+      "publicationDate": "2026-11-09",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-11-09-006.json",
+      "proofSha256": "8c98c12decce0f1849a176d5b0f86604eb3a3738e123aa83512915f9d093e159",
+      "recordCount": 19
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-11-09-007",
+      "publicationDate": "2026-11-09",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-11-09-007.json",
+      "proofSha256": "81865594814b1e5c1eec14177ddfd89368ddbce87ae4717dd8c8a6b596b5ce46",
+      "recordCount": 18
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-11-09-008",
+      "publicationDate": "2026-11-09",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-11-09-008.json",
+      "proofSha256": "e0b0b315c1bafcd2c3f3c40f45386f9df9df036b89bdf1255595062534194478",
+      "recordCount": 18
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-11-09-009",
+      "publicationDate": "2026-11-09",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-11-09-009.json",
+      "proofSha256": "e0a38094bb94953c0e8b3ffbc9db57b94328bb493d5ed14296794abd2ff86563",
+      "recordCount": 19
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-11-09-010",
+      "publicationDate": "2026-11-09",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-11-09-010.json",
+      "proofSha256": "1ce01d5c082651d415a8c8e955f5b935b83d7b5e0c1657df97ce1747e4b9150a",
+      "recordCount": 18
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-11-09-011",
+      "publicationDate": "2026-11-09",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-11-09-011.json",
+      "proofSha256": "83f6a8d00573659cb463fc82ee5c478f246ef074cfb8c166ffe3cd2540c398bd",
+      "recordCount": 17
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-11-09-012",
+      "publicationDate": "2026-11-09",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-11-09-012.json",
+      "proofSha256": "030d7ce48790a618fd191e28b56d3a1e15a78b6344b71eac48ac4935e91669df",
+      "recordCount": 5
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-queue-2026-11-09-013",
+      "publicationDate": "2026-11-09",
+      "proofPath": "/publication-proofs/aic/aic-queue-2026-11-09-013.json",
+      "proofSha256": "5ce34923a217c04cc9a6dd648334640ca7e6d9e9bdff86957b845d53e4110f3f",
+      "recordCount": 2
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-reassessment-2026-11-03-001",
+      "publicationDate": "2026-11-03",
+      "proofPath": "/publication-proofs/aic/aic-reassessment-2026-11-03-001.json",
+      "proofSha256": "383ca5052743f2647fa8823354d40ba749f202eb342b5672ff959a8a8695f2ba",
+      "recordCount": 1
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-reassessment-2026-11-03-002",
+      "publicationDate": "2026-11-03",
+      "proofPath": "/publication-proofs/aic/aic-reassessment-2026-11-03-002.json",
+      "proofSha256": "39e75fa5e55d1e389c3b8e69c283b8d9731094e137f3d8e2ff0a6f5630d02122",
+      "recordCount": 2
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "aic-reassessment-2026-11-03-003",
+      "publicationDate": "2026-11-03",
+      "proofPath": "/publication-proofs/aic/aic-reassessment-2026-11-03-003.json",
+      "proofSha256": "3f0b61fde5e6bd950533bbac1116af0494ab8a99348c1159503104b2ffa21c3a",
+      "recordCount": 7
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "v106-pending-independent-2026-11-11-001",
+      "publicationDate": "2026-11-11",
+      "proofPath": "/publication-proofs/aic/v106-pending-independent-2026-11-11-001.json",
+      "proofSha256": "edbd41cd987df24a26de9e403fe7b50725eff524b962a9b939e178d7c8033d58",
+      "recordCount": 1
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "v109-aic-cache-2026-11-11-001",
+      "publicationDate": "2026-11-11",
+      "proofPath": "/publication-proofs/aic/v109-aic-cache-2026-11-11-001.json",
+      "proofSha256": "7c2a5448b38e0a023721eae64113506bb177e7b96e494cd9fbee189f5d7242f5",
+      "recordCount": 5
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "v75-visual-2026-11-10-001",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/aic/v75-visual-2026-11-10-001.json",
+      "proofSha256": "c02074548e6367b1f6eee24679495315b74abae5b1eb3244e47d7193c7167d20",
+      "recordCount": 9
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "v77-visual-2026-11-10-001",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/aic/v77-visual-2026-11-10-001.json",
+      "proofSha256": "6d1d5d8381b572ad11d9b12acc3b23c3e427f80183726e688f24aeffe91ff484",
+      "recordCount": 2
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "v80-visual-2026-11-10-002",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/aic/v80-visual-2026-11-10-002.json",
+      "proofSha256": "6130949c2e80028c3173521cfe6543de50602445ef32457bcf4232a6b0db0f17",
+      "recordCount": 2
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "v83-visual-2026-11-10-001",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/aic/v83-visual-2026-11-10-001.json",
+      "proofSha256": "e326b7ee4aa552f464ebd8fb7a40907d3383faab397a341fbf9be7de8ba407ad",
+      "recordCount": 2
+    },
+    {
+      "provider": "aic",
+      "localBatchId": "v84-visual-2026-11-10-001",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/aic/v84-visual-2026-11-10-001.json",
+      "proofSha256": "2f4547bc7c0ee48ad95ae5dddcbbc0bb8e2450483215d21032a77e57ded51d3d",
+      "recordCount": 1
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "cma-2026-10-26-001",
+      "publicationDate": "2026-10-26",
+      "proofPath": "/publication-proofs/cma/cma-2026-10-26-001.json",
+      "proofSha256": "c2034f573744ccd537c2b60465ab23588bb4808504833315f795eac91adda06e",
+      "recordCount": 51
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "cma-2026-10-26-002",
+      "publicationDate": "2026-10-26",
+      "proofPath": "/publication-proofs/cma/cma-2026-10-26-002.json",
+      "proofSha256": "e0b3191bc83d2b5009e167e506ca8cfc6643f48d67412e5e38b90541653b0d54",
+      "recordCount": 80
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "cma-2026-10-26-003",
+      "publicationDate": "2026-10-26",
+      "proofPath": "/publication-proofs/cma/cma-2026-10-26-003.json",
+      "proofSha256": "af308155d4b8c33dc15acf31d227a67c10a2b7a2da5ad5e581b7405da2cb19be",
+      "recordCount": 54
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "cma-2026-10-27-005",
+      "publicationDate": "2026-10-27",
+      "proofPath": "/publication-proofs/cma/cma-2026-10-27-005.json",
+      "proofSha256": "216d50f684f0eb8d288cc4c29b28a8363d12a2738591d449fbf7f3032115f2fa",
+      "recordCount": 8
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "cma-2026-10-28-006",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/cma/cma-2026-10-28-006.json",
+      "proofSha256": "18f8a238702312520fd1083d4dbb3e8c2f4115b6d7a51569bedaf97702d06b69",
+      "recordCount": 8
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "cma-2026-10-28-007",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/cma/cma-2026-10-28-007.json",
+      "proofSha256": "75f0b3ad5ea5c4218a1664549eef12e52d6dbb612a2a9160f14ec3a4e1855932",
+      "recordCount": 19
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "cma-2026-10-28-008",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/cma/cma-2026-10-28-008.json",
+      "proofSha256": "2afeca0a0c3fb8d185b4f61577add4bbc021b6716f969b3ccc1f9354d45e93d3",
+      "recordCount": 15
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "cma-2026-10-28-009",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/cma/cma-2026-10-28-009.json",
+      "proofSha256": "3c3cd722779ee9f5f6a8f8dbca47e845f390205fc93b9a4fb0111d64f34b2fb3",
+      "recordCount": 13
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "cma-2026-10-28-010",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/cma/cma-2026-10-28-010.json",
+      "proofSha256": "71acf2c468b8292a81d2c7c68559799632f2d7d95f7c68032e21df2c7daa0ee2",
+      "recordCount": 14
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "cma-2026-10-28-011",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/cma/cma-2026-10-28-011.json",
+      "proofSha256": "2d701c7d3dcbe9967cf1a7aed15de0696ff679d5fb6fa8f20a3373341e7f9550",
+      "recordCount": 2
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "cma-2026-10-28-012",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/cma/cma-2026-10-28-012.json",
+      "proofSha256": "a03c5450345667b2da2d4c4a2f5bc46525cb7ea76a7ff2f4071a20b9f321e584",
+      "recordCount": 3
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "cma-2026-10-28-013",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/cma/cma-2026-10-28-013.json",
+      "proofSha256": "b7302801db863a4e511ee2cfabc3e6b7cab2926a5bf07ef43660892dfe7c9462",
+      "recordCount": 4
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "cma-2026-10-28-014",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/cma/cma-2026-10-28-014.json",
+      "proofSha256": "6515a135e2d72dbb4a4077f78929127c09247ce7651f6245e3ce67d387e408c7",
+      "recordCount": 1
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "cma-2026-10-28-015",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/cma/cma-2026-10-28-015.json",
+      "proofSha256": "7e95ea2cbdabd162a54dc18ee7aebd8583866d2d13dcdcf1dcdcc78e0440b890",
+      "recordCount": 12
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "cma-2026-10-28-016",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/cma/cma-2026-10-28-016.json",
+      "proofSha256": "662e59c1c02b202fd1c7590458cd7922dc67d6e6ddad164fc58aae4426a6044d",
+      "recordCount": 1
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "cma-2026-10-28-017",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/cma/cma-2026-10-28-017.json",
+      "proofSha256": "ce52998ae901fb55aa9d22b4183bd7a74adf8bd9bef1756ead75af2885b81389",
+      "recordCount": 12
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "cma-2026-10-28-018",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/cma/cma-2026-10-28-018.json",
+      "proofSha256": "e98a1d179030227e981865df2582302411867c7bb0b94f27118dbf9f6238cea1",
+      "recordCount": 10
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "cma-2026-10-28-019",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/cma/cma-2026-10-28-019.json",
+      "proofSha256": "0c36f6fdca73007a7a95fe5b7e454adbb6301fb143ec4c74ebe991a7361ffc55",
+      "recordCount": 9
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "cma-2026-10-28-020",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/cma/cma-2026-10-28-020.json",
+      "proofSha256": "3a3dba9e26a21970adecd336711c396e5b1beb8295f79a4e7bde653d58fbccd3",
+      "recordCount": 19
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "cma-2026-10-28-021",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/cma/cma-2026-10-28-021.json",
+      "proofSha256": "1b5e1f9178a47400424c246b90a6c7a72fc9fd55dacd1a0dbd0382b42b4b25c9",
+      "recordCount": 14
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "cma-2026-10-28-022",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/cma/cma-2026-10-28-022.json",
+      "proofSha256": "e8d0709d6b95bd6ffac6db7fe8923f66edd9ca17a5815c2c3a53330e7fdc8a49",
+      "recordCount": 9
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "cma-2026-10-28-023",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/cma/cma-2026-10-28-023.json",
+      "proofSha256": "648513a9c45a00a3c08f45ba0460142d81fc3aa3be82b30c4ce7b0dda4804b13",
+      "recordCount": 2
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "cma-2026-10-28-024",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/cma/cma-2026-10-28-024.json",
+      "proofSha256": "fe31a389abb6ed076fb5e1cc11b6b6d74e420627bacaab393d17dc4fd2b49c7c",
+      "recordCount": 2
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "cma-2026-10-28-025",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/cma/cma-2026-10-28-025.json",
+      "proofSha256": "9e2eb3b51583231840ddb4adde85bb8f9dd0087a23793641befb464a97d7b542",
+      "recordCount": 1
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "cma-2026-11-09-001",
+      "publicationDate": "2026-11-09",
+      "proofPath": "/publication-proofs/cma/cma-2026-11-09-001.json",
+      "proofSha256": "17a963e5f0d205ced5b34ff3b2b893e9ddadaa68ef533ddf6639f56e74f9bba9",
+      "recordCount": 2
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "cma-2026-11-09-003",
+      "publicationDate": "2026-11-09",
+      "proofPath": "/publication-proofs/cma/cma-2026-11-09-003.json",
+      "proofSha256": "97f43c7d7992c19f2460450bb2037407b2b3a84cd8f40b6736bde785764e8b6f",
+      "recordCount": 3
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "cma-2026-11-09-009",
+      "publicationDate": "2026-11-09",
+      "proofPath": "/publication-proofs/cma/cma-2026-11-09-009.json",
+      "proofSha256": "b742fdb66e2744454fe821f499fffc419c64470d36c80111ce9b2f5167f297e8",
+      "recordCount": 1
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "cma-2026-11-11-901",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/cma/cma-2026-11-11-901.json",
+      "proofSha256": "6ecab32e54720cf5b3e3890c433119cc3853c289cce748cc017cb120fb97afba",
+      "recordCount": 2
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "cma-2026-11-11-902",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/cma/cma-2026-11-11-902.json",
+      "proofSha256": "06f2754b2c3742b9dc9cc3c10504262e3f874eeb29cc6e9460355b44a8193e73",
+      "recordCount": 8
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "review-v119-2026-11-12-001",
+      "publicationDate": "2026-11-12",
+      "proofPath": "/publication-proofs/cma/review-v119-2026-11-12-001.json",
+      "proofSha256": "ff2d25932416bfb4f039cd9228f81c112c71ae1afe89d5a984f654ba944bd63f",
+      "recordCount": 3
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "review-v120-2026-11-12-002",
+      "publicationDate": "2026-11-12",
+      "proofPath": "/publication-proofs/cma/review-v120-2026-11-12-002.json",
+      "proofSha256": "ba5cb37c6afe454b7fc496731c42d0b225e7b0fe3fe8e2b7547f57eadfc7e63f",
+      "recordCount": 4
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "review-v127-2026-11-12-001",
+      "publicationDate": "2026-11-12",
+      "proofPath": "/publication-proofs/cma/review-v127-2026-11-12-001.json",
+      "proofSha256": "ac7a7781720289f01c5fe79b54dfe46f5b0cb2e1e6bc8d8d7d147f68632477e3",
+      "recordCount": 13
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "review-v127-2026-11-12-002",
+      "publicationDate": "2026-11-12",
+      "proofPath": "/publication-proofs/cma/review-v127-2026-11-12-002.json",
+      "proofSha256": "db49e192ddad285e2bb2aa3622b50727c06750f338c3adad5b09706f00fc1683",
+      "recordCount": 9
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "review-v128-2026-11-12-002",
+      "publicationDate": "2026-11-12",
+      "proofPath": "/publication-proofs/cma/review-v128-2026-11-12-002.json",
+      "proofSha256": "dd66523d1a3a718a4132c7a9c4346efa150ee845bc69a0649f0b4d2289d5480a",
+      "recordCount": 20
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "review-v129-2026-11-12-001",
+      "publicationDate": "2026-11-12",
+      "proofPath": "/publication-proofs/cma/review-v129-2026-11-12-001.json",
+      "proofSha256": "e528fe145017f273b855acf64fb937e7e8cdc0b34940c4ee9e02d4532a741321",
+      "recordCount": 20
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "review-v130-2026-11-12-001",
+      "publicationDate": "2026-11-12",
+      "proofPath": "/publication-proofs/cma/review-v130-2026-11-12-001.json",
+      "proofSha256": "49734b40dcbfcb4900dc4afef4c79dbad35e956ed8058238b7664ed9367187ef",
+      "recordCount": 19
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "review-v131-2026-11-12-001",
+      "publicationDate": "2026-11-12",
+      "proofPath": "/publication-proofs/cma/review-v131-2026-11-12-001.json",
+      "proofSha256": "6dd201da16898198fa97d0fd9a8be54c12ca3836a992c847e4f5d0d621430862",
+      "recordCount": 16
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "review-v137-2026-11-13-001",
+      "publicationDate": "2026-11-13",
+      "proofPath": "/publication-proofs/cma/review-v137-2026-11-13-001.json",
+      "proofSha256": "c49af694846cfd2cc32cf7089a9b33cfac801e0c8f9600bcc905844b2771e1b7",
+      "recordCount": 10
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "v105-local-2026-11-11-002",
+      "publicationDate": "2026-11-11",
+      "proofPath": "/publication-proofs/cma/v105-local-2026-11-11-002.json",
+      "proofSha256": "f9d9f9be622dace5e479f4f74f5e2be021d9227cb37a23adea844b264fefd089",
+      "recordCount": 1
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "v75-visual-2026-11-10-001",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/cma/v75-visual-2026-11-10-001.json",
+      "proofSha256": "a617f4354a238ce82333f5d269d658e0f928e21c9fe079adc092f23ee8e7482e",
+      "recordCount": 6
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "v76-visual-2026-11-10-002",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/cma/v76-visual-2026-11-10-002.json",
+      "proofSha256": "87f22c3595afd520c37514ce29449aa4a9411287552c4fd8318ad42f93e03067",
+      "recordCount": 1
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "v77-visual-2026-11-10-001",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/cma/v77-visual-2026-11-10-001.json",
+      "proofSha256": "721cda6b347836686c839d22d7526a592b85c631f811f00416abef2ddfbcf096",
+      "recordCount": 6
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "v80-visual-2026-11-10-002",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/cma/v80-visual-2026-11-10-002.json",
+      "proofSha256": "0a6f3aaaabaf9ee51a52fab242ab2525588376f45c0a23912418ad1f34f18ad9",
+      "recordCount": 6
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "v81-visual-2026-11-10-002",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/cma/v81-visual-2026-11-10-002.json",
+      "proofSha256": "9d79fef2459c5b30ae6fd1c40dec6183ec67fccba9d67d32c2e14ef5ae305409",
+      "recordCount": 3
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "v82-visual-2026-11-10-001",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/cma/v82-visual-2026-11-10-001.json",
+      "proofSha256": "317597fafae39c8d229bafc7dbadd11e68532586b82ec7e41a41721e7617b84c",
+      "recordCount": 4
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "v83-visual-2026-11-10-001",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/cma/v83-visual-2026-11-10-001.json",
+      "proofSha256": "26a56a77cac471955bc9e5ba24bfd8ace0ddc5ccff364c038bc6944e0ac8e0b0",
+      "recordCount": 18
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "v84-visual-2026-11-10-001",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/cma/v84-visual-2026-11-10-001.json",
+      "proofSha256": "35d3d3ded7470065ca4b338568d2a7d26343dbc5087f01f04328bc6004fb0683",
+      "recordCount": 19
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "v85-visual-2026-11-10-001",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/cma/v85-visual-2026-11-10-001.json",
+      "proofSha256": "3bd3269fc816c7fc327982403a48af96e46a725671da33265121a7867ca7b8d4",
+      "recordCount": 19
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "v86-visual-2026-11-10-001",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/cma/v86-visual-2026-11-10-001.json",
+      "proofSha256": "1e1411ae7cf1ca261dc264eeac31b6dff0246a74f3a77ee0a095905637c9b9b9",
+      "recordCount": 11
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "v87-visual-2026-11-10-001",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/cma/v87-visual-2026-11-10-001.json",
+      "proofSha256": "fd0aac62f462c38528932cbb9f029043eb3591a7f56e1e4b689c47769a64bf61",
+      "recordCount": 8
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "v88-visual-2026-11-10-001",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/cma/v88-visual-2026-11-10-001.json",
+      "proofSha256": "b58894a719bd3954114365661770c9a648a44fffc0f10cb5167d0b9f189c3ace",
+      "recordCount": 8
+    },
+    {
+      "provider": "cma",
+      "localBatchId": "v89-visual-2026-11-10-001",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/cma/v89-visual-2026-11-10-001.json",
+      "proofSha256": "1dc44ce4cfcb68cc0eab071717699cb5a740cb1ab72c8da5f9a5eed0e55f57bf",
+      "recordCount": 7
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-10-26-001",
+      "publicationDate": "2026-10-26",
+      "proofPath": "/publication-proofs/met/met-2026-10-26-001.json",
+      "proofSha256": "b13d4b62b00a5bb7108166ef03fd51a3ced1938b81f4e7c83931e572d87b46a3",
+      "recordCount": 37
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-10-26-002",
+      "publicationDate": "2026-10-26",
+      "proofPath": "/publication-proofs/met/met-2026-10-26-002.json",
+      "proofSha256": "004648bf9c04cd6551b4c4065b01b893086e5d7f5800fef68ff0e3ebcb6d6c72",
+      "recordCount": 58
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-10-26-003",
+      "publicationDate": "2026-10-26",
+      "proofPath": "/publication-proofs/met/met-2026-10-26-003.json",
+      "proofSha256": "0ff70b97af4b7b15c262dd53d87c3b72c7651d48abf8eb697669aa71550f0c7c",
+      "recordCount": 48
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-10-26-004",
+      "publicationDate": "2026-10-26",
+      "proofPath": "/publication-proofs/met/met-2026-10-26-004.json",
+      "proofSha256": "8a0763db62f28d097fe6d8bbc8991e2b3931b5e4bc7e146b8e92a24cf333cb7a",
+      "recordCount": 39
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-10-26-005",
+      "publicationDate": "2026-10-26",
+      "proofPath": "/publication-proofs/met/met-2026-10-26-005.json",
+      "proofSha256": "813000f21e589522fd518d7631ea77ac6c460b758aab0fefcbc5b1cec68f7f6a",
+      "recordCount": 40
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-10-26-006",
+      "publicationDate": "2026-10-26",
+      "proofPath": "/publication-proofs/met/met-2026-10-26-006.json",
+      "proofSha256": "0fbcae88ceb935502e35d8f54f0009d4292bc0bbd5af5e45ba4d3a6a8a24a537",
+      "recordCount": 40
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-10-26-007",
+      "publicationDate": "2026-10-26",
+      "proofPath": "/publication-proofs/met/met-2026-10-26-007.json",
+      "proofSha256": "a9aafec9ad317e5a734fad04b95738fa5e0eb542591b6c4b799c72590c59b13b",
+      "recordCount": 10
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-10-26-008",
+      "publicationDate": "2026-10-26",
+      "proofPath": "/publication-proofs/met/met-2026-10-26-008.json",
+      "proofSha256": "0ad4f3b7f9113d8342f3720acfd8e27e01849d9e7ed438f746097a4e677e7795",
+      "recordCount": 39
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-10-26-009",
+      "publicationDate": "2026-10-27",
+      "proofPath": "/publication-proofs/met/met-2026-10-26-009.json",
+      "proofSha256": "d256e2fd206c35ac6f82198398307ea1b4dac6b763b09799cf1b2a5d844db3d7",
+      "recordCount": 57
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-03-001",
+      "publicationDate": "2026-11-03",
+      "proofPath": "/publication-proofs/met/met-2026-11-03-001.json",
+      "proofSha256": "75c37e69682626729946b385d2d6b541a9dbdfdbef0596e7c55f9ba26b99ba41",
+      "recordCount": 6
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-03-002",
+      "publicationDate": "2026-11-03",
+      "proofPath": "/publication-proofs/met/met-2026-11-03-002.json",
+      "proofSha256": "d026bc7f0fb5afb119e24a3096a91e75de7cfe6ed147d81480741a77d31ceec3",
+      "recordCount": 14
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-03-003",
+      "publicationDate": "2026-11-03",
+      "proofPath": "/publication-proofs/met/met-2026-11-03-003.json",
+      "proofSha256": "1e37db1191a1e9e57ddf263b04922cb21ae4151bcae2b790471862b1bd97dce2",
+      "recordCount": 4
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-03-004",
+      "publicationDate": "2026-11-03",
+      "proofPath": "/publication-proofs/met/met-2026-11-03-004.json",
+      "proofSha256": "5f6d1607bd5a14e123a7aa16bbb8dc06575f251fbada68aacdbe2e9bc79be803",
+      "recordCount": 5
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-03-005",
+      "publicationDate": "2026-11-03",
+      "proofPath": "/publication-proofs/met/met-2026-11-03-005.json",
+      "proofSha256": "12aa06c82074c1f9adfd4c0ebd7e02efddd99b3ce5cecc63fc86c2478277bb66",
+      "recordCount": 67
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-03-006",
+      "publicationDate": "2026-11-03",
+      "proofPath": "/publication-proofs/met/met-2026-11-03-006.json",
+      "proofSha256": "c91381697dd7843c31955a1864e69cdaf4ad471f55fb735dd32af022766ff77e",
+      "recordCount": 53
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-03-007",
+      "publicationDate": "2026-11-03",
+      "proofPath": "/publication-proofs/met/met-2026-11-03-007.json",
+      "proofSha256": "b519c804326ca054097307aa9858900a7721b9d2acc84459caf101579a14542d",
+      "recordCount": 139
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-03-008",
+      "publicationDate": "2026-11-03",
+      "proofPath": "/publication-proofs/met/met-2026-11-03-008.json",
+      "proofSha256": "2cdc9c9085055c4518ea01564f7b0d3ebd749b61b6290c493ad69ec26aebd1bb",
+      "recordCount": 3
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-03-009",
+      "publicationDate": "2026-11-03",
+      "proofPath": "/publication-proofs/met/met-2026-11-03-009.json",
+      "proofSha256": "bba3dfec484f784979d851c073fa568e2325eb89339452428c98155c351e2aed",
+      "recordCount": 77
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-03-010",
+      "publicationDate": "2026-11-03",
+      "proofPath": "/publication-proofs/met/met-2026-11-03-010.json",
+      "proofSha256": "4519b9bd41807d56973cc7555430bf618fe7da0cd18d486fd23188f5bc83145e",
+      "recordCount": 136
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-05-001",
+      "publicationDate": "2026-11-05",
+      "proofPath": "/publication-proofs/met/met-2026-11-05-001.json",
+      "proofSha256": "6bd9b79afcb51f183e95880e502087712542ae49c7e1cb8e3b64c9094466f5f0",
+      "recordCount": 9
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-05-120",
+      "publicationDate": "2026-11-05",
+      "proofPath": "/publication-proofs/met/met-2026-11-05-120.json",
+      "proofSha256": "51a5690e3eac6774932c833f4fdd3fc1e6d75f84d340e23a337a5dcb33c4a7a3",
+      "recordCount": 130
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-05-901",
+      "publicationDate": "2026-11-05",
+      "proofPath": "/publication-proofs/met/met-2026-11-05-901.json",
+      "proofSha256": "9d69c541ed5a198944fdc5ffaa1d75f00d05397c6e9cb089ea44719197e27892",
+      "recordCount": 14
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-05-902",
+      "publicationDate": "2026-11-05",
+      "proofPath": "/publication-proofs/met/met-2026-11-05-902.json",
+      "proofSha256": "1e7e3f901c8d5b6a77b8165a74c11df132a3bc7d33120e0af38ccb60f31f1319",
+      "recordCount": 39
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-05-903",
+      "publicationDate": "2026-11-05",
+      "proofPath": "/publication-proofs/met/met-2026-11-05-903.json",
+      "proofSha256": "236f15bbcdf09ff2226075be896d0a0309869dae182c2281b731ba6a72a59043",
+      "recordCount": 7
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-09-002",
+      "publicationDate": "2026-11-09",
+      "proofPath": "/publication-proofs/met/met-2026-11-09-002.json",
+      "proofSha256": "16a77020f17b619f715498d85b31ea6733bf2dad384969b914bced143eecb168",
+      "recordCount": 7
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-09-004",
+      "publicationDate": "2026-11-09",
+      "proofPath": "/publication-proofs/met/met-2026-11-09-004.json",
+      "proofSha256": "89b253e6327cbc64651fc42f868e8015f8ff30525e93fc574d0404c3393058fd",
+      "recordCount": 35
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-09-014",
+      "publicationDate": "2026-11-09",
+      "proofPath": "/publication-proofs/met/met-2026-11-09-014.json",
+      "proofSha256": "3df66f074132ccab34c53ddc5344d984e89dbec0c3d4f71ad2cd0811cae6753d",
+      "recordCount": 23
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-09-015",
+      "publicationDate": "2026-11-09",
+      "proofPath": "/publication-proofs/met/met-2026-11-09-015.json",
+      "proofSha256": "65f5a1b0c935a9b07642e19eca97ae39aabd7e18942f11612edc3a216b8a7655",
+      "recordCount": 280
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-10-002",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/met/met-2026-11-10-002.json",
+      "proofSha256": "8238fc8169fbd3d098996b091a4eea129591bdcd24159820a88bac2212dff540",
+      "recordCount": 4
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-10-003",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/met/met-2026-11-10-003.json",
+      "proofSha256": "8186f26593cff4486df2ec6037d159b7629c6a6065297e5933842c2478d2b514",
+      "recordCount": 10
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-10-004",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/met/met-2026-11-10-004.json",
+      "proofSha256": "5333cb32de5328d6ad3e6875f00e63bc35bae430b75efae775983b8e72be76dc",
+      "recordCount": 28
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-11-004",
+      "publicationDate": "2026-11-11",
+      "proofPath": "/publication-proofs/met/met-2026-11-11-004.json",
+      "proofSha256": "dba8b4dcb67e8395fd34096702f8e51ce0a929c63e843b8b8701ee75268e4b32",
+      "recordCount": 4
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-11-006",
+      "publicationDate": "2026-11-11",
+      "proofPath": "/publication-proofs/met/met-2026-11-11-006.json",
+      "proofSha256": "b8fa6e8e263c4788d665e625f80a3e7878a597eb9a37eb2a48d3972747135244",
+      "recordCount": 6
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-11-007",
+      "publicationDate": "2026-11-11",
+      "proofPath": "/publication-proofs/met/met-2026-11-11-007.json",
+      "proofSha256": "9018f99b170d9de1b5498dad121d1d6596a9fd2cb3e06673a4ed053f46242a12",
+      "recordCount": 11
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-11-009",
+      "publicationDate": "2026-11-11",
+      "proofPath": "/publication-proofs/met/met-2026-11-11-009.json",
+      "proofSha256": "fe09c4b736ab33ad44092c0203b89d84ccded76f092f7c0e5694b079376b4fc4",
+      "recordCount": 18
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-11-010",
+      "publicationDate": "2026-11-11",
+      "proofPath": "/publication-proofs/met/met-2026-11-11-010.json",
+      "proofSha256": "2ee404dd06b8fe8da39510a0b5d01ecb5db1b7532dcda13a5b91c93a136bd5ad",
+      "recordCount": 17
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-11-011",
+      "publicationDate": "2026-11-11",
+      "proofPath": "/publication-proofs/met/met-2026-11-11-011.json",
+      "proofSha256": "28c5f813edcf3f45f640d6ce84282421aabe64c8b9afa1848020b245098a85ba",
+      "recordCount": 20
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-11-012",
+      "publicationDate": "2026-11-11",
+      "proofPath": "/publication-proofs/met/met-2026-11-11-012.json",
+      "proofSha256": "01e994363efcff93f75485329bf91622fb4e5f5d61c3a83c8a4a38b7e69fdb3e",
+      "recordCount": 20
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-11-013",
+      "publicationDate": "2026-11-11",
+      "proofPath": "/publication-proofs/met/met-2026-11-11-013.json",
+      "proofSha256": "e329718f39066cd09475b8ae8e3ab896dc9477301ffa18e4ecf81065f604eb0a",
+      "recordCount": 19
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-11-015",
+      "publicationDate": "2026-11-11",
+      "proofPath": "/publication-proofs/met/met-2026-11-11-015.json",
+      "proofSha256": "d644100baa25dec0829dfce4ba17762a9e396d311551af67b69da4d08e143765",
+      "recordCount": 17
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-11-017",
+      "publicationDate": "2026-11-11",
+      "proofPath": "/publication-proofs/met/met-2026-11-11-017.json",
+      "proofSha256": "20b71cf700bdced563f769b28eab975e27ad2befd900401efec4d95887ddee7d",
+      "recordCount": 17
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-11-018",
+      "publicationDate": "2026-11-11",
+      "proofPath": "/publication-proofs/met/met-2026-11-11-018.json",
+      "proofSha256": "04f98ce92dfdf88ed4a466a43dec3e044d06dab13106c257cb949c3f6bb94a7b",
+      "recordCount": 1
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-11-019",
+      "publicationDate": "2026-11-11",
+      "proofPath": "/publication-proofs/met/met-2026-11-11-019.json",
+      "proofSha256": "7d97deda67522cac781a1005f3586da5bed59936c6b243fbfdc5f0236e16e15c",
+      "recordCount": 16
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-11-022",
+      "publicationDate": "2026-11-11",
+      "proofPath": "/publication-proofs/met/met-2026-11-11-022.json",
+      "proofSha256": "4aebf3411b43a69670240a80b6ea679abd5476015220005e1f88c2f6922982da",
+      "recordCount": 17
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-11-023",
+      "publicationDate": "2026-11-11",
+      "proofPath": "/publication-proofs/met/met-2026-11-11-023.json",
+      "proofSha256": "a688fadfe770a620ad5956650d45946a3d479e9f987575671dd66a88fae875f6",
+      "recordCount": 15
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-11-024",
+      "publicationDate": "2026-11-11",
+      "proofPath": "/publication-proofs/met/met-2026-11-11-024.json",
+      "proofSha256": "f08bdc101aa0d2b85deeb5d24afd2e76137a0cb4a8b5cf4318272374a6990e74",
+      "recordCount": 17
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-11-025",
+      "publicationDate": "2026-11-11",
+      "proofPath": "/publication-proofs/met/met-2026-11-11-025.json",
+      "proofSha256": "8776c8931f260305c810063c0b090eccd1d43c66d0f4b6dd9260ac9e6ba949a6",
+      "recordCount": 14
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-11-026",
+      "publicationDate": "2026-11-11",
+      "proofPath": "/publication-proofs/met/met-2026-11-11-026.json",
+      "proofSha256": "0b048384c414ab0a3068ce4b5927d87f866f0c31c4ba8a7af3b9380c46a55e60",
+      "recordCount": 11
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-11-027",
+      "publicationDate": "2026-11-11",
+      "proofPath": "/publication-proofs/met/met-2026-11-11-027.json",
+      "proofSha256": "15afb773a5f1ca5404c422d78bd9de0dd9cb91cfc0218d79c8abdf4209ea18ab",
+      "recordCount": 10
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-11-028",
+      "publicationDate": "2026-11-11",
+      "proofPath": "/publication-proofs/met/met-2026-11-11-028.json",
+      "proofSha256": "715a330ce5dff69c0e410810c1b9ba38c2fc043898ccd5780c267f69a8c688ed",
+      "recordCount": 77
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-11-029",
+      "publicationDate": "2026-11-11",
+      "proofPath": "/publication-proofs/met/met-2026-11-11-029.json",
+      "proofSha256": "79bd66e3f7f64cf15efde0b2fd522257c73caca9b20efc211a5c3c6b1e7ee5ee",
+      "recordCount": 86
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-2026-11-11-030",
+      "publicationDate": "2026-11-11",
+      "proofPath": "/publication-proofs/met/met-2026-11-11-030.json",
+      "proofSha256": "b5973c88b3f83f4fb6837be48f73c2c1f14605d040e5ce4d2a8d831e26abecff",
+      "recordCount": 3
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-modern-2026-11-05-001",
+      "publicationDate": "2026-11-05",
+      "proofPath": "/publication-proofs/met/met-modern-2026-11-05-001.json",
+      "proofSha256": "1cb8ce381e4149c3e50bf73662a5c9f1531dbd7c61b375218132aaab087b9c49",
+      "recordCount": 1
+    },
+    {
+      "provider": "met",
+      "localBatchId": "met-period-v3-2026-11-11-001",
+      "publicationDate": "2026-11-11",
+      "proofPath": "/publication-proofs/met/met-period-v3-2026-11-11-001.json",
+      "proofSha256": "b41b91bac3de14d3426e44d741a25b266e61aeea81542e8be1d02bfa95984179",
+      "recordCount": 14
+    },
+    {
+      "provider": "met",
+      "localBatchId": "review-v119-2026-11-12-001",
+      "publicationDate": "2026-11-12",
+      "proofPath": "/publication-proofs/met/review-v119-2026-11-12-001.json",
+      "proofSha256": "3f377ebfd526cb7d38d011fd0a435486f0149d2f05347b6a6259aafa02e9b016",
+      "recordCount": 3
+    },
+    {
+      "provider": "met",
+      "localBatchId": "review-v120-2026-11-12-002",
+      "publicationDate": "2026-11-12",
+      "proofPath": "/publication-proofs/met/review-v120-2026-11-12-002.json",
+      "proofSha256": "400ab065b2ac7ae22a8e778c0a2e8f7350beabf2b390d606c799eb94326fb834",
+      "recordCount": 5
+    },
+    {
+      "provider": "met",
+      "localBatchId": "review-v127-2026-11-12-002",
+      "publicationDate": "2026-11-12",
+      "proofPath": "/publication-proofs/met/review-v127-2026-11-12-002.json",
+      "proofSha256": "55b1e3b8084011d69275f6b50b40b824bdda764faa6c67ca98f62610e93feedc",
+      "recordCount": 4
+    },
+    {
+      "provider": "met",
+      "localBatchId": "review-v133-2026-11-12-001",
+      "publicationDate": "2026-11-12",
+      "proofPath": "/publication-proofs/met/review-v133-2026-11-12-001.json",
+      "proofSha256": "0f65d029083d57903965a7998fc573acb5ee3aa02f0852c3c1ebc00af33fba36",
+      "recordCount": 8
+    },
+    {
+      "provider": "met",
+      "localBatchId": "review-v135-2026-11-13-001",
+      "publicationDate": "2026-11-13",
+      "proofPath": "/publication-proofs/met/review-v135-2026-11-13-001.json",
+      "proofSha256": "b8129f816e1f3dae9fff0806afb1fcb83a3bd29eda28b02bd23ce2566ee57cdb",
+      "recordCount": 10
+    },
+    {
+      "provider": "met",
+      "localBatchId": "v105-met-2026-11-11-001",
+      "publicationDate": "2026-11-11",
+      "proofPath": "/publication-proofs/met/v105-met-2026-11-11-001.json",
+      "proofSha256": "a450449d84135ea6f48adea70578f8fa36b0ef430a53ab71ca1af93f43420807",
+      "recordCount": 18
+    },
+    {
+      "provider": "met",
+      "localBatchId": "v75-visual-2026-11-10-001",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/met/v75-visual-2026-11-10-001.json",
+      "proofSha256": "32665eda118a6dbca4b5e18e11a5f5c1f64a588c26c07d9abe14e65b6f3ab4cc",
+      "recordCount": 1
+    },
+    {
+      "provider": "met",
+      "localBatchId": "v77-visual-2026-11-10-001",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/met/v77-visual-2026-11-10-001.json",
+      "proofSha256": "0832a29633e144f634794cb45fa7b78f45e6ecaba9dcd1b30ac92b70aa8aa8ec",
+      "recordCount": 12
+    },
+    {
+      "provider": "met",
+      "localBatchId": "v80-visual-2026-11-10-002",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/met/v80-visual-2026-11-10-002.json",
+      "proofSha256": "8edc15d05c90ee37b2c217015af940820959c72e0329a79f790ee374e85896fb",
+      "recordCount": 11
+    },
+    {
+      "provider": "met",
+      "localBatchId": "v81-visual-2026-11-10-002",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/met/v81-visual-2026-11-10-002.json",
+      "proofSha256": "d1611575871db45290919f4d1a36e84f974c1cd0ed7962f05f898b8988583518",
+      "recordCount": 3
+    },
+    {
+      "provider": "met",
+      "localBatchId": "v82-visual-2026-11-10-001",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/met/v82-visual-2026-11-10-001.json",
+      "proofSha256": "5eeab639a4a82148b3b2b442cbf486beda56bf68c8a35a6d39feafd1b80dd832",
+      "recordCount": 16
+    },
+    {
+      "provider": "met",
+      "localBatchId": "v90-met-2026-11-10-001",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/met/v90-met-2026-11-10-001.json",
+      "proofSha256": "959935aec2ce889204c768b803452944c83dfe57dd583604d278fe06953be98c",
+      "recordCount": 2
+    },
+    {
+      "provider": "mia",
+      "localBatchId": "mia-2026-10-28-001",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/mia/mia-2026-10-28-001.json",
+      "proofSha256": "163cae27d010d55d854c0ee62f90555be40a00dce9b52bbd1afb7aab489c47db",
+      "recordCount": 31
+    },
+    {
+      "provider": "mia",
+      "localBatchId": "mia-2026-10-28-002",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/mia/mia-2026-10-28-002.json",
+      "proofSha256": "9d34b2c12d31fd22414afef3ebfc3c158d872cf689368bf751dc60447c07fbaa",
+      "recordCount": 50
+    },
+    {
+      "provider": "mia",
+      "localBatchId": "mia-2026-10-28-003",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/mia/mia-2026-10-28-003.json",
+      "proofSha256": "dd589b780549da9834dcb74e9d5ea39a3efdc1c015632e8eb0bea786d54326f6",
+      "recordCount": 34
+    },
+    {
+      "provider": "mia",
+      "localBatchId": "mia-2026-10-28-004",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/mia/mia-2026-10-28-004.json",
+      "proofSha256": "d0ee54642316f454b7c4c5949c4f4a8a81b2ad79b30ac8c50180ed7164de1627",
+      "recordCount": 11
+    },
+    {
+      "provider": "mia",
+      "localBatchId": "mia-2026-10-28-005",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/mia/mia-2026-10-28-005.json",
+      "proofSha256": "f45735db6f630cb32de3a391e5014402df4ba089a360d8c4c60da03fd185d65b",
+      "recordCount": 139
+    },
+    {
+      "provider": "mia",
+      "localBatchId": "mia-2026-10-28-006",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/mia/mia-2026-10-28-006.json",
+      "proofSha256": "c6978700e0e53aec771e988fe1dcd68e58190adf6058271ca01c1435ebd70844",
+      "recordCount": 39
+    },
+    {
+      "provider": "mia",
+      "localBatchId": "mia-2026-10-28-007",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/mia/mia-2026-10-28-007.json",
+      "proofSha256": "d4919e1af88c412786e4f6f899e3455468b4bcf4a0aad26770b2bd56431911e8",
+      "recordCount": 15
+    },
+    {
+      "provider": "mia",
+      "localBatchId": "mia-2026-10-28-008",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/mia/mia-2026-10-28-008.json",
+      "proofSha256": "4b267fc888ac446a467f136c8a325391b77d78408b724965ed309402fdb01b70",
+      "recordCount": 6
+    },
+    {
+      "provider": "mia",
+      "localBatchId": "mia-2026-10-28-009",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/mia/mia-2026-10-28-009.json",
+      "proofSha256": "3f4b2923a81cf459cc93a5ada327a4e3e37d5c3a0470248073bcc7961bf22f6c",
+      "recordCount": 16
+    },
+    {
+      "provider": "mia",
+      "localBatchId": "mia-2026-11-06-002",
+      "publicationDate": "2026-11-06",
+      "proofPath": "/publication-proofs/mia/mia-2026-11-06-002.json",
+      "proofSha256": "d26a814ea44bbc342c7b6bf1183965f2486241b323cfe414fdcc2a7ad89e4948",
+      "recordCount": 119
+    },
+    {
+      "provider": "mia",
+      "localBatchId": "mia-2026-11-06-003",
+      "publicationDate": "2026-11-06",
+      "proofPath": "/publication-proofs/mia/mia-2026-11-06-003.json",
+      "proofSha256": "f60c8f603bd94f649feb61cae8fdadcdeee50e8bf5c6dbb651c0e73bb85c1d4e",
+      "recordCount": 137
+    },
+    {
+      "provider": "mia",
+      "localBatchId": "mia-2026-11-06-004",
+      "publicationDate": "2026-11-06",
+      "proofPath": "/publication-proofs/mia/mia-2026-11-06-004.json",
+      "proofSha256": "4c46526501fce90a35ad17ded13a8cf4e95fc0bd74efd121e11e8136f8467f39",
+      "recordCount": 127
+    },
+    {
+      "provider": "mia",
+      "localBatchId": "mia-2026-11-06-005",
+      "publicationDate": "2026-11-06",
+      "proofPath": "/publication-proofs/mia/mia-2026-11-06-005.json",
+      "proofSha256": "8e9759d46983ea15a35cb5f1fe0841e2f306956a49a5cc2219e98f897ffd9450",
+      "recordCount": 36
+    },
+    {
+      "provider": "mia",
+      "localBatchId": "mia-2026-11-09-001",
+      "publicationDate": "2026-11-09",
+      "proofPath": "/publication-proofs/mia/mia-2026-11-09-001.json",
+      "proofSha256": "b77c83d65fe202a48cb3974cd8d4771d8cb8c2afb481e7dbddd35f8ed923c0b0",
+      "recordCount": 14
+    },
+    {
+      "provider": "mia",
+      "localBatchId": "mia-reconcile-2026-11-11-001",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/mia/mia-reconcile-2026-11-11-001.json",
+      "proofSha256": "e9af57ad7775a3f06af1806f67d7d2e8d6d8c83fe60508284da7098ca4bc614d",
+      "recordCount": 137
+    },
+    {
+      "provider": "mia",
+      "localBatchId": "mia-reconcile-2026-11-11-002",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/mia/mia-reconcile-2026-11-11-002.json",
+      "proofSha256": "82d2daa2a3affbf9fde37bf145f29cb891aaaaf1ae088973d92b49aa50a48cfe",
+      "recordCount": 51
+    },
+    {
+      "provider": "mia",
+      "localBatchId": "mia-reconcile-2026-11-11-003",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/mia/mia-reconcile-2026-11-11-003.json",
+      "proofSha256": "bcf398ebd119dc4b80b97a408ed47f78e7f7f9b78a85d516614b27a40b95e9ae",
+      "recordCount": 29
+    },
+    {
+      "provider": "mia",
+      "localBatchId": "mia-reconcile-2026-11-11-004",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/mia/mia-reconcile-2026-11-11-004.json",
+      "proofSha256": "8661b39c7d38f8db63f68158bd0e0f6921283fe7df6a431ca968167464e9c4e4",
+      "recordCount": 90
+    },
+    {
+      "provider": "mia",
+      "localBatchId": "mia-reconcile-2026-11-11-005",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/mia/mia-reconcile-2026-11-11-005.json",
+      "proofSha256": "89c8feba98327a2f8cd1223f4c4258f983b2de4281526bb5e82c99a274acf343",
+      "recordCount": 1
+    },
+    {
+      "provider": "mia",
+      "localBatchId": "review-v120-2026-11-12-003",
+      "publicationDate": "2026-11-12",
+      "proofPath": "/publication-proofs/mia/review-v120-2026-11-12-003.json",
+      "proofSha256": "2b4e23a12d093964749cd84a7b0196944b0bb89d103caa7d421b5978d285cdd1",
+      "recordCount": 1
+    },
+    {
+      "provider": "mia",
+      "localBatchId": "v105-local-2026-11-11-002",
+      "publicationDate": "2026-11-11",
+      "proofPath": "/publication-proofs/mia/v105-local-2026-11-11-002.json",
+      "proofSha256": "90f57b2e06c221dab09db36d3a1279621a204f6f88b1dfd02f32379a60b02fc7",
+      "recordCount": 5
+    },
+    {
+      "provider": "mia",
+      "localBatchId": "v106-pending-independent-2026-11-11-001",
+      "publicationDate": "2026-11-11",
+      "proofPath": "/publication-proofs/mia/v106-pending-independent-2026-11-11-001.json",
+      "proofSha256": "af7acb3f91192a84a134d55716928a14652dd1817b275d37b35aac56af97a3ad",
+      "recordCount": 1
+    },
+    {
+      "provider": "si",
+      "localBatchId": "review-v119-2026-11-12-001",
+      "publicationDate": "2026-11-12",
+      "proofPath": "/publication-proofs/si/review-v119-2026-11-12-001.json",
+      "proofSha256": "fa8ecfc84d3a1441b33dd3446aac541066ee90dc4021aea1dc0eebcbb8760f37",
+      "recordCount": 1
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-2026-10-28-001",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/si/si-2026-10-28-001.json",
+      "proofSha256": "ba4340e249abb4dedebe12753a9c9efdb2b0cbd2376de659ab7a5d70c6e44a3d",
+      "recordCount": 42
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-2026-10-28-002",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/si/si-2026-10-28-002.json",
+      "proofSha256": "8f0536c480b3e05a5c572616beb91b9dd7f6a1185c7193364e6c0a1ee005e470",
+      "recordCount": 90
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-2026-10-28-003",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/si/si-2026-10-28-003.json",
+      "proofSha256": "a779569f96ca050bcb9aedc709b37fcbbf3cd44899d504781a7a0761c7c5588e",
+      "recordCount": 4
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-2026-10-28-004",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/si/si-2026-10-28-004.json",
+      "proofSha256": "599315606f0ceba317c8a63e88bce320f1c8e03090e3a24e0b600c8776c32cb1",
+      "recordCount": 82
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-2026-10-28-005",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/si/si-2026-10-28-005.json",
+      "proofSha256": "d023c1540b4d3e6d1a71836e4f8a09ff6962ebf2031f1ee5d6ae049917f5636d",
+      "recordCount": 213
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-2026-10-28-006",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/si/si-2026-10-28-006.json",
+      "proofSha256": "1a6c12c90c7e011c0826c24f7f5caef57a7ad8abaee408c6d5a086d9ed8e67d6",
+      "recordCount": 59
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-2026-10-28-007",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/si/si-2026-10-28-007.json",
+      "proofSha256": "d6445e2ea52f4c6eb1376a420cc884f2d2d11486953c7eedd90827f5f313a55d",
+      "recordCount": 11
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-2026-10-28-008",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/si/si-2026-10-28-008.json",
+      "proofSha256": "f0e9cd96de121d13fc5e29e56fd0be0cec72f1136f8677dd95ec4ed422a68300",
+      "recordCount": 5
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-2026-10-28-009",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/si/si-2026-10-28-009.json",
+      "proofSha256": "c4da466d9cbd268622132075c4025d5f4f1cb43bee4023306f4f8824df6193c0",
+      "recordCount": 1
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-2026-10-28-011",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/si/si-2026-10-28-011.json",
+      "proofSha256": "c328a885ffdac465834fb92c544960162c382d79139ed7d5aa38030e23ec5b1f",
+      "recordCount": 1
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-2026-10-28-012",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/si/si-2026-10-28-012.json",
+      "proofSha256": "250d0e8123776a7e90bf17c7961ec0a161ca285925919d57f5e1f6ff2ba903c4",
+      "recordCount": 80
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-2026-10-28-013",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/si/si-2026-10-28-013.json",
+      "proofSha256": "6e66c13ac33342e26114058dc9cd270717a27bfd6822f78103281e3e64fbda06",
+      "recordCount": 154
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-2026-10-28-014",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/si/si-2026-10-28-014.json",
+      "proofSha256": "932020f6af5af3d9abee43fe25bcfa6fb0467f0130e4381755909ded1429f873",
+      "recordCount": 16
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-2026-10-29-001",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/si/si-2026-10-29-001.json",
+      "proofSha256": "9fa8bb94a7d475ed3a20be1512066ad177ccf8353a3091ed09d9a320909fb37a",
+      "recordCount": 10
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-2026-10-29-015",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/si/si-2026-10-29-015.json",
+      "proofSha256": "148cc00d6ca772983fefc63f1f237f2ed2c6381fc09327204414c336bad3ef3b",
+      "recordCount": 12
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-2026-10-29-016",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/si/si-2026-10-29-016.json",
+      "proofSha256": "8d7684bc25839a2fa16b730bae8a3d542b56aeb6bde1e796ee7f067772d27fd8",
+      "recordCount": 17
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-2026-10-29-017",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/si/si-2026-10-29-017.json",
+      "proofSha256": "92615a6fb917b8c9e45402ee8755e74df94fbfef73d922965be9e6be5021c7a0",
+      "recordCount": 14
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-2026-10-29-018",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/si/si-2026-10-29-018.json",
+      "proofSha256": "df63e46e9f38d4dd582310a4a02fba5faa79f215a38c310ebfef3791b6178bd4",
+      "recordCount": 12
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-2026-10-29-019",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/si/si-2026-10-29-019.json",
+      "proofSha256": "d219c164b9edebf7d409e2a3a836a9623f43deb9485ef7315a49c78c1514b487",
+      "recordCount": 11
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-2026-10-29-020",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/si/si-2026-10-29-020.json",
+      "proofSha256": "02ba2551f8b7ac66f2a34b73227d895fbd5dab537afd6836db780c6c2817e8f4",
+      "recordCount": 15
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-2026-10-29-021",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/si/si-2026-10-29-021.json",
+      "proofSha256": "78b661eeb95c56f75522c67600a154d81aa974088dc5d8c5a3249bd8e8fc9e6f",
+      "recordCount": 18
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-2026-10-29-022",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/si/si-2026-10-29-022.json",
+      "proofSha256": "2febc930c214008e0057a6a04e31987807710dbae4e574c6c78ada94a7b4c3f6",
+      "recordCount": 14
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-2026-10-29-023",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/si/si-2026-10-29-023.json",
+      "proofSha256": "45259b446c0141fac6003b4131fc95091051793842c939d77776117f93bf58f9",
+      "recordCount": 15
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-2026-10-29-024",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/si/si-2026-10-29-024.json",
+      "proofSha256": "c1f464667e4d4e87ca5e1b3e9c04f6904d27c2a33456770789be481dd543d711",
+      "recordCount": 18
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-2026-10-29-025",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/si/si-2026-10-29-025.json",
+      "proofSha256": "d66fbbf92fa913bf21bf3178574a324ae1df74957c00341b04a88ba23c316dab",
+      "recordCount": 12
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-2026-10-29-026",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/si/si-2026-10-29-026.json",
+      "proofSha256": "7159d42355efffafda5c9bbf36bee337a97a12113c5af16b3f186dbb1500935a",
+      "recordCount": 2
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-2026-11-03-001",
+      "publicationDate": "2026-11-03",
+      "proofPath": "/publication-proofs/si/si-2026-11-03-001.json",
+      "proofSha256": "b9dae962519fb45ecf5be729dece38e8797ed9fdc8d481a23c9dda8ffe29d190",
+      "recordCount": 23
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-2026-11-03-002",
+      "publicationDate": "2026-11-03",
+      "proofPath": "/publication-proofs/si/si-2026-11-03-002.json",
+      "proofSha256": "8e8853fadef121e014fa5204314acec431bb25d083fbf059ae72d668ce75fb25",
+      "recordCount": 12
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-2026-11-03-003",
+      "publicationDate": "2026-11-03",
+      "proofPath": "/publication-proofs/si/si-2026-11-03-003.json",
+      "proofSha256": "9d6f4f192db9d0e901c0cc67f2cb6e97c4e5df373a51c7b56e1ddeda077d94ae",
+      "recordCount": 9
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-2026-11-03-004",
+      "publicationDate": "2026-11-03",
+      "proofPath": "/publication-proofs/si/si-2026-11-03-004.json",
+      "proofSha256": "2fd44e217b35c2d8db3f12e02e80556a3f1264c8f4b6635163136daf0cf2df8c",
+      "recordCount": 3
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-2026-11-05-905",
+      "publicationDate": "2026-11-05",
+      "proofPath": "/publication-proofs/si/si-2026-11-05-905.json",
+      "proofSha256": "217646a393fb5d8ab45e34d32a79be088e63ea6d4b733ebf1f4dee996a5aee2d",
+      "recordCount": 4
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-2026-11-09-001",
+      "publicationDate": "2026-11-09",
+      "proofPath": "/publication-proofs/si/si-2026-11-09-001.json",
+      "proofSha256": "1512ef39c22201bd1b9d77081ff7d234f9ab994f85e35cedb11fc6395d2d7740",
+      "recordCount": 2
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-bulk-2026-11-11-001",
+      "publicationDate": "2026-11-11",
+      "proofPath": "/publication-proofs/si/si-bulk-2026-11-11-001.json",
+      "proofSha256": "0d58c8309543cd2abee26b8c44afa3d3414f95986a13b4c5c680b2eed945fb4e",
+      "recordCount": 38
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-bulk-2026-11-11-002",
+      "publicationDate": "2026-11-11",
+      "proofPath": "/publication-proofs/si/si-bulk-2026-11-11-002.json",
+      "proofSha256": "b01b6f5dce5b28a8d1a41d3d838543d4b67daff067722fda4bc102774cf51ed3",
+      "recordCount": 44
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-bulk-2026-11-11-003",
+      "publicationDate": "2026-11-11",
+      "proofPath": "/publication-proofs/si/si-bulk-2026-11-11-003.json",
+      "proofSha256": "5dde4ed1986e26be48d1aac25ade7bda9eb46bcc83a56c3b5a41d9e1b740030c",
+      "recordCount": 47
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-reconcile-2026-11-11-001",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/si/si-reconcile-2026-11-11-001.json",
+      "proofSha256": "fbdb88b4673a8ae9ba2fc868de4139106b3a70e44c2ea609679683f374d9d25f",
+      "recordCount": 141
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-reconcile-2026-11-11-002",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/si/si-reconcile-2026-11-11-002.json",
+      "proofSha256": "cb3f0b284c508eae0221182425a12a58e8c5167dfd773b4b4bcc18e8f107b753",
+      "recordCount": 128
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-reconcile-2026-11-11-003",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/si/si-reconcile-2026-11-11-003.json",
+      "proofSha256": "1c46a07e4e09b072946920b2aa3100d6b2ecf084cde8b07d32fde978fd62e70c",
+      "recordCount": 143
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-reconcile-2026-11-11-004",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/si/si-reconcile-2026-11-11-004.json",
+      "proofSha256": "9e2c3023203bb433fab2c6d451b50d35f9f831b33fcaa4b710a987b918351dc6",
+      "recordCount": 134
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-reconcile-2026-11-11-005",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/si/si-reconcile-2026-11-11-005.json",
+      "proofSha256": "7094b7c705e8741b40c283b23ea3f79651cfd4c4106a6282fee5292e2d2eea3a",
+      "recordCount": 147
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-reconcile-2026-11-11-006",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/si/si-reconcile-2026-11-11-006.json",
+      "proofSha256": "9f9bb3c76b50101c2f04eddf8ebfea7b07e9de9a5827c7803dda514999489766",
+      "recordCount": 167
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-reconcile-2026-11-11-007",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/si/si-reconcile-2026-11-11-007.json",
+      "proofSha256": "d148ddf6ddc4a6beaba14878fe368fb0c327943cad7c198731554776afdd3ab1",
+      "recordCount": 151
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-reconcile-2026-11-11-008",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/si/si-reconcile-2026-11-11-008.json",
+      "proofSha256": "b0f666354f604263a0e579405c4e8c4ba6834e64f50c09babe93e2827ef61563",
+      "recordCount": 3
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-reconcile-2026-11-11-009",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/si/si-reconcile-2026-11-11-009.json",
+      "proofSha256": "8cb318e14234b538aa78cb44644c6ab1d5af1f744969ef4cc71124118aff99a3",
+      "recordCount": 1
+    },
+    {
+      "provider": "si",
+      "localBatchId": "v109-si-approx-2026-11-11-001",
+      "publicationDate": "2026-11-11",
+      "proofPath": "/publication-proofs/si/v109-si-approx-2026-11-11-001.json",
+      "proofSha256": "dc78d54fbd4b758b67c3814124680cc890c302f61f1afc5f4274608007eaa5fe",
+      "recordCount": 5
+    },
+    {
+      "provider": "si",
+      "localBatchId": "v109-si-approx-2026-11-11-002",
+      "publicationDate": "2026-11-11",
+      "proofPath": "/publication-proofs/si/v109-si-approx-2026-11-11-002.json",
+      "proofSha256": "db34adaa901c70e0aa5ffd0cc65fee1637bd6e10bf96d82c17f78a460ab40964",
+      "recordCount": 3
+    },
+    {
+      "provider": "wellcome",
+      "localBatchId": "v76-visual-2026-11-10-002",
+      "publicationDate": "2026-11-10",
+      "proofPath": "/publication-proofs/wellcome/v76-visual-2026-11-10-002.json",
+      "proofSha256": "04278675014bd2ee7cd90c08cc0314086b3107cd232da5a1289f77614ee7bbec",
+      "recordCount": 1
+    },
+    {
+      "provider": "wellcome",
+      "localBatchId": "wellcome-2026-10-28-001",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/wellcome/wellcome-2026-10-28-001.json",
+      "proofSha256": "50e22d6551b6c68d9c07cc30abcf0469641caba17e00282077d5b573c8c3ac26",
+      "recordCount": 12
+    },
+    {
+      "provider": "wellcome",
+      "localBatchId": "wellcome-2026-10-28-002",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/wellcome/wellcome-2026-10-28-002.json",
+      "proofSha256": "1a016be4db88c0f5730596abde22c00a13c84f3de61858b7047d23cce0bd19c2",
+      "recordCount": 39
+    },
+    {
+      "provider": "wellcome",
+      "localBatchId": "wellcome-2026-10-28-003",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/wellcome/wellcome-2026-10-28-003.json",
+      "proofSha256": "71a4b48c93b49f98a81bfdd7386a8a7622d1692e11e2fb03bffb21254298dee8",
+      "recordCount": 47
+    },
+    {
+      "provider": "wellcome",
+      "localBatchId": "wellcome-2026-10-28-004",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/wellcome/wellcome-2026-10-28-004.json",
+      "proofSha256": "334cbe9fcef0080d9f5b89596c217b54864effdc7e3f0bfa02d733b7f9c02966",
+      "recordCount": 22
+    },
+    {
+      "provider": "wellcome",
+      "localBatchId": "wellcome-2026-10-28-005",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/wellcome/wellcome-2026-10-28-005.json",
+      "proofSha256": "1e794562dcdc0168165c8518b6ed39b18e088df76542eda40f2bf01fbcb34d88",
+      "recordCount": 19
+    },
+    {
+      "provider": "wellcome",
+      "localBatchId": "wellcome-2026-10-28-006",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/wellcome/wellcome-2026-10-28-006.json",
+      "proofSha256": "4daf0f19d4fdb112a38119428a46b69083a1326e7cd5dcbd05cfff0d2968e5b5",
+      "recordCount": 14
+    },
+    {
+      "provider": "wellcome",
+      "localBatchId": "wellcome-2026-10-28-008",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/wellcome/wellcome-2026-10-28-008.json",
+      "proofSha256": "fa2bd1dbecb4ce9c850c4748438b692106e5c6259b90d61b083ff36fc4a0c997",
+      "recordCount": 9
+    },
+    {
+      "provider": "wellcome",
+      "localBatchId": "wellcome-2026-10-28-009",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/wellcome/wellcome-2026-10-28-009.json",
+      "proofSha256": "a0ae643ff03687c7f4bc6b94d94c64b705857a4d9c656c634b86edde032f7059",
+      "recordCount": 6
+    },
+    {
+      "provider": "wellcome",
+      "localBatchId": "wellcome-2026-10-28-010",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/wellcome/wellcome-2026-10-28-010.json",
+      "proofSha256": "7f3c8842c7e90d8dd447fd50f29905c0ffabaa7ca806fc45fbd809d96da0527b",
+      "recordCount": 10
+    },
+    {
+      "provider": "wellcome",
+      "localBatchId": "wellcome-2026-10-28-011",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/wellcome/wellcome-2026-10-28-011.json",
+      "proofSha256": "ab67301d8853c03254569336b3774c8e168d5013cbef414489bf56bffd4e67ca",
+      "recordCount": 15
+    },
+    {
+      "provider": "wellcome",
+      "localBatchId": "wellcome-2026-10-28-012",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/wellcome/wellcome-2026-10-28-012.json",
+      "proofSha256": "2502eacf635cc7acecf75f74f621b0a6d2b2bbe424717efd69f3723c93d75581",
+      "recordCount": 7
+    },
+    {
+      "provider": "wellcome",
+      "localBatchId": "wellcome-2026-10-28-013",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/wellcome/wellcome-2026-10-28-013.json",
+      "proofSha256": "8709dbdbf0430a368b102d3876050ee41a704aa2442a0b2b414ff45e83b95f90",
+      "recordCount": 7
+    },
+    {
+      "provider": "wellcome",
+      "localBatchId": "wellcome-2026-10-28-015",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/wellcome/wellcome-2026-10-28-015.json",
+      "proofSha256": "69e0919929263e4ae5d5220762acc4efce28745c2f89f75273a2685aabab463c",
+      "recordCount": 7
+    },
+    {
+      "provider": "wellcome",
+      "localBatchId": "wellcome-2026-10-28-018",
+      "publicationDate": "2026-10-28",
+      "proofPath": "/publication-proofs/wellcome/wellcome-2026-10-28-018.json",
+      "proofSha256": "d523673fc60043ac76d873f4fec8d5058735edf1e92c77a4b4f802fd8551a7a1",
+      "recordCount": 18
+    },
+    {
+      "provider": "wellcome",
+      "localBatchId": "wellcome-2026-10-28-019",
+      "publicationDate": "2026-10-29",
+      "proofPath": "/publication-proofs/wellcome/wellcome-2026-10-28-019.json",
+      "proofSha256": "7839103bad11d6aa7b851857d7710cb10fda4c4795a49efa770afe9ee7b2a26a",
+      "recordCount": 47
+    }
+  ]
+}
