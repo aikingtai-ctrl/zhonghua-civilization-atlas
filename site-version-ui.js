@@ -5,7 +5,22 @@
   var meta = document.querySelector('meta[name="atlas-snapshot-revision"]');
   var current = meta && meta.getAttribute('content');
   if (!/^[a-f0-9]{64}$/.test(current || '') || typeof fetch !== 'function') return;
-  var checking = false, attemptedAt = 0, nextRevision = null, notice = null;
+  var checking = false, attemptedAt = 0, nextRevision = null, notice = null, refreshTimer = null;
+  function hasActiveState() {
+    var path = (location.pathname || '').toLowerCase();
+    if (/\/manage(?:\.html)?\/?$/.test(path)) return true;
+    var params;
+    try { params = new URLSearchParams(location.search || ''); } catch (_) { params = null; }
+    if (params && ['q', 'era', 'category', 'period', 'batch', 'item'].some(function (key) { return params.has(key); })) return true;
+    var active = document.activeElement;
+    return !!(active && /^(INPUT|TEXTAREA|SELECT)$/.test(active.tagName || ''));
+  }
+  function reloadLatest() {
+    if (!nextRevision || hasActiveState() || document.visibilityState === 'hidden') return;
+    var url = new URL(location.href);
+    url.searchParams.set('atlas-update', nextRevision);
+    location.replace(url.href);
+  }
   function announce(revision) {
     nextRevision = revision;
     if (notice || !document.body) return;
@@ -19,11 +34,13 @@
     text.textContent = '网站内容已更新。当前页面仍是较早的目录快照。';
     var button = document.createElement('button'); button.type = 'button'; button.textContent = '加载最新内容';
     button.addEventListener('click', function () {
-      var url = new URL(location.href);
-      url.searchParams.set('atlas-update', nextRevision);
-      location.replace(url.href);
+      if (refreshTimer) clearTimeout(refreshTimer);
+      reloadLatest();
     });
     notice.appendChild(text); notice.appendChild(button); document.body.appendChild(notice);
+    // A public page with no active filters is safe to refresh automatically.
+    // Keep management/search sessions manual so a release cannot discard work.
+    if (!hasActiveState()) refreshTimer = setTimeout(reloadLatest, 4000);
   }
   async function check(force) {
     if (checking || document.visibilityState === 'hidden' || !force && attemptedAt && Date.now() - attemptedAt < 15000) return;
