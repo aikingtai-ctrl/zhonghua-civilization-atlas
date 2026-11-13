@@ -158,7 +158,8 @@ function findOrigUrlByPreview(relPath){
       if(window.ARCHIVE_DATA&&Array.isArray(window.ARCHIVE_DATA.records))pools.push(window.ARCHIVE_DATA.records);
       if(Array.isArray(window.EXPANSION_CANDIDATES))pools.push(window.EXPANSION_CANDIDATES);
       if(window.EXPANSION_CANDIDATES&&Array.isArray(window.EXPANSION_CANDIDATES.items))pools.push(window.EXPANSION_CANDIDATES.items);
-      pools.forEach(function(arr){arr.forEach(function(r){if(!r)return;var k=r.localImage||r.previewUrl;var u=r.imageUrl||r.originalImageUrl;if(k&&u)_extMap[k.replace(/^\.\//,'')]=u;});});
+      Object.keys(window).forEach(function(wk){if(/_DATA$/.test(wk)&&window[wk]&&Array.isArray(window[wk].records))pools.push(window[wk].records);});
+      pools.forEach(function(arr){arr.forEach(function(r){if(!r)return;var u=r.imageUrl||r.originalImageUrl;if(!u)return;[r.localImage,r.previewUrl].forEach(function(k){if(k)_extMap[String(k).replace(/^\.\//,'')]=u;});});});
     }catch(e){}
   }
   return _extMap[relPath]||'';
@@ -169,7 +170,7 @@ window.addEventListener('error',function(ev){
   var step=parseInt(el.getAttribute('data-jt-fb')||'0',10);
   if(step>=4){el.src=FALLBACK_SVG;return;}
   el.setAttribute('data-jt-fb',String(step+1));
-  var mRel=cur.match(/((?:assets|images)\/[^?#]+)/);
+  var mRel=cur.match(/((?:assets|(?:[A-Za-z0-9_-]+-)?images|research-[A-Za-z0-9_-]+)\/[^?#]+)/);
   if(mRel&&cur.indexOf('wsrv.nl')===-1){
     var rel=mRel[1];
     if(IS_GH&&step===0){el.src=RAW+rel;return;}
@@ -189,7 +190,7 @@ window.addEventListener('error',function(ev){
   <title>采集与审核工作台 · 中华文明图谱</title>
   <link rel="stylesheet" href="./manage.css?v=0d00ba5ee38e">
   <script src="./manage.js?v=7aa2787fb98b" defer></script>
-<script id="atlasVersionNotice" defer src="./site-version-ui.js?v=1df5aa2d1482"></script><meta id="atlasSnapshotRevision" name="atlas-snapshot-revision" content="630712fe23fc72dd73140bf3a7f6bd26332233bbb5049560338a7545bd43babf"></head>
+<script id="atlasVersionNotice" defer src="./site-version-ui.js?v=1df5aa2d1482"></script><meta id="atlasSnapshotRevision" name="atlas-snapshot-revision" content="890881e125ab57e39feede0e6ab5ef380eaab5b6486a81643549680627bd996e"></head>
 <body>
   <a class="skip" href="#main">跳转到工作台</a>
   <header class="masthead">

@@ -347,6 +347,7 @@ def git_push_if_changed(repo_dir: Path, repo_name: str, msg: str, auto_push: boo
 # 1. Shengcang Incremental Sync
 # ------------------------------------------------------------------------------
 SHIM_REV = "20261113d1"
+ZH_SHIM_REV = "20261113e1"
 SC_SHIM = """<style>a[href*="signin-with-chatgpt"]{display:none!important}</style><script id="jintai-shengcang-shim">(function(){
 var BASE=new URL('.',location.href).pathname;if(BASE.slice(-1)!=='/')BASE+='/';window.__JT_BASE__=BASE;
 var IS_GH=/github\\.io$/i.test(location.hostname||'');
@@ -604,7 +605,8 @@ function findOrigUrlByPreview(relPath){
       if(window.ARCHIVE_DATA&&Array.isArray(window.ARCHIVE_DATA.records))pools.push(window.ARCHIVE_DATA.records);
       if(Array.isArray(window.EXPANSION_CANDIDATES))pools.push(window.EXPANSION_CANDIDATES);
       if(window.EXPANSION_CANDIDATES&&Array.isArray(window.EXPANSION_CANDIDATES.items))pools.push(window.EXPANSION_CANDIDATES.items);
-      pools.forEach(function(arr){arr.forEach(function(r){if(!r)return;var k=r.localImage||r.previewUrl;var u=r.imageUrl||r.originalImageUrl;if(k&&u)_extMap[k.replace(/^\\.\\//,'')]=u;});});
+      Object.keys(window).forEach(function(wk){if(/_DATA$/.test(wk)&&window[wk]&&Array.isArray(window[wk].records))pools.push(window[wk].records);});
+      pools.forEach(function(arr){arr.forEach(function(r){if(!r)return;var u=r.imageUrl||r.originalImageUrl;if(!u)return;[r.localImage,r.previewUrl].forEach(function(k){if(k)_extMap[String(k).replace(/^\\.\\//,'')]=u;});});});
     }catch(e){}
   }
   return _extMap[relPath]||'';
@@ -615,7 +617,7 @@ window.addEventListener('error',function(ev){
   var step=parseInt(el.getAttribute('data-jt-fb')||'0',10);
   if(step>=4){el.src=FALLBACK_SVG;return;}
   el.setAttribute('data-jt-fb',String(step+1));
-  var mRel=cur.match(/((?:assets|images)\\/[^?#]+)/);
+  var mRel=cur.match(/((?:assets|(?:[A-Za-z0-9_-]+-)?images|research-[A-Za-z0-9_-]+)\\/[^?#]+)/);
   if(mRel&&cur.indexOf('wsrv.nl')===-1){
     var rel=mRel[1];
     if(IS_GH&&step===0){el.src=RAW+rel;return;}
@@ -666,7 +668,7 @@ def sync_zhonghua(site_dir: Path, auto_push: bool = True) -> dict:
             if pf.endswith(".html"):
                 b_p = strip_cf_challenge(b_p.decode("utf-8", "ignore")).encode("utf-8")
             probe_parts.append(sha256_bytes(b_p))
-    quick_fp = "|".join(probe_parts + [SHIM_REV])
+    quick_fp = "|".join(probe_parts + [ZH_SHIM_REV])
 
     state_p = site_dir / ".sync_state.json"
     required_aux = (
@@ -749,7 +751,7 @@ def sync_zhonghua(site_dir: Path, auto_push: bool = True) -> dict:
                         if nr:
                             discovered_media.add(nr)
                 elif ext in (".js", ".json"):
-                    for m in re.finditer(r'["\'`]((?:\./)?(?:assets|images|research-[A-Za-z0-9_-]+)/[^"\'`\s?#]+|(?:[A-Za-z0-9_-]+\.html))(?:\?[^"\'`\s#]*)?["\'`]', txt):
+                    for m in re.finditer(r'["\'`]((?:\./)?(?:assets|(?:[A-Za-z0-9_-]+-)?images|research-[A-Za-z0-9_-]+)/[^"\'`\s?#]+|(?:[A-Za-z0-9_-]+\.html))(?:\?[^"\'`\s#]*)?["\'`]', txt):
                         nr = norm_zh_rel(rel, m.group(1))
                         if nr:
                             rext = os.path.splitext(nr)[1].lower()

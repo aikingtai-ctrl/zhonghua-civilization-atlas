@@ -40,18 +40,33 @@
   function officialUrl(value, kind, provider = 'met') {
     if (typeof value !== 'string') return null;
     try {
-      const url = new URL(value);
-      if (url.protocol !== 'https:' || url.username || url.password || url.port || url.search || url.hash || url.href !== value) return null;
-      const source = url.hostname === 'www.metmuseum.org' && /^\/art\/collection\/search\/[1-9]\d*$/.test(url.pathname);
-      const image = url.hostname === 'images.metmuseum.org' && /^\/CRDImages\/[a-z0-9-]+\/original\/[^/]+$/i.test(url.pathname);
-      const rights = url.hostname === 'www.metmuseum.org' && url.pathname === '/about-the-met/policies-and-documents/open-access';
-      if (provider === 'cma') {
-        const museum = ['clevelandart.org','www.clevelandart.org'].includes(url.hostname);
-        const source = museum && /^\/art\/[a-z0-9][a-z0-9._-]*$/i.test(url.pathname);
-        const image = url.hostname === 'openaccess-cdn.clevelandart.org' && /^\/[a-z0-9][a-z0-9._-]*\/[a-z0-9][a-z0-9._-]*_(?:web|print)\.(?:jpg|jpeg|png|tiff?|webp)$/i.test(url.pathname);
-        const rights = museum && url.pathname === '/open-access';
-        return (kind === 'image' ? image : kind === 'rights' ? rights : source) ? url.href : null;
-      }
+      const url = new URL(value), host = url.hostname.toLowerCase(), path = url.pathname;
+      const allowedAicRightsHash = host === 'api.artic.edu' && url.hash === '#copyright' && !url.search;
+      if (url.protocol !== 'https:' || url.username || url.password || url.port || url.hash && !allowedAicRightsHash || url.href !== value || path.includes('..')) return null;
+      const museum = ['clevelandart.org','www.clevelandart.org'].includes(host);
+      const clean = !url.search;
+      const source = clean && (
+        host === 'www.metmuseum.org' && /^\/art\/collection\/search\/[1-9]\d*$/.test(path) ||
+        museum && /^\/art\/[a-z0-9][a-z0-9._-]*$/i.test(path) ||
+        host === 'www.artic.edu' && /^\/artworks\/[1-9]\d*$/.test(path) ||
+        host === 'collections.artsmia.org' && /^\/art\/[1-9]\d*$/.test(path) ||
+        host === 'asia.si.edu' && /^\/object\/[a-z0-9._-]+\/?$/i.test(path) ||
+        host === 'collection.cooperhewitt.org' && /^\/view\/objects\/asitem\/id\/[1-9]\d*$/.test(path) ||
+        host === 'wellcomecollection.org' && /^\/works\/[a-z0-9]+$/i.test(path));
+      const image =
+        host === 'images.metmuseum.org' && !url.search && /^\/CRDImages\/[a-z0-9-]+\/original\/[^/]+$/i.test(path) ||
+        host === 'openaccess-cdn.clevelandart.org' && !url.search && /^\/[a-z0-9][a-z0-9._-]*\/[a-z0-9][a-z0-9._-]*_(?:web|print)\.(?:jpg|jpeg|png|tiff?|webp)$/i.test(path) ||
+        host === 'www.artic.edu' && !url.search && /^\/iiif\/2\/[0-9a-f-]{36}\/full\/843,\/0\/default\.jpg$/i.test(path) ||
+        host === 'img.artsmia.org' && !url.search && /^\/web_objects_cache\/[a-z0-9._/-]+_800\.jpg$/i.test(path) ||
+        host === 'ids.si.edu' && /^\/ids\/(?:deliveryService|download)$/.test(path) && url.searchParams.size === 1 && /^[a-z0-9._-]+$/i.test(url.searchParams.get('id') || '') ||
+        host === 'iiif.wellcomecollection.org' && !url.search && /^\/image\/[a-z0-9._-]+\/full\/[0-9]*,\/0\/default\.jpg$/i.test(path);
+      const rights =
+        host === 'www.metmuseum.org' && !url.search && path === '/about-the-met/policies-and-documents/open-access' ||
+        museum && !url.search && path === '/open-access' ||
+        host === 'api.artic.edu' && !url.search && path === '/docs/' && url.hash === '#copyright' ||
+        host === 'new.artsmia.org' && !url.search && path === '/copyright-and-image-access' ||
+        host === 'creativecommons.org' && !url.search && /^\/(?:publicdomain\/zero\/1\.0|share-your-work\/public-domain\/pdm)\/?$/.test(path);
+      if (provider === 'cma' && !museum && host !== 'openaccess-cdn.clevelandart.org') return null;
       return (kind === 'image' ? image : kind === 'rights' ? rights : source) ? url.href : null;
     } catch (_) { return null; }
   }
