@@ -57,11 +57,23 @@ jobs:
         if: steps.push_changes.outputs.updated == 'true' || github.event_name == 'workflow_dispatch'
         uses: actions/configure-pages@v5
 
-      - name: Stage static site for Pages
+      - name: Stage static site for Pages & verify < 850 MiB capacity
         if: steps.push_changes.outputs.updated == 'true' || github.event_name == 'workflow_dispatch'
         run: |
           mkdir -p _site
-          rsync -a --exclude='.git' --exclude='.github' --exclude='scripts' --exclude='_site' ./ _site/
+          rsync -a --exclude='.git' --exclude='.github' --exclude='scripts' --exclude='.sync_state.json' --exclude='_site' ./ _site/
+          SITE_MIB=$(du -sm _site | awk '{print $1}')
+          echo "Initial _site size: ${SITE_MIB} MiB"
+          if [ "$SITE_MIB" -ge 800 ]; then
+            echo "Offloading bulk image folders to GitHub Raw CDN fallback to stay under 850 MiB..."
+            rm -rf _site/assets _site/*-images
+            SITE_MIB=$(du -sm _site | awk '{print $1}')
+            echo "Post-offload _site size: ${SITE_MIB} MiB"
+          fi
+          if [ "$SITE_MIB" -ge 850 ]; then
+            echo "::error::_site (${SITE_MIB} MiB) exceeds 850 MiB safety ceiling"
+            exit 1
+          fi
           touch _site/.nojekyll
 
       - name: Upload Pages artifact

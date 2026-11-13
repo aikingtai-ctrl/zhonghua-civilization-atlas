@@ -347,7 +347,7 @@ def git_push_if_changed(repo_dir: Path, repo_name: str, msg: str, auto_push: boo
 # 1. Shengcang Incremental Sync
 # ------------------------------------------------------------------------------
 SHIM_REV = "20261113d1"
-ZH_SHIM_REV = "20261113e2"
+ZH_SHIM_REV = "20261113e4"
 SC_SHIM = """<style>a[href*="signin-with-chatgpt"]{display:none!important}</style><script id="jintai-shengcang-shim">(function(){
 var BASE=new URL('.',location.href).pathname;if(BASE.slice(-1)!=='/')BASE+='/';window.__JT_BASE__=BASE;
 var IS_GH=/github\\.io$/i.test(location.hostname||'');
@@ -604,23 +604,27 @@ function toDomesticSafeImg(u){
   }
   return u;
 }
-function sanitizeUnhostedPreviews(){
+function sanitizePack(pack){
   try{
-    Object.keys(window).forEach(function(wk){
-      var pack=(wk==='ARCHIVE_DATA'||/_DATA$/.test(wk))?window[wk]:null;
-      if(!pack||!Array.isArray(pack.records)||pack.__jtSanitized)return;
-      pack.__jtSanitized=true;
-      pack.records.forEach(function(r){
-        if(!r)return;
-        var orig=r.imageUrl||r.originalImageUrl;
-        if(!orig)return;
-        if(typeof r.previewUrl==='string'&&/^liao-images\\//.test(r.previewUrl))r.previewUrl=toDomesticSafeImg(orig);
-        if(typeof r.localImage==='string'&&/^liao-images\\//.test(r.localImage))r.localImage=toDomesticSafeImg(orig);
-      });
+    if(!pack||!Array.isArray(pack.records)||pack.__jtSanitized)return;
+    pack.__jtSanitized=true;
+    pack.records.forEach(function(r){
+      if(!r)return;
+      var orig=r.imageUrl||r.originalImageUrl;
+      if(!orig)return;
+      if(typeof r.previewUrl==='string'&&/^research-[A-Za-z0-9_-]+\\//.test(r.previewUrl))r.previewUrl=toDomesticSafeImg(orig);
+      if(typeof r.localImage==='string'&&/^research-[A-Za-z0-9_-]+\\//.test(r.localImage))r.localImage=toDomesticSafeImg(orig);
+      if(typeof r.thumbnailUrl==='string'&&/^research-[A-Za-z0-9_-]+\\//.test(r.thumbnailUrl))r.thumbnailUrl=toDomesticSafeImg(orig);
     });
   }catch(e){}
 }
-window.addEventListener('load',function(ev){if(ev&&ev.target&&ev.target.tagName==='SCRIPT')sanitizeUnhostedPreviews();},true);
+['ARCHIVE_DATA','SHANG_DATA','WESTERN_ZHOU_DATA','SPRING_AUTUMN_DATA','WARRING_STATES_DATA','QIN_DATA','WESTERN_HAN_DATA','EASTERN_HAN_DATA','WEIJIN_DATA','SUI_DATA','SONG_DATA','LIAO_DATA','JIN_DATA'].forEach(function(dk){
+  var _v=window[dk];if(_v)sanitizePack(_v);
+  try{Object.defineProperty(window,dk,{configurable:true,enumerable:true,get:function(){return _v;},set:function(nv){_v=nv;sanitizePack(nv);}});}catch(e){}
+});
+function sanitizeUnhostedPreviews(){
+  try{Object.keys(window).forEach(function(wk){if(wk==='ARCHIVE_DATA'||/_DATA$/.test(wk))sanitizePack(window[wk]);});}catch(e){}
+}
 document.addEventListener('DOMContentLoaded',sanitizeUnhostedPreviews);
 function findOrigUrlByPreview(relPath){
   if(!_extMap){
@@ -680,6 +684,13 @@ def norm_zh_rel(base_doc: str, raw_ref: str):
 def sync_zhonghua(site_dir: Path, auto_push: bool = True) -> dict:
     git_prepare_repo(site_dir, auto_push)
     host = "zhonghua-civilization-atlas.fondcream1.chatgpt.site"
+    try:
+        with urllib.request.urlopen(urllib.request.Request(f"https://{host}/", headers={"User-Agent": UA}), timeout=15) as r_eff:
+            eff_netloc = urllib.parse.urlparse(r_eff.geturl()).netloc
+            if eff_netloc:
+                host = eff_netloc
+    except Exception:
+        pass
     base = f"https://{host}/"
 
     # Quick probe on index.html + data.js + daily-batch.js + app.js
@@ -807,11 +818,23 @@ def sync_zhonghua(site_dir: Path, auto_push: bool = True) -> dict:
                     conn.request("GET", "/" + urllib.parse.quote(rel, safe="/"), headers={"User-Agent": UA, "Connection": "keep-alive"})
                     resp = conn.getresponse()
                     data = resp.read()
+                    if resp.status in (301, 302, 307, 308):
+                        loc = resp.getheader("Location") or ""
+                        if loc.startswith("http"):
+                            st_r, data_r = fetch_bytes(loc, retries=2, timeout=15)
+                            if st_r == 200 and data_r and len(data_r) < 25 * 1024 * 1024:
+                                lp = site_dir / rel
+                                lp.parent.mkdir(parents=True, exist_ok=True)
+                                lp.write_bytes(data_r)
+                            elif st_r in (404, 410):
+                                with unhosted_lock:
+                                    newly_unhosted.add(rel)
+                        return
                     if resp.status == 200 and data and len(data) < 25 * 1024 * 1024:
                         lp = site_dir / rel
                         lp.parent.mkdir(parents=True, exist_ok=True)
                         lp.write_bytes(data)
-                    elif resp.status == 404:
+                    elif resp.status in (404, 410):
                         with unhosted_lock:
                             newly_unhosted.add(rel)
                     return

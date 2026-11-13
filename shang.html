@@ -157,23 +157,27 @@ function toDomesticSafeImg(u){
   }
   return u;
 }
-function sanitizeUnhostedPreviews(){
+function sanitizePack(pack){
   try{
-    Object.keys(window).forEach(function(wk){
-      var pack=(wk==='ARCHIVE_DATA'||/_DATA$/.test(wk))?window[wk]:null;
-      if(!pack||!Array.isArray(pack.records)||pack.__jtSanitized)return;
-      pack.__jtSanitized=true;
-      pack.records.forEach(function(r){
-        if(!r)return;
-        var orig=r.imageUrl||r.originalImageUrl;
-        if(!orig)return;
-        if(typeof r.previewUrl==='string'&&/^liao-images\//.test(r.previewUrl))r.previewUrl=toDomesticSafeImg(orig);
-        if(typeof r.localImage==='string'&&/^liao-images\//.test(r.localImage))r.localImage=toDomesticSafeImg(orig);
-      });
+    if(!pack||!Array.isArray(pack.records)||pack.__jtSanitized)return;
+    pack.__jtSanitized=true;
+    pack.records.forEach(function(r){
+      if(!r)return;
+      var orig=r.imageUrl||r.originalImageUrl;
+      if(!orig)return;
+      if(typeof r.previewUrl==='string'&&/^research-[A-Za-z0-9_-]+\//.test(r.previewUrl))r.previewUrl=toDomesticSafeImg(orig);
+      if(typeof r.localImage==='string'&&/^research-[A-Za-z0-9_-]+\//.test(r.localImage))r.localImage=toDomesticSafeImg(orig);
+      if(typeof r.thumbnailUrl==='string'&&/^research-[A-Za-z0-9_-]+\//.test(r.thumbnailUrl))r.thumbnailUrl=toDomesticSafeImg(orig);
     });
   }catch(e){}
 }
-window.addEventListener('load',function(ev){if(ev&&ev.target&&ev.target.tagName==='SCRIPT')sanitizeUnhostedPreviews();},true);
+['ARCHIVE_DATA','SHANG_DATA','WESTERN_ZHOU_DATA','SPRING_AUTUMN_DATA','WARRING_STATES_DATA','QIN_DATA','WESTERN_HAN_DATA','EASTERN_HAN_DATA','WEIJIN_DATA','SUI_DATA','SONG_DATA','LIAO_DATA','JIN_DATA'].forEach(function(dk){
+  var _v=window[dk];if(_v)sanitizePack(_v);
+  try{Object.defineProperty(window,dk,{configurable:true,enumerable:true,get:function(){return _v;},set:function(nv){_v=nv;sanitizePack(nv);}});}catch(e){}
+});
+function sanitizeUnhostedPreviews(){
+  try{Object.keys(window).forEach(function(wk){if(wk==='ARCHIVE_DATA'||/_DATA$/.test(wk))sanitizePack(window[wk]);});}catch(e){}
+}
 document.addEventListener('DOMContentLoaded',sanitizeUnhostedPreviews);
 function findOrigUrlByPreview(relPath){
   if(!_extMap){
@@ -208,7 +212,7 @@ window.addEventListener('error',function(ev){
   }
   el.src=FALLBACK_SVG;
 },true);
-})();</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#24443f"><meta name="description" content="商代有源图像与考古文献：逐项保留原始断代、馆藏机构、原图地址、出土信息和核验边界。"><title>商代影像 · 中华文明影像库</title><link rel="stylesheet" href="shang.css?v=f4446e9a9e3d"><link rel="stylesheet" href="atlas-design.css?v=8ae8c5a7691f"><script id="atlasVersionNotice" defer src="./site-version-ui.js?v=1df5aa2d1482"></script><meta id="atlasSnapshotRevision" name="atlas-snapshot-revision" content="890881e125ab57e39feede0e6ab5ef380eaab5b6486a81643549680627bd996e"></head>
+})();</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#24443f"><meta name="description" content="商代有源图像与考古文献：逐项保留原始断代、馆藏机构、原图地址、出土信息和核验边界。"><title>商代影像 · 中华文明影像库</title><link rel="stylesheet" href="shang.css?v=f4446e9a9e3d"><link rel="stylesheet" href="atlas-design.css?v=8ae8c5a7691f"><script id="atlasVersionNotice" defer src="./site-version-ui.js?v=1df5aa2d1482"></script><meta id="atlasSnapshotRevision" name="atlas-snapshot-revision" content="4295d529674c720df3906b4833e2965dce7a196d8a362446cce2ff394a17b844"></head>
 <body class="atlas-standalone">
 <header class="top"><a class="brand" href="index.html"><span class="seal">中华<br>文明</span><span>中华文明影像库<small>CHINESE CIVILIZATION ARCHIVE</small></span></a><nav aria-label="主导航"><a href="index.html">影像检索</a><a href="index.html#timeline">历代索引</a><a href="index.html#sources">收录来源</a></nav><button id="exportPack" class="outline">↓ 导出资料包</button></header>
 <main><div class="atlas-standalone-nav"><a href="index.html#timeline">← 历代索引</a><span>商代</span><a href="#collection">影像目录</a><a href="#literature">文献书目</a><a href="#coverage">参考边界</a></div>

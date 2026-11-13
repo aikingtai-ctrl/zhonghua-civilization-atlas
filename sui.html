@@ -156,23 +156,27 @@ function toDomesticSafeImg(u){
   }
   return u;
 }
-function sanitizeUnhostedPreviews(){
+function sanitizePack(pack){
   try{
-    Object.keys(window).forEach(function(wk){
-      var pack=(wk==='ARCHIVE_DATA'||/_DATA$/.test(wk))?window[wk]:null;
-      if(!pack||!Array.isArray(pack.records)||pack.__jtSanitized)return;
-      pack.__jtSanitized=true;
-      pack.records.forEach(function(r){
-        if(!r)return;
-        var orig=r.imageUrl||r.originalImageUrl;
-        if(!orig)return;
-        if(typeof r.previewUrl==='string'&&/^liao-images\//.test(r.previewUrl))r.previewUrl=toDomesticSafeImg(orig);
-        if(typeof r.localImage==='string'&&/^liao-images\//.test(r.localImage))r.localImage=toDomesticSafeImg(orig);
-      });
+    if(!pack||!Array.isArray(pack.records)||pack.__jtSanitized)return;
+    pack.__jtSanitized=true;
+    pack.records.forEach(function(r){
+      if(!r)return;
+      var orig=r.imageUrl||r.originalImageUrl;
+      if(!orig)return;
+      if(typeof r.previewUrl==='string'&&/^research-[A-Za-z0-9_-]+\//.test(r.previewUrl))r.previewUrl=toDomesticSafeImg(orig);
+      if(typeof r.localImage==='string'&&/^research-[A-Za-z0-9_-]+\//.test(r.localImage))r.localImage=toDomesticSafeImg(orig);
+      if(typeof r.thumbnailUrl==='string'&&/^research-[A-Za-z0-9_-]+\//.test(r.thumbnailUrl))r.thumbnailUrl=toDomesticSafeImg(orig);
     });
   }catch(e){}
 }
-window.addEventListener('load',function(ev){if(ev&&ev.target&&ev.target.tagName==='SCRIPT')sanitizeUnhostedPreviews();},true);
+['ARCHIVE_DATA','SHANG_DATA','WESTERN_ZHOU_DATA','SPRING_AUTUMN_DATA','WARRING_STATES_DATA','QIN_DATA','WESTERN_HAN_DATA','EASTERN_HAN_DATA','WEIJIN_DATA','SUI_DATA','SONG_DATA','LIAO_DATA','JIN_DATA'].forEach(function(dk){
+  var _v=window[dk];if(_v)sanitizePack(_v);
+  try{Object.defineProperty(window,dk,{configurable:true,enumerable:true,get:function(){return _v;},set:function(nv){_v=nv;sanitizePack(nv);}});}catch(e){}
+});
+function sanitizeUnhostedPreviews(){
+  try{Object.keys(window).forEach(function(wk){if(wk==='ARCHIVE_DATA'||/_DATA$/.test(wk))sanitizePack(window[wk]);});}catch(e){}
+}
 document.addEventListener('DOMContentLoaded',sanitizeUnhostedPreviews);
 function findOrigUrlByPreview(relPath){
   if(!_extMap){
@@ -207,7 +211,7 @@ window.addEventListener('error',function(ev){
   }
   el.src=FALLBACK_SVG;
 },true);
-})();</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#18342f"><meta name="description" content="隋代专属图库：开皇、仁寿、大业、义宁及皇泰的七个视觉章节，逐图标注原始断代、来源、画面细节和参考边界。"><title>隋代专属图库 · 中华文明影像库</title><link rel="stylesheet" href="sui.css?v=87393ec9ac9d"><script id="atlasVersionNotice" defer src="./site-version-ui.js?v=1df5aa2d1482"></script><meta id="atlasSnapshotRevision" name="atlas-snapshot-revision" content="890881e125ab57e39feede0e6ab5ef380eaab5b6486a81643549680627bd996e"></head><body>
+})();</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#18342f"><meta name="description" content="隋代专属图库：开皇、仁寿、大业、义宁及皇泰的七个视觉章节，逐图标注原始断代、来源、画面细节和参考边界。"><title>隋代专属图库 · 中华文明影像库</title><link rel="stylesheet" href="sui.css?v=87393ec9ac9d"><script id="atlasVersionNotice" defer src="./site-version-ui.js?v=1df5aa2d1482"></script><meta id="atlasSnapshotRevision" name="atlas-snapshot-revision" content="4295d529674c720df3906b4833e2965dce7a196d8a362446cce2ff394a17b844"></head><body>
 <a class="skip" href="#gallery">跳转到图像目录</a><header><a class="brand" href="index.html"><span class="seal">中华<br>文明</span><span>中华文明影像库<small>CHINESE CIVILIZATION ARCHIVE</small></span></a><nav aria-label="专题导航"><a href="#periods">分期画面</a><a href="#gallery">参考图库</a><a href="#literature">文献依据</a></nav><a class="back" href="index.html#era=%E9%9A%8B">返回历代目录 ↗</a></header>
 <main><section class="hero"><div class="hero-copy"><p class="eyebrow">SUI DYNASTY / 581—618 · LUOYANG EPILOGUE TO 619</p><h1>隋<span>南北合流的形与色</span></h1><p class="hero-lead">白瓷、金玉、石窟与新都。<br>沿着七个历史章节，寻找每一幅画面的依据。</p><div class="hero-actions"><a class="primary" href="#gallery">打开隋代图库 ↓</a><a class="secondary" href="#periods">按时期寻找画面 →</a></div><div class="stats" id="stats" aria-live="polite"></div></div><figure class="hero-visual"><img id="heroImage" alt="隋代参考图" referrerpolicy="no-referrer" fetchpriority="high"><figcaption><span id="heroCaption">来自真实遗存的细节</span><button id="heroDetail">查看图像出处 ↗</button></figcaption><span class="hero-mark" aria-hidden="true">隋</span></figure></section>
 <div class="scope-line"><span>开皇 · 仁寿 · 大业 · 义宁 · 皇泰</span><span>七期导览 / 每期三组画面参考</span><span>按独立图像计数，同件多视角另有说明</span></div>

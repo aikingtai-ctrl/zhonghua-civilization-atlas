@@ -156,23 +156,27 @@ function toDomesticSafeImg(u){
   }
   return u;
 }
-function sanitizeUnhostedPreviews(){
+function sanitizePack(pack){
   try{
-    Object.keys(window).forEach(function(wk){
-      var pack=(wk==='ARCHIVE_DATA'||/_DATA$/.test(wk))?window[wk]:null;
-      if(!pack||!Array.isArray(pack.records)||pack.__jtSanitized)return;
-      pack.__jtSanitized=true;
-      pack.records.forEach(function(r){
-        if(!r)return;
-        var orig=r.imageUrl||r.originalImageUrl;
-        if(!orig)return;
-        if(typeof r.previewUrl==='string'&&/^liao-images\//.test(r.previewUrl))r.previewUrl=toDomesticSafeImg(orig);
-        if(typeof r.localImage==='string'&&/^liao-images\//.test(r.localImage))r.localImage=toDomesticSafeImg(orig);
-      });
+    if(!pack||!Array.isArray(pack.records)||pack.__jtSanitized)return;
+    pack.__jtSanitized=true;
+    pack.records.forEach(function(r){
+      if(!r)return;
+      var orig=r.imageUrl||r.originalImageUrl;
+      if(!orig)return;
+      if(typeof r.previewUrl==='string'&&/^research-[A-Za-z0-9_-]+\//.test(r.previewUrl))r.previewUrl=toDomesticSafeImg(orig);
+      if(typeof r.localImage==='string'&&/^research-[A-Za-z0-9_-]+\//.test(r.localImage))r.localImage=toDomesticSafeImg(orig);
+      if(typeof r.thumbnailUrl==='string'&&/^research-[A-Za-z0-9_-]+\//.test(r.thumbnailUrl))r.thumbnailUrl=toDomesticSafeImg(orig);
     });
   }catch(e){}
 }
-window.addEventListener('load',function(ev){if(ev&&ev.target&&ev.target.tagName==='SCRIPT')sanitizeUnhostedPreviews();},true);
+['ARCHIVE_DATA','SHANG_DATA','WESTERN_ZHOU_DATA','SPRING_AUTUMN_DATA','WARRING_STATES_DATA','QIN_DATA','WESTERN_HAN_DATA','EASTERN_HAN_DATA','WEIJIN_DATA','SUI_DATA','SONG_DATA','LIAO_DATA','JIN_DATA'].forEach(function(dk){
+  var _v=window[dk];if(_v)sanitizePack(_v);
+  try{Object.defineProperty(window,dk,{configurable:true,enumerable:true,get:function(){return _v;},set:function(nv){_v=nv;sanitizePack(nv);}});}catch(e){}
+});
+function sanitizeUnhostedPreviews(){
+  try{Object.keys(window).forEach(function(wk){if(wk==='ARCHIVE_DATA'||/_DATA$/.test(wk))sanitizePack(window[wk]);});}catch(e){}
+}
 document.addEventListener('DOMContentLoaded',sanitizeUnhostedPreviews);
 function findOrigUrlByPreview(relPath){
   if(!_extMap){
@@ -207,7 +211,7 @@ window.addEventListener('error',function(ev){
   }
   el.src=FALLBACK_SVG;
 },true);
-})();</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#243e36"><meta name="description" content="三国、西晋、东晋、十六国与南北朝视觉参考图库。逐图记录年代、来源、画面细节和图像许可。"><title>魏晋南北朝专属图库｜中华文明影像库</title><link rel="stylesheet" href="weijin.css?v=12d61dc787c3"><script id="atlasVersionNotice" defer src="./site-version-ui.js?v=1df5aa2d1482"></script><meta id="atlasSnapshotRevision" name="atlas-snapshot-revision" content="890881e125ab57e39feede0e6ab5ef380eaab5b6486a81643549680627bd996e"></head>
+})();</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#243e36"><meta name="description" content="三国、西晋、东晋、十六国与南北朝视觉参考图库。逐图记录年代、来源、画面细节和图像许可。"><title>魏晋南北朝专属图库｜中华文明影像库</title><link rel="stylesheet" href="weijin.css?v=12d61dc787c3"><script id="atlasVersionNotice" defer src="./site-version-ui.js?v=1df5aa2d1482"></script><meta id="atlasSnapshotRevision" name="atlas-snapshot-revision" content="4295d529674c720df3906b4833e2965dce7a196d8a362446cce2ff394a17b844"></head>
 <body><header class="top"><a class="brand" href="index.html"><span class="seal">中华<br>文明</span><span>中华文明影像库<small>CHINESE CIVILIZATION ARCHIVE</small></span></a><nav aria-label="专题导航"><a href="#periods">时期档案</a><a href="#scenes">画面参考</a><a href="#gallery">全部图像</a></nav><a class="text-link" href="weijin-reference-pack.json.gz" download>下载资料包 ↗</a></header>
 <main><section class="hero"><div class="hero-copy"><p class="eyebrow">220 — 589 CE / A VISUAL SOURCEBOOK</p><h1>魏晋南北朝<span>循一物，见一时。</span></h1><p class="intro">从三国并立到南北交融，沿着服饰、器物、<br class="desktop">墓葬与造像，寻找能够落在画面上的历史细节。</p><div class="hero-actions"><a class="primary" href="#periods">按时期寻找参考 ↓</a><a href="#gallery">浏览图像目录 →</a></div><p class="scope-note">三国 · 西晋 · 东晋 · 十六国 · 南北朝<br>综合入口跨越多个并行政权；每张图保留原始断代。</p></div><div class="hero-art"><span class="hero-script" aria-hidden="true">魏晋</span><img id="heroImage" alt="本专题馆藏参考图" fetchpriority="high"><div class="hero-caption"><span>从实物出发</span><button id="heroDetail"></button><small id="heroSource"></small></div></div></section><div id="stats" class="stats" aria-label="本专题图像统计"></div>
 <section id="periods" class="period-section"><div class="heading"><div><p class="eyebrow">01 / PERIODS & CONTEXT</p><h2>同一时代，不同画面。</h2></div><p>先定年代与地域，再取视觉细节。<br>东晋与十六国并行，北魏早期与十六国重叠。</p></div><div id="periodTabs" class="period-tabs" aria-label="选择时期"></div><article id="periodProfile" class="period-profile" aria-live="polite"></article></section>

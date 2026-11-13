@@ -156,23 +156,27 @@ function toDomesticSafeImg(u){
   }
   return u;
 }
-function sanitizeUnhostedPreviews(){
+function sanitizePack(pack){
   try{
-    Object.keys(window).forEach(function(wk){
-      var pack=(wk==='ARCHIVE_DATA'||/_DATA$/.test(wk))?window[wk]:null;
-      if(!pack||!Array.isArray(pack.records)||pack.__jtSanitized)return;
-      pack.__jtSanitized=true;
-      pack.records.forEach(function(r){
-        if(!r)return;
-        var orig=r.imageUrl||r.originalImageUrl;
-        if(!orig)return;
-        if(typeof r.previewUrl==='string'&&/^liao-images\//.test(r.previewUrl))r.previewUrl=toDomesticSafeImg(orig);
-        if(typeof r.localImage==='string'&&/^liao-images\//.test(r.localImage))r.localImage=toDomesticSafeImg(orig);
-      });
+    if(!pack||!Array.isArray(pack.records)||pack.__jtSanitized)return;
+    pack.__jtSanitized=true;
+    pack.records.forEach(function(r){
+      if(!r)return;
+      var orig=r.imageUrl||r.originalImageUrl;
+      if(!orig)return;
+      if(typeof r.previewUrl==='string'&&/^research-[A-Za-z0-9_-]+\//.test(r.previewUrl))r.previewUrl=toDomesticSafeImg(orig);
+      if(typeof r.localImage==='string'&&/^research-[A-Za-z0-9_-]+\//.test(r.localImage))r.localImage=toDomesticSafeImg(orig);
+      if(typeof r.thumbnailUrl==='string'&&/^research-[A-Za-z0-9_-]+\//.test(r.thumbnailUrl))r.thumbnailUrl=toDomesticSafeImg(orig);
     });
   }catch(e){}
 }
-window.addEventListener('load',function(ev){if(ev&&ev.target&&ev.target.tagName==='SCRIPT')sanitizeUnhostedPreviews();},true);
+['ARCHIVE_DATA','SHANG_DATA','WESTERN_ZHOU_DATA','SPRING_AUTUMN_DATA','WARRING_STATES_DATA','QIN_DATA','WESTERN_HAN_DATA','EASTERN_HAN_DATA','WEIJIN_DATA','SUI_DATA','SONG_DATA','LIAO_DATA','JIN_DATA'].forEach(function(dk){
+  var _v=window[dk];if(_v)sanitizePack(_v);
+  try{Object.defineProperty(window,dk,{configurable:true,enumerable:true,get:function(){return _v;},set:function(nv){_v=nv;sanitizePack(nv);}});}catch(e){}
+});
+function sanitizeUnhostedPreviews(){
+  try{Object.keys(window).forEach(function(wk){if(wk==='ARCHIVE_DATA'||/_DATA$/.test(wk))sanitizePack(window[wk]);});}catch(e){}
+}
 document.addEventListener('DOMContentLoaded',sanitizeUnhostedPreviews);
 function findOrigUrlByPreview(relPath){
   if(!_extMap){
@@ -207,7 +211,7 @@ window.addEventListener('error',function(ev){
   }
   el.src=FALLBACK_SVG;
 },true);
-})();</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f2efe6"><meta name="description" content="辽代专属图库：按执政者、年号与视觉主题查找真实遗存，逐图保留出处、原始断代与参考边界。"><title>辽代专属图库｜中华文明影像库</title><link rel="stylesheet" href="liao.css?v=c1dfb4f48511"><script id="atlasVersionNotice" defer src="./site-version-ui.js?v=1df5aa2d1482"></script><meta id="atlasSnapshotRevision" name="atlas-snapshot-revision" content="890881e125ab57e39feede0e6ab5ef380eaab5b6486a81643549680627bd996e"></head>
+})();</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f2efe6"><meta name="description" content="辽代专属图库：按执政者、年号与视觉主题查找真实遗存，逐图保留出处、原始断代与参考边界。"><title>辽代专属图库｜中华文明影像库</title><link rel="stylesheet" href="liao.css?v=c1dfb4f48511"><script id="atlasVersionNotice" defer src="./site-version-ui.js?v=1df5aa2d1482"></script><meta id="atlasSnapshotRevision" name="atlas-snapshot-revision" content="4295d529674c720df3906b4833e2965dce7a196d8a362446cce2ff394a17b844"></head>
 <body><header class="top"><a class="brand" href="index.html"><span class="seal">中华<br>文明</span><span>中华文明影像库<small>CHINESE CIVILIZATION ARCHIVE</small></span></a><nav aria-label="专题导航"><a href="#periods">辽代分期</a><a href="#gallery">图像目录</a><a href="#sources">来源与范围</a></nav><a class="outline" href="liao-reference-pack.json.gz" download>下载资料包 ↓</a></header>
 <main><section class="hero"><div class="hero-copy"><p class="eyebrow">LIAO DYNASTY · 916–1125</p><h1>大辽<span>从草原行帐，到佛寺重楼。</span></h1><p class="lead">器物、衣冠、壁画与营造，<br>为辽代每个时期，找到有出处的画面。</p><a class="primary" href="#periods">按时期寻找参考 ↓</a><p class="hero-note">以916年称帝至1125年为主体，另列907—916年前史与926—927年过渡。西辽保留独立纪年入口，不混入辽代图量。</p></div><button class="hero-photo" id="heroDetail" aria-label="查看封面图出处"><img id="heroImage" alt="" fetchpriority="high"><span id="heroCaption"></span></button></section><div class="stats" id="stats" aria-label="图库统计"></div>
 <section class="period-section" id="periods"><div class="section-heading"><div><p class="eyebrow">TIME & VISUAL EVIDENCE</p><h2>沿着时间，进入画面。</h2></div><p>有纪年的遗存与跨期形制参考，分别说明。</p></div><div class="phase-tabs" id="phaseTabs" aria-label="浏览分期"></div><div class="period-layout"><aside class="period-sidebar"><h3>执政时期</h3><div id="rulerList"></div><p class="sidebar-note">此处分期服务于视觉检索。建筑照片展示今日现状；墓葬纪年不等于器物制作年份。</p><a href="index.html#era=%E8%BE%BD&polity=%E8%A5%BF%E8%BE%BD">西辽纪年索引 ↗</a></aside><article id="periodProfile" class="profile"></article></div></section>
