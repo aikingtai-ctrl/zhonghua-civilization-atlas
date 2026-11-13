@@ -347,7 +347,7 @@ def git_push_if_changed(repo_dir: Path, repo_name: str, msg: str, auto_push: boo
 # 1. Shengcang Incremental Sync
 # ------------------------------------------------------------------------------
 SHIM_REV = "20261113d1"
-ZH_SHIM_REV = "20261113f2"
+ZH_SHIM_REV = "20261113g1"
 SC_SHIM = """<style>a[href*="signin-with-chatgpt"]{display:none!important}</style><script id="jintai-shengcang-shim">(function(){
 var BASE=new URL('.',location.href).pathname;if(BASE.slice(-1)!=='/')BASE+='/';window.__JT_BASE__=BASE;
 var IS_GH=/github\\.io$/i.test(location.hostname||'');
@@ -738,15 +738,39 @@ def _build_zh_async_loader_tag(all_srcs: list[str], p1: list[str], p2: list[str]
         "var me=document.getElementById('jt-zh-async-loader');if(!me)return;"
         "var p1=JSON.parse(me.getAttribute('data-p1')||'[]'),p2=JSON.parse(me.getAttribute('data-p2')||'[]');"
         "if(location.hash==='#expansion'&&p2.length){p1=p1.concat(p2);p2=[];}"
-        "var pendingDetail=null;"
-        "document.addEventListener('click',function(e){if(window.__JT_HYDRATED__)return;var b=e.target&&e.target.closest?e.target.closest('[data-detail]'):null;if(b){e.preventDefault();pendingDetail=b.getAttribute('data-detail');}},true);"
+        "var pendingAct=null;"
+        "function showPreToast(m){var t=document.getElementById('toast');if(t){t.textContent=m;t.classList.add('show');}}"
+        "document.addEventListener('click',function(e){"
+        "if(window.__JT_HYDRATED__)return;"
+        "var t=e.target;if(!t||!t.closest)return;"
+        "if(t.closest('[data-save]')||t.closest('a[href]'))return;"
+        "var b=t.closest('[data-detail]');"
+        "if(!b){var cd=t.closest('article.card');if(cd)b=cd.querySelector('[data-detail]');}"
+        "if(b){e.preventDefault();pendingAct={t:'detail',v:b.getAttribute('data-detail')};showPreToast('正在载入文物考证详情…');return;}"
+        "for(var k of ['era','category','view']){var fb=t.closest('[data-'+k+']');if(fb){e.preventDefault();pendingAct={t:k,v:fb.getAttribute('data-'+k)};showPreToast('正在载入分类筛选…');return;}}"
+        "},true);"
         "function loadTag(u){return new Promise(function(res){var s=document.createElement('script');s.src=u;s.onload=function(){res(true);};s.onerror=function(){res(false);};document.head.appendChild(s);});}"
         "async function runList(list){if(!list.length)return;if(location.protocol==='file:'){for(var i=0;i<list.length;i++)await loadTag(list[i]);return;}"
         "var tasks=list.map(function(u){return fetch(u).then(function(r){if(!r.ok)throw new Error(r.status);return r.text();});});"
         "for(var j=0;j<list.length;j++){try{var c=await tasks[j];var s=document.createElement('script');s.textContent=c+'\\n//# sourceURL='+list[j];document.head.appendChild(s);s.remove();if(c.length>2000000)await new Promise(function(r){setTimeout(r,0);});}catch(err){await loadTag(list[j]);}}}"
+        "async function replayPending(allowP2){"
+        "if(!pendingAct)return;"
+        "var act=pendingAct;"
+        "if(act.t==='detail'&&typeof window.detail==='function'){"
+        "try{window.detail(act.v);}catch(e){}"
+        "var dlg=document.getElementById('detailDialog');"
+        "if(dlg&&dlg.open){pendingAct=null;return;}"
+        "if(allowP2&&p2.length){var rest=p2.slice();p2=[];await runList(rest);if(window.__jtSanitizeAll)window.__jtSanitizeAll();try{window.detail(act.v);}catch(e){}}"
+        "pendingAct=null;"
+        "}else if(act.t!=='detail'){"
+        "pendingAct=null;"
+        "var sel='[data-'+act.t+'=\"'+String(act.v).replace(/\"/g,'\\\\\"')+'\"]';"
+        "var el=document.querySelector(sel);if(el)try{el.click();}catch(e){}"
+        "}"
+        "}"
         "async function boot(){await runList(p1);if(window.__jtSanitizeAll)window.__jtSanitizeAll();window.__JT_HYDRATED__=true;"
         "if(['#tangReignDossier','#xixiaReignDossier'].indexOf(location.hash)!==-1)window.dispatchEvent(new Event('load'));"
-        "if(pendingDetail&&typeof window.detail==='function'){try{window.detail(pendingDetail);}catch(e){}}"
+        "await replayPending(true);"
         "if(p2.length){var rp=function(){runList(p2);};if(typeof requestIdleCallback==='function')requestIdleCallback(rp,{timeout:600});else setTimeout(rp,350);}}"
         "if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(boot,0);},{once:true});else setTimeout(boot,0);"
         "})();"
@@ -1106,9 +1130,479 @@ def sync_history_site1() -> dict:
     return {"site": "history", "status": "up-to-date"}
 
 
+def collect_live_4sites_metrics(root: Path) -> dict:
+    pub = Path(r"C:\Users\KingT\jintai-internal\中国历史文化图库\每日更新\publish_checkout_20261012")
+    m: dict = {
+        "d1_shards": 736, "d1_entries": 77379, "d1_prompts": 370412,
+        "d2_shards": 793, "d2_entries": 76386, "d2_prompts": 364996,
+        "film_works": 53000, "film_shots": 2779879, "film_styles": 250,
+        "ws_groups": 13500, "ws_prompts": 135000,
+        "dyn_groups": 7800, "dyn_prompts": 78000, "dyn_wtag": "W6200",
+        "arch_sites": 9507, "arch_prompts": 45582,
+        "myth_groups": 7884, "myth_prompts": 45666,
+        "epics_groups": 2600, "epics_prompts": 25760, "full_lit_groups": 3000,
+        "hlm_groups": 268, "hlm_prompts": 2423,
+        "lz_groups": 376, "lz_prompts": 3094,
+        "zg_rel": 3072, "figures_total": 26000,
+        "zh_records": 26847, "zh_hosted_imgs": 18427,
+        "doc_published": 4229, "doc_total": 30469, "doc_regions": 137, "doc_topics": 1176,
+        "sc_total": 72298, "sc_cats": 12,
+    }
+    if pub.is_dir():
+        for html_fn, pfx, idx_sub in (("index.html", "d1", "d1_idx"), ("browser.html", "d2", "d2_idx")):
+            hp = pub / html_fn
+            if hp.is_file():
+                ht = hp.read_text(encoding="utf-8", errors="ignore")
+                ms = re.search(r"const SHARDS=(\[[^\n;]+\]);", ht)
+                if ms:
+                    m[f"{pfx}_shards"] = len(json.loads(ms.group(1)))
+                mc = re.search(r"const IDX_CHUNKS=(\[[^\n;]+\]);", ht)
+                if mc and (pub / idx_sub).is_dir():
+                    ec, pc = 0, 0
+                    for cfn in json.loads(mc.group(1)):
+                        cp = pub / idx_sub / cfn
+                        if cp.is_file():
+                            ct = cp.read_text(encoding="utf-8")
+                            ib, ie = ct.find("["), ct.rfind("]")
+                            if ib >= 0 and ie > ib:
+                                for grp in json.loads(ct[ib:ie + 1]):
+                                    ec += len(grp[2])
+                                    pc += sum(int(r[-1]) for r in grp[2])
+                    if ec > 0:
+                        m[f"{pfx}_entries"], m[f"{pfx}_prompts"] = ec, pc
+        if (pub / "sources.html").is_file():
+            stxt = (pub / "sources.html").read_text(encoding="utf-8", errors="ignore")
+            mk = re.search(r'id="topKpi"[^>]*><b>([\d,]+)</b>\s*部\s*·\s*<b>([\d,]+)</b>\s*镜', stxt)
+            if mk:
+                m["film_works"] = int(mk.group(1).replace(",", ""))
+                m["film_shots"] = int(mk.group(2).replace(",", ""))
+            msl = re.search(r"(\d+)大风格派", stxt)
+            if msl:
+                m["film_styles"] = int(msl.group(1))
+        if (pub / "websearch5000.html").is_file():
+            wtxt = (pub / "websearch5000.html").read_text(encoding="utf-8", errors="ignore")
+            mw = re.search(r"全网考证总馆藏\s*·\s*([\d,]+)\s*条", wtxt)
+            if mw:
+                m["ws_prompts"] = int(mw.group(1).replace(",", ""))
+                m["ws_groups"] = m["ws_prompts"] // 10
+        if (pub / "dynasty2000.html").is_file():
+            dtxt = (pub / "dynasty2000.html").read_text(encoding="utf-8", errors="ignore")
+            md = re.search(r"专集\s*·\s*([\d,]+)\s*条", dtxt)
+            if md:
+                m["dyn_prompts"] = int(md.group(1).replace(",", ""))
+                m["dyn_groups"] = m["dyn_prompts"] // 10
+            mwtag = re.search(r"\b(W\d{4,5})\b", dtxt)
+            if mwtag:
+                m["dyn_wtag"] = mwtag.group(1)
+        if (pub / "arch5680.html").is_file():
+            atxt = (pub / "arch5680.html").read_text(encoding="utf-8", errors="ignore")
+            ma = re.search(r"全库\s*([\d,]+)\s*座\s*·\s*([\d,]+)\s*条", atxt)
+            if ma:
+                m["arch_sites"] = int(ma.group(1).replace(",", ""))
+                m["arch_prompts"] = int(ma.group(2).replace(",", ""))
+        if (pub / "myth5000.html").is_file():
+            mtxt = (pub / "myth5000.html").read_text(encoding="utf-8", errors="ignore")
+            mm = re.search(r"([\d,]+)\s*组\s*·\s*([\d,]+)\s*条", mtxt)
+            if mm:
+                m["myth_groups"] = int(mm.group(1).replace(",", ""))
+                m["myth_prompts"] = int(mm.group(2).replace(",", ""))
+        if (pub / "epics.html").is_file():
+            etxt = (pub / "epics.html").read_text(encoding="utf-8", errors="ignore")
+            me = re.search(r"本集\s*([\d,]+)\s*组\s*/\s*([\d,]+)\s*条[^）]*满\s*([\d,]+)\s*组", etxt)
+            if me:
+                m["epics_groups"] = int(me.group(1).replace(",", ""))
+                m["epics_prompts"] = int(me.group(2).replace(",", ""))
+                m["full_lit_groups"] = int(me.group(3).replace(",", ""))
+        if (pub / "hongloumeng.html").is_file():
+            htxt = (pub / "hongloumeng.html").read_text(encoding="utf-8", errors="ignore")
+            mh = re.search(r"(\d+)\s*组\s*[·（(]\s*([\d,]+)\s*条", htxt)
+            if mh:
+                m["hlm_groups"], m["hlm_prompts"] = int(mh.group(1)), int(mh.group(2).replace(",", ""))
+        if (pub / "liaozhai.html").is_file():
+            ltxt = (pub / "liaozhai.html").read_text(encoding="utf-8", errors="ignore")
+            ml = re.search(r"(\d+)\s*组\s*[·（(]\s*([\d,]+)\s*条", ltxt)
+            if ml:
+                m["lz_groups"], m["lz_prompts"] = int(ml.group(1)), int(ml.group(2).replace(",", ""))
+        if (pub / "zhiguai31.html").is_file():
+            ztxt = (pub / "zhiguai31.html").read_text(encoding="utf-8", errors="ignore")
+            mz = re.search(r"关联\s*([\d,]+)\s*组", ztxt)
+            if mz:
+                m["zg_rel"] = int(mz.group(1).replace(",", ""))
+        fmf = pub / "figures_data" / "manifest.js"
+        if fmf.is_file():
+            mfm = re.search(r'"total_figures"\s*:\s*(\d+)', fmf.read_text(encoding="utf-8", errors="ignore"))
+            if mfm:
+                m["figures_total"] = int(mfm.group(1))
+
+    zh_dir = root / "03_zhonghua-civilization-atlas"
+    if (zh_dir / "index.html").is_file():
+        zht = (zh_dir / "index.html").read_text(encoding="utf-8", errors="ignore")
+        mzt = re.search(r'id="totalCount">(\d+)<', zht)
+        if mzt:
+            m["zh_records"] = int(mzt.group(1))
+        m["zh_hosted_imgs"] = sum(
+            1 for p in zh_dir.rglob("*")
+            if p.suffix.lower() in {".webp", ".jpg", ".jpeg", ".png"} and ".git" not in p.parts
+        )
+
+    doc_lib = root / "02_documentary-classroom-library" / "data" / "library_full.json"
+    if doc_lib.is_file():
+        dobj = json.loads(doc_lib.read_text(encoding="utf-8"))
+        st = dobj.get("stats") or {}
+        fc = dobj.get("facets") or {}
+        if st.get("published"):
+            m["doc_published"] = int(st["published"])
+        if st.get("total"):
+            m["doc_total"] = int(st["total"])
+        if fc.get("region"):
+            m["doc_regions"] = len(fc["region"])
+        if fc.get("topic"):
+            m["doc_topics"] = len(fc["topic"])
+
+    sc_dir = root / "01_shengcang-sound-library"
+    if sc_dir.is_dir():
+        cats = set()
+        sc_rows = 0
+        sc_mf_total = 0
+        for cp in sorted(sc_dir.glob("catalogue-*.json")):
+            cobj = json.loads(cp.read_text(encoding="utf-8"))
+            if isinstance(cobj, dict):
+                if "total" in cobj and "parts" in cobj:
+                    sc_mf_total = int(cobj["total"])
+                elif "rows" in cobj and "columns" in cobj:
+                    sc_rows += len(cobj["rows"])
+                    cols = cobj["columns"]
+                    dct = cobj.get("dictionary") or []
+                    if "category" in cols:
+                        ci = cols.index("category")
+                        for r in cobj["rows"]:
+                            v = r[ci]
+                            cats.add(dct[v] if isinstance(v, int) and 0 <= v < len(dct) else str(v))
+        if sc_mf_total or sc_rows:
+            m["sc_total"] = sc_mf_total or sc_rows
+        if cats:
+            m["sc_cats"] = len(cats)
+    return m
+
+
+def _patch_hbcm_html_metrics(txt: str, m: dict) -> str:
+    combined_wan = f"{(m['d1_prompts'] + m['film_shots']) / 10000:.1f}"
+    d1_wan = f"{m['d1_prompts'] / 10000:.1f}"
+    film_wan = f"{m['film_shots'] / 10000:.1f}"
+    works_wan = f"{m['film_works'] / 10000:g}"
+    out = txt
+    out = re.sub(r"\d+(?:\.\d+)?\s*万\+(?=\s*(?:考证与镜头|历史考证词|双图库|</div>))", f"{combined_wan} 万+", out)
+    out = re.sub(r"总提示词与镜头描述资源已突破\s*[\d.]+\s*万条", f"总提示词与镜头描述资源已突破 {combined_wan} 万条", out)
+    out = re.sub(r"超越 ShotDeck 的\s*[\d.]+\s*万镜引擎", f"超越 ShotDeck 的 {film_wan} 万镜引擎", out)
+    out = re.sub(r'count:\s*"[\d,]+\s*条镜头词"', f'count: "{m["film_shots"]:,} 条镜头词"', out)
+    out = re.sub(
+        r'subCount:\s*"[\d,]+\s*部世界影史名作\s*·\s*全球百四十大摄影体系\s*\+\s*\d+大视觉流派"',
+        f'subCount: "{m["film_works"]:,} 部世界影史名作 · 全球百四十大摄影体系 + {m["film_styles"]}大视觉流派"',
+        out,
+    )
+    out = re.sub(
+        r"直达《影视参考图集》\([^)]*镜\)",
+        f"直达《影视参考图集》({works_wan}万部·{film_wan}万镜)",
+        out,
+    )
+    out = re.sub(
+        r"《影视参考图集》\s*\([\d.]+万镜\)",
+        f"《影视参考图集》({film_wan}万镜)",
+        out,
+    )
+    out = re.sub(
+        r"影视参考图集\s*\([\d.]+万镜\)",
+        f"影视参考图集 ({film_wan}万镜)",
+        out,
+    )
+    out = re.sub(
+        r"《影视参考图集》[\d.]+\s*万镜大师电影分镜检索引擎",
+        f"《影视参考图集》{film_wan} 万镜大师电影分镜检索引擎",
+        out,
+    )
+    out = re.sub(r'count:\s*"[\d,]+\s*条考证词"', f'count: "{m["d1_prompts"]:,} 条考证词"', out)
+    out = re.sub(
+        r'subCount:\s*"[\d,]+\s*个历史条目\s*·\s*[\d,]+\s*位历史名人\s*·\s*全网考证\s*[\d,]+\s*条"',
+        f'subCount: "{m["d1_entries"]:,} 个历史条目 · {m["figures_total"]:,} 位历史名人 · 全网考证 {m["ws_prompts"]:,} 条"',
+        out,
+    )
+    out = re.sub(
+        r"《中国历史文化图库》[\d,]+\s*条中文十二段",
+        f"《中国历史文化图库》{m['d1_prompts']:,} 条中文十二段",
+        out,
+    )
+    out = re.sub(
+        r"联通《中国历史文化图库》[\d.]+\s*万条考证词",
+        f"联通《中国历史文化图库》{d1_wan} 万条考证词",
+        out,
+    )
+    out = re.sub(
+        r"(《中国历史文化图库》|历史文化图库)\s*\([\d.]+万[词条]?\)",
+        rf"\1({d1_wan}万词)",
+        out,
+    )
+    out = re.sub(
+        r"《声仓(?:\s*Shengcang)?》\s*[\d,]+\s*条",
+        f"《声仓》{m['sc_total']:,} 条",
+        out,
+    )
+    out = re.sub(r"\((?:200|203|[\d,]+)条真品\)", f"({m['sc_total']:,}条真品)", out)
+    out = re.sub(r"直跳《声仓》(?:200|203|[\d,]+)条真品", f"直跳《声仓》{m['sc_total']:,}条真品", out)
+    out = re.sub(
+        r'count:\s*"[\d,]+\s*部纪录片\s*\+\s*[\d,]+\s*(?:图|条考证)"',
+        f'count: "{m["doc_published"]:,} 部纪录片 + {m["zh_records"]:,} 条考证"',
+        out,
+    )
+    out = re.sub(
+        r"《纪录片教学资源库》（[\d,]+\s*部课程档案）",
+        f"《纪录片教学资源库》（{m['doc_published']:,} 部已发布课程档案 / {m['doc_total']:,} 总目）",
+        out,
+    )
+    out = re.sub(
+        r"《纪录片教学资源库》[\d,]+\s*部(?:已发布)?课程档案",
+        f"《纪录片教学资源库》{m['doc_published']:,} 部课程档案",
+        out,
+    )
+    out = re.sub(
+        r"《纪录片教学资源库》\([\d,]+部\)",
+        f"《纪录片教学资源库》({m['doc_published']:,}部)",
+        out,
+    )
+    out = re.sub(
+        r"([\d,]+)\s*部经典纪录片教学切入点",
+        f"{m['doc_published']:,} 部经典纪录片教学切入点",
+        out,
+    )
+    out = re.sub(
+        r"([\d,]+)\s*部纪录片教学库",
+        f"{m['doc_published']:,} 部纪录片教学库",
+        out,
+    )
+    out = re.sub(r'metric:\s*"[\d,]+纪录片\s*\+\s*真人1:1"', f'metric: "{m["doc_published"]:,}纪录片 + 真人1:1"', out)
+    out = re.sub(r'"[\d,]+部纪录片教学库"', f'"{m["doc_published"]:,}部纪录片教学库"', out)
+    out = re.sub(
+        r"《中华文明影像库》（[\d,]+\s*(?:张高清馆藏图|条文物考证[^）]*)）",
+        f"《中华文明影像库》（{m['zh_records']:,} 条文物考证 · {m['zh_hosted_imgs']:,} 张自托管高清馆藏图）",
+        out,
+    )
+    out = re.sub(
+        r"《中华文明影像库》[\d,]+\s*(?:张|件)(?:博物馆)?(?:高清)?文物真迹",
+        f"《中华文明影像库》{m['zh_records']:,} 件博物馆高清文物真迹",
+        out,
+    )
+    out = re.sub(
+        r"《中华文明影像库》[\d,]+\s*张文物真迹",
+        f"《中华文明影像库》{m['zh_records']:,} 条文物真迹",
+        out,
+    )
+    out = re.sub(
+        r"《中华文明影像库》\([\d,]+件真迹\)",
+        f"《中华文明影像库》({m['zh_records']:,}件真迹)",
+        out,
+    )
+    return out
+
+
+def sync_portal_and_hbcm_metrics(root: Path, auto_push: bool = True) -> dict:
+    portal_dir = root / "00_portal"
+    if not (portal_dir / "index.html").is_file():
+        return {"site": "portal", "status": "skipped_not_local"}
+
+    git_prepare_repo(portal_dir, auto_push)
+    m = collect_live_4sites_metrics(root)
+    d1_wan2 = f"{m['d1_prompts'] / 10000:.2f}"
+    d1_wan1 = f"{m['d1_prompts'] / 10000:.1f}"
+    d2_wan1 = f"{m['d2_prompts'] / 10000:.1f}"
+    film_wan1 = f"{m['film_shots'] / 10000:.1f}"
+
+    sites_data = [
+        {
+            "key": "history",
+            "fullWidth": True,
+            "title": "1. 中国历史文化图库与影视参考库（14 大分类专集全量同步）",
+            "tags": [
+                [f"{m['d1_entries']:,} 条目 / {m['d1_prompts']:,} 提示词（{d1_wan2}万词）· 全网考证 {m['ws_prompts']:,} 条", ""],
+                [f"建筑 {m['arch_sites']:,} 座（{m['arch_prompts']:,} 条）· 名人 {m['figures_total']:,} 人 · 文学传奇满 {m['epics_groups']:,}/{m['full_lit_groups']:,} 组", ""],
+                [f"影视参考 {m['film_works']:,} 部 · {m['film_shots']:,} 镜 · {m['film_styles']} 大流派", "red"],
+            ],
+            "desc": (
+                f"覆盖中国全历史纪年 66 格矩阵（全库达 {m['d1_prompts']:,} 条提示词 / {m['d1_entries']:,} 条目 · {m['d1_shards']} 分片）："
+                f"历代历史名人 {m['figures_total']:,} 人、全网考证 {m['ws_prompts']:,} 条、薄弱专集 {m['dyn_prompts']:,} 条（{m['dyn_wtag']}）、"
+                f"历代建筑考证 {m['arch_sites']:,} 座（{m['arch_prompts']:,} 条）、神话与传说 {m['myth_groups']:,} 组（{m['myth_prompts']:,} 条）、"
+                f"文学名著·民国小说与民间传奇（{m['epics_groups']:,} 组 / {m['epics_prompts']:,} 条，合璧红楼聊斋全库满 {m['full_lit_groups']:,} 组）。"
+            ),
+            "cloudUrl": "https://aikingtai-ctrl.github.io/jintai-history-image-library/portal.html",
+            "localPath": "/jintai-history-image-library/portal.html",
+            "catTitle": f"直达分类专集网页（14 个专集已与 {m['d1_shards']} 分片全量对齐）：",
+            "categories": [
+                {"name": "📋 全站更新记录中心", "meta": "每日批次台账", "cloud": "https://aikingtai-ctrl.github.io/jintai-history-image-library/更新记录.html", "local": "/jintai-history-image-library/更新记录.html"},
+                {"name": "🔍 全库总检索", "meta": f"{m['d1_entries']:,} 条目 / {d1_wan1}万词", "cloud": "https://aikingtai-ctrl.github.io/jintai-history-image-library/index.html", "local": "/jintai-history-image-library/index.html"},
+                {"name": "📚 18 分卷提示词浏览", "meta": f"{m['d2_entries']:,} 组 / {d2_wan1}万词", "cloud": "https://aikingtai-ctrl.github.io/jintai-history-image-library/browser.html", "local": "/jintai-history-image-library/browser.html"},
+                {"name": "🎬 影视参考图集", "meta": f"{m['film_works']:,} 部 / {film_wan1}万镜", "cloud": "https://aikingtai-ctrl.github.io/jintai-history-image-library/film.html", "local": "/jintai-history-image-library/film.html"},
+                {"name": "🏆 全球获奖影片目录", "meta": f"140 大奖项 · {m['film_styles']} 流派", "cloud": "https://aikingtai-ctrl.github.io/jintai-history-image-library/sources.html", "local": "/jintai-history-image-library/sources.html"},
+                {"name": "🌐 全网考证总馆藏", "meta": f"{m['ws_groups']:,} 组 / {m['ws_prompts']:,} 条", "cloud": "https://aikingtai-ctrl.github.io/jintai-history-image-library/websearch5000.html", "local": "/jintai-history-image-library/websearch5000.html"},
+                {"name": "🛠️ 薄弱与工程配套专集", "meta": f"{m['dyn_groups']:,} 组 / {m['dyn_prompts']:,} 条", "cloud": "https://aikingtai-ctrl.github.io/jintai-history-image-library/dynasty2000.html", "local": "/jintai-history-image-library/dynasty2000.html"},
+                {"name": "🏯 历代建筑考证总集", "meta": f"{m['arch_sites']:,} 座 / {m['arch_prompts']:,} 条", "cloud": "https://aikingtai-ctrl.github.io/jintai-history-image-library/arch5680.html", "local": "/jintai-history-image-library/arch5680.html"},
+                {"name": "🐉 神话与传说总专集", "meta": f"{m['myth_groups']:,} 组 / {m['myth_prompts']:,} 条", "cloud": "https://aikingtai-ctrl.github.io/jintai-history-image-library/myth5000.html", "local": "/jintai-history-image-library/myth5000.html"},
+                {"name": "📜 文学·民国小说·民间传奇", "meta": f"{m['epics_groups']:,} 组 / {m['epics_prompts']:,} 条（全库满{m['full_lit_groups']:,}组）", "cloud": "https://aikingtai-ctrl.github.io/jintai-history-image-library/epics.html", "local": "/jintai-history-image-library/epics.html"},
+                {"name": "🏮 《红楼梦》角色与大观园", "meta": f"{m['hlm_groups']} 组 / {m['hlm_prompts']:,} 条", "cloud": "https://aikingtai-ctrl.github.io/jintai-history-image-library/hongloumeng.html", "local": "/jintai-history-image-library/hongloumeng.html"},
+                {"name": "🦊 《聊斋志异》全谱专集", "meta": f"{m['lz_groups']} 组 / {m['lz_prompts']:,} 条", "cloud": "https://aikingtai-ctrl.github.io/jintai-history-image-library/liaozhai.html", "local": "/jintai-history-image-library/liaozhai.html"},
+                {"name": "📖 57 部志怪佛道传奇", "meta": f"800 组 + {m['zg_rel']:,} 关联", "cloud": "https://aikingtai-ctrl.github.io/jintai-history-image-library/zhiguai31.html", "local": "/jintai-history-image-library/zhiguai31.html"},
+                {"name": "👤 历代历史名人专集", "meta": f"{m['figures_total']:,} 人", "cloud": "https://aikingtai-ctrl.github.io/jintai-history-image-library/figures.html", "local": "/jintai-history-image-library/figures.html"},
+            ],
+        },
+        {
+            "key": "zhonghua",
+            "fullWidth": True,
+            "title": "2. 中华文明影像库 · 视觉美术参考（全朝代总览 + 12 断代考证专卷）",
+            "tags": [
+                [f"12 断代考证专卷 · {m['zh_records']:,} 条馆藏文物考证（{m['zh_hosted_imgs']:,} 张高清图）", ""],
+                ["统一密码保护 · 微信一次通用", "red"],
+            ],
+            "desc": (
+                f"汇集海内外博物馆开放馆藏与考古出土图像实证（全库已达 {m['zh_records']:,} 条文物考证记录 · {m['zh_hosted_imgs']:,} 张自托管高清馆藏图），"
+                "覆盖史前至明清全朝代器物、服饰、甲胄、车马与建筑考证，内置商、西周、春秋、战国、秦、西汉、东汉、魏晋南北朝、隋、宋、辽、金 12 部独立断代分类专卷。"
+            ),
+            "cloudUrl": "https://aikingtai-ctrl.github.io/zhonghua-civilization-atlas/",
+            "localPath": "/zhonghua-civilization-atlas/",
+            "catTitle": "直达断代分类网页（全朝代总览 + 12 断代专卷）：",
+            "categories": [
+                {"name": "🏛️ 全朝代影像总览首页", "meta": f"{m['zh_records']:,} 条馆藏实证", "cloud": "https://aikingtai-ctrl.github.io/zhonghua-civilization-atlas/", "local": "/zhonghua-civilization-atlas/"},
+                {"name": "🏺 商代专卷", "meta": "青铜礼器·殷墟甲骨", "cloud": "https://aikingtai-ctrl.github.io/zhonghua-civilization-atlas/shang.html", "local": "/zhonghua-civilization-atlas/shang.html"},
+                {"name": "🔔 西周专卷", "meta": "礼乐彝器·车马铭文", "cloud": "https://aikingtai-ctrl.github.io/zhonghua-civilization-atlas/western-zhou.html", "local": "/zhonghua-civilization-atlas/western-zhou.html"},
+                {"name": "⚔️ 春秋专卷", "meta": "列国青铜·礼崩乐坏", "cloud": "https://aikingtai-ctrl.github.io/zhonghua-civilization-atlas/spring-autumn.html", "local": "/zhonghua-civilization-atlas/spring-autumn.html"},
+                {"name": "🐉 战国专卷", "meta": "楚漆错金·七雄衣冠", "cloud": "https://aikingtai-ctrl.github.io/zhonghua-civilization-atlas/warring-states.html", "local": "/zhonghua-civilization-atlas/warring-states.html"},
+                {"name": "🛡️ 秦代专卷", "meta": "兵马俑阵·秦诏度量", "cloud": "https://aikingtai-ctrl.github.io/zhonghua-civilization-atlas/qin.html", "local": "/zhonghua-civilization-atlas/qin.html"},
+                {"name": "🐎 西汉专卷", "meta": "马王堆·汉阙丝路", "cloud": "https://aikingtai-ctrl.github.io/zhonghua-civilization-atlas/western-han.html", "local": "/zhonghua-civilization-atlas/western-han.html"},
+                {"name": "🧱 东汉专卷", "meta": "画像石砖·绿釉陶楼", "cloud": "https://aikingtai-ctrl.github.io/zhonghua-civilization-atlas/eastern-han.html", "local": "/zhonghua-civilization-atlas/eastern-han.html"},
+                {"name": "🪷 魏晋南北朝专卷", "meta": "石窟壁画·褒衣博带", "cloud": "https://aikingtai-ctrl.github.io/zhonghua-civilization-atlas/weijin.html", "local": "/zhonghua-civilization-atlas/weijin.html"},
+                {"name": "🌉 隋代专卷", "meta": "白瓷金银·大运河", "cloud": "https://aikingtai-ctrl.github.io/zhonghua-civilization-atlas/sui.html", "local": "/zhonghua-civilization-atlas/sui.html"},
+                {"name": "🎋 宋代专卷", "meta": "汝官哥钧·风俗书画", "cloud": "https://aikingtai-ctrl.github.io/zhonghua-civilization-atlas/song.html", "local": "/zhonghua-civilization-atlas/song.html"},
+                {"name": "🦅 辽代专卷", "meta": "契丹金面·辽塔壁画", "cloud": "https://aikingtai-ctrl.github.io/zhonghua-civilization-atlas/liao.html", "local": "/zhonghua-civilization-atlas/liao.html"},
+                {"name": "🦌 金代专卷", "meta": "女真春水秋山·磁州窑", "cloud": "https://aikingtai-ctrl.github.io/zhonghua-civilization-atlas/jin.html", "local": "/zhonghua-civilization-atlas/jin.html"},
+            ],
+        },
+        {
+            "key": "documentary",
+            "title": "3. 纪录片教学资源库 · 以真实，启发课堂",
+            "tags": [
+                [f"{m['doc_published']:,} 部已发布课程档案 / {m['doc_total']:,} 总目", ""],
+                [f"{m['doc_regions']} 国家地区 · {m['doc_topics']:,} 主题分类", "red"],
+            ],
+            "desc": (
+                f"覆盖 1910–2020 年代全球与中国经典纪录片，已扩容同步至 {m['doc_published']:,} 部已发布课程档案"
+                f"（登记总目 {m['doc_total']:,} 部 · {m['doc_regions']} 个国家地区 · {m['doc_topics']:,} 个主题分类），"
+                "支持按学科、年代、国家与主题多维课堂检索。"
+            ),
+            "cloudUrl": "https://aikingtai-ctrl.github.io/documentary-classroom-library/",
+            "localPath": "/documentary-classroom-library/",
+            "catTitle": "功能与分类入口：",
+            "categories": [
+                {"name": f"🎞️ {m['doc_published']:,} 部课程档案检索", "meta": "按学科 / 年代 / 国家", "cloud": "https://aikingtai-ctrl.github.io/documentary-classroom-library/#library", "local": "/documentary-classroom-library/#library"},
+                {"name": f"🗂️ {m['doc_total']:,} 部全球纪录片总目", "meta": f"{m['doc_topics']:,} 个主题分类", "cloud": "https://aikingtai-ctrl.github.io/documentary-classroom-library/", "local": "/documentary-classroom-library/"},
+            ],
+        },
+        {
+            "key": "shengcang",
+            "title": "4. 声仓 · 找到画面之外的声音",
+            "tags": [
+                [f"{m['sc_total']:,} 条影视声音素材 · {m['sc_cats']} 大声效分类", ""],
+                ["统一密码保护 · 微信一次通用", "red"],
+            ],
+            "desc": (
+                f"全量归档 {m['sc_total']:,} 条影视级声音素材，涵盖环境氛围、物件拟音、人物拟音、交通机械、战斗破坏、科幻魔法、"
+                f"动物生物、冲击强调、转场运动、情绪张力、界面提示、音乐 {m['sc_cats']} 大声效分类，支持国内直连试听、波形预览与原文件下载。"
+            ),
+            "cloudUrl": "https://aikingtai-ctrl.github.io/shengcang-sound-library/#sound-library",
+            "localPath": "/shengcang-sound-library/#sound-library",
+            "catTitle": "功能与分类入口：",
+            "categories": [
+                {"name": "🔊 在线声效分类检索与试听", "meta": f"{m['sc_cats']} 大类 · {m['sc_total']:,} 条", "cloud": "https://aikingtai-ctrl.github.io/shengcang-sound-library/#sound-library", "local": "/shengcang-sound-library/#sound-library"},
+                {"name": "🎚️ 声仓首页与使用指南", "meta": "波形预览与下载", "cloud": "https://aikingtai-ctrl.github.io/shengcang-sound-library/", "local": "/shengcang-sound-library/"},
+            ],
+        },
+    ]
+
+    p_idx = portal_dir / "index.html"
+    orig_pt = p_idx.read_text(encoding="utf-8")
+    new_lead = (
+        f'<p class="lead">已全量同步四大资源库与全部分类专集网页：历史文化图库（{m["d1_entries"]:,} 条目 / {m["d1_prompts"]:,} 提示词 / 14 大分类专集）'
+        f'· 影视参考库（{m["film_works"]:,} 部 / {m["film_shots"]:,} 镜 / {m["film_styles"]} 大流派）'
+        f'· 声仓（{m["sc_total"]:,} 条声效 / {m["sc_cats"]} 大类）'
+        f'· 纪录片教学库（{m["doc_published"]:,} 部已发布 / {m["doc_total"]:,} 总目）'
+        f'· 中华文明影像库（12 断代专卷 / {m["zh_records"]:,} 条馆藏考证）。</p>'
+    )
+    sites_js = "  var SITES = " + json.dumps(sites_data, ensure_ascii=False, indent=4) + ";"
+    pt = re.sub(r'<p class="lead">.*?</p>', new_lead, orig_pt, count=1, flags=re.S)
+    pt = re.sub(r"  var SITES = \[.*?\n  \];", lambda _: sites_js, pt, count=1, flags=re.S)
+    if pt != orig_pt:
+        today_s = time.strftime("%Y-%m-%d")
+        pt = re.sub(r"四站全分类网页实时同步（\d{4}-\d{2}-\d{2}）", f"四站全分类网页实时同步（{today_s}）", pt, count=1)
+        p_idx.write_bytes(pt.encode("utf-8"))
+        check_html_js_syntax(p_idx)
+
+    # Also update hbcm*.html inside 00_portal and sync to standalone jintai-hbcm-ai-platform repo
+    for hfn in ("hbcm.html", "hbcm-m.html", "hbcm-mobile.html", "hbcm-platform.html"):
+        hp = portal_dir / hfn
+        if hp.is_file():
+            ho = hp.read_text(encoding="utf-8")
+            hn = _patch_hbcm_html_metrics(ho, m)
+            if hn != ho:
+                hp.write_bytes(hn.encode("utf-8"))
+                check_html_js_syntax(hp)
+
+    portal_changed = git_push_if_changed(
+        portal_dir,
+        "jintai-domestic-portal",
+        f"chore(portal): auto-reconcile 4-site live metrics ({m['d1_entries']:,} entries, {m['film_works']:,} films, {m['sc_total']:,} sounds, {m['zh_records']:,} relics)",
+        auto_push,
+    )
+
+    hbcm_gh = Path(r"C:\Users\KingT\Documents\Claude产出\2026-11-03_金泰AI影视全栈平台能力方案与动态美学网页\gh_pages_site")
+    hbcm_changed = []
+    if (hbcm_gh / ".git").is_dir() and (portal_dir / "hbcm.html").is_file() and (portal_dir / "hbcm-m.html").is_file():
+        git_prepare_repo(hbcm_gh, auto_push)
+        desk_bytes = (portal_dir / "hbcm.html").read_bytes()
+        mob_bytes = (portal_dir / "hbcm-m.html").read_bytes()
+        for dfn in ("index.html", "01_金泰AI影视艺术全栈智算平台_面向河传师生能力全景动态展映台.html"):
+            dp = hbcm_gh / dfn
+            if not dp.is_file() or dp.read_bytes() != desk_bytes:
+                dp.write_bytes(desk_bytes)
+        for mfn in ("m.html", "mobile.html", "05_金泰AI影视艺术全栈智算平台_面向河传师生手机版.html"):
+            mp = hbcm_gh / mfn
+            if not mp.is_file() or mp.read_bytes() != mob_bytes:
+                mp.write_bytes(mob_bytes)
+        for mirror_dir in (
+            hbcm_gh.parent,
+            Path(r"C:\Users\KingT\jintai-internal\2026-11-03_金泰AI平台面向河传能力全景方案"),
+        ):
+            if mirror_dir.is_dir():
+                for src_b, tname in (
+                    (desk_bytes, "01_金泰AI影视艺术全栈智算平台_面向河传师生能力全景动态展映台.html"),
+                    (mob_bytes, "05_金泰AI影视艺术全栈智算平台_面向河传师生手机版.html"),
+                ):
+                    tp = mirror_dir / tname
+                    if tp.is_file() and tp.read_bytes() != src_b:
+                        tp.write_bytes(src_b)
+        hbcm_changed = git_push_if_changed(
+            hbcm_gh,
+            "jintai-hbcm-ai-platform",
+            f"chore(hbcm): auto-reconcile 4-library live metrics ({m['film_works']:,} films / {m['sc_total']:,} sounds / {m['zh_records']:,} relics)",
+            auto_push,
+        )
+
+    return {
+        "site": "portal_and_hbcm",
+        "status": "updated" if (portal_changed or hbcm_changed) else "up-to-date",
+        "portal_changed": len(portal_changed),
+        "hbcm_changed": len(hbcm_changed),
+        "metrics": m,
+    }
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--only", choices=["all", "history", "shengcang", "documentary", "zhonghua"], default="all")
+    ap.add_argument("--only", choices=["all", "history", "shengcang", "documentary", "zhonghua", "portal"], default="all")
     ap.add_argument("--repo-dir", type=str, default="")
     ap.add_argument("--no-push", action="store_true")
     ap.add_argument("--optimize-zhonghua-local", action="store_true")
@@ -1134,6 +1628,8 @@ def main():
     if args.only in ("all", "zhonghua"):
         d = Path(args.repo_dir) if args.repo_dir else (root / "03_zhonghua-civilization-atlas")
         results.append(sync_zhonghua(d, auto_push=auto_push))
+    if args.only in ("all", "portal") and not args.repo_dir:
+        results.append(sync_portal_and_hbcm_metrics(root, auto_push=auto_push))
 
     print(json.dumps({"synced_at": time.strftime("%Y-%m-%dT%H:%M:%S%z"), "results": results}, ensure_ascii=False, indent=2))
 
