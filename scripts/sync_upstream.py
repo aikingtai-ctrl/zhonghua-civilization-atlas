@@ -347,7 +347,7 @@ def git_push_if_changed(repo_dir: Path, repo_name: str, msg: str, auto_push: boo
 # 1. Shengcang Incremental Sync
 # ------------------------------------------------------------------------------
 SHIM_REV = "20261113d1"
-ZH_SHIM_REV = "20261113e1"
+ZH_SHIM_REV = "20261113e2"
 SC_SHIM = """<style>a[href*="signin-with-chatgpt"]{display:none!important}</style><script id="jintai-shengcang-shim">(function(){
 var BASE=new URL('.',location.href).pathname;if(BASE.slice(-1)!=='/')BASE+='/';window.__JT_BASE__=BASE;
 var IS_GH=/github\\.io$/i.test(location.hostname||'');
@@ -597,6 +597,31 @@ if(typeof window.fetch==='function'){
 }
 var FALLBACK_SVG='data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360" viewBox="0 0 480 360"><rect width="480" height="360" fill="#f3efe6"/><rect x="16" y="16" width="448" height="328" fill="none" stroke="#c8bda8" stroke-width="1.5"/><text x="240" y="168" text-anchor="middle" fill="#5c5040" font-family="Microsoft YaHei,sans-serif" font-size="18">馆藏文物考证条目</text><text x="240" y="202" text-anchor="middle" fill="#8b7d6b" font-family="Microsoft YaHei,sans-serif" font-size="14">点击卡片查阅馆方详细著录与原图出处</text></svg>');
 var _extMap=null;
+function toDomesticSafeImg(u){
+  if(!u||typeof u!=='string')return u;
+  if(/^https?:\\/\\/(?:[^/]+\\.)?(?:clevelandart\\.org|artic\\.edu|si\\.edu|wikimedia\\.org|wikipedia\\.org|metmuseum\\.org)\\//i.test(u)){
+    return 'https://wsrv.nl/?url='+encodeURIComponent(u)+'&w=960&output=webp';
+  }
+  return u;
+}
+function sanitizeUnhostedPreviews(){
+  try{
+    Object.keys(window).forEach(function(wk){
+      var pack=(wk==='ARCHIVE_DATA'||/_DATA$/.test(wk))?window[wk]:null;
+      if(!pack||!Array.isArray(pack.records)||pack.__jtSanitized)return;
+      pack.__jtSanitized=true;
+      pack.records.forEach(function(r){
+        if(!r)return;
+        var orig=r.imageUrl||r.originalImageUrl;
+        if(!orig)return;
+        if(typeof r.previewUrl==='string'&&/^liao-images\\//.test(r.previewUrl))r.previewUrl=toDomesticSafeImg(orig);
+        if(typeof r.localImage==='string'&&/^liao-images\\//.test(r.localImage))r.localImage=toDomesticSafeImg(orig);
+      });
+    });
+  }catch(e){}
+}
+window.addEventListener('load',function(ev){if(ev&&ev.target&&ev.target.tagName==='SCRIPT')sanitizeUnhostedPreviews();},true);
+document.addEventListener('DOMContentLoaded',sanitizeUnhostedPreviews);
 function findOrigUrlByPreview(relPath){
   if(!_extMap){
     _extMap={};
@@ -760,10 +785,18 @@ def sync_zhonghua(site_dir: Path, auto_push: bool = True) -> dict:
                             elif rext in asset_exts:
                                 discovered_media.add(nr)
 
-    missing_media = sorted(m for m in discovered_media if not (site_dir / m).is_file())
+    prev_unhosted = set()
+    if state_p.is_file():
+        try:
+            prev_unhosted = set(json.loads(state_p.read_text(encoding="utf-8")).get("unhosted_media") or [])
+        except Exception:
+            pass
+    missing_media = sorted(m for m in discovered_media if not (site_dir / m).is_file() and m not in prev_unhosted)
+    newly_unhosted = set()
     if missing_media:
         tls_local = threading.local()
         ctx = ssl.create_default_context()
+        unhosted_lock = threading.Lock()
         def dl_media(rel):
             conn = getattr(tls_local, "conn", None)
             for _ in range(2):
@@ -778,6 +811,9 @@ def sync_zhonghua(site_dir: Path, auto_push: bool = True) -> dict:
                         lp = site_dir / rel
                         lp.parent.mkdir(parents=True, exist_ok=True)
                         lp.write_bytes(data)
+                    elif resp.status == 404:
+                        with unhosted_lock:
+                            newly_unhosted.add(rel)
                     return
                 except Exception:
                     tls_local.conn = None
@@ -806,7 +842,8 @@ def sync_zhonghua(site_dir: Path, auto_push: bool = True) -> dict:
         except Exception:
             pass
 
-    state_p.write_text(json.dumps({"quick_fp": quick_fp, "docs": len(visited), "new_media": len(missing_media)}, indent=2), encoding="utf-8")
+    all_unhosted = sorted((prev_unhosted | newly_unhosted) - {m for m in discovered_media if (site_dir / m).is_file()})
+    state_p.write_text(json.dumps({"quick_fp": quick_fp, "docs": len(visited), "new_media": len(missing_media) - len(newly_unhosted), "unhosted_media": all_unhosted}, indent=2), encoding="utf-8")
     changed = git_push_if_changed(site_dir, "zhonghua-civilization-atlas", f"sync(auto): upstream zhonghua atlas ({len(visited)} docs)", auto_push)
     return {"site": "zhonghua", "status": "updated" if changed else "up-to-date", "changed_files": len(changed), "new_media": len(missing_media)}
 
