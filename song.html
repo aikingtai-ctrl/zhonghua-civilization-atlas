@@ -158,18 +158,22 @@ function toDomesticSafeImg(u){
 }
 function sanitizePack(pack){
   try{
-    if(!pack||!Array.isArray(pack.records)||pack.__jtSanitized)return;
-    pack.__jtSanitized=true;
-    pack.records.forEach(function(r){
-      if(!r)return;
+    if(!pack||!Array.isArray(pack.records))return;
+    var start=pack.__jtSanitizedLen||0;
+    if(start>=pack.records.length)return;
+    for(var i=start;i<pack.records.length;i++){
+      var r=pack.records[i];
+      if(!r)continue;
       var orig=r.imageUrl||r.originalImageUrl;
-      if(!orig)return;
+      if(!orig)continue;
       if(typeof r.previewUrl==='string'&&/^research-[A-Za-z0-9_-]+\//.test(r.previewUrl))r.previewUrl=toDomesticSafeImg(orig);
       if(typeof r.localImage==='string'&&/^research-[A-Za-z0-9_-]+\//.test(r.localImage))r.localImage=toDomesticSafeImg(orig);
       if(typeof r.thumbnailUrl==='string'&&/^research-[A-Za-z0-9_-]+\//.test(r.thumbnailUrl))r.thumbnailUrl=toDomesticSafeImg(orig);
-    });
+    }
+    pack.__jtSanitizedLen=pack.records.length;
   }catch(e){}
 }
+window.__jtSanitizePack=sanitizePack;
 ['ARCHIVE_DATA','SHANG_DATA','WESTERN_ZHOU_DATA','SPRING_AUTUMN_DATA','WARRING_STATES_DATA','QIN_DATA','WESTERN_HAN_DATA','EASTERN_HAN_DATA','WEIJIN_DATA','SUI_DATA','SONG_DATA','LIAO_DATA','JIN_DATA'].forEach(function(dk){
   var _v=window[dk];if(_v)sanitizePack(_v);
   try{Object.defineProperty(window,dk,{configurable:true,enumerable:true,get:function(){return _v;},set:function(nv){_v=nv;sanitizePack(nv);}});}catch(e){}
@@ -177,6 +181,7 @@ function sanitizePack(pack){
 function sanitizeUnhostedPreviews(){
   try{Object.keys(window).forEach(function(wk){if(wk==='ARCHIVE_DATA'||/_DATA$/.test(wk))sanitizePack(window[wk]);});}catch(e){}
 }
+window.__jtSanitizeAll=sanitizeUnhostedPreviews;
 document.addEventListener('DOMContentLoaded',sanitizeUnhostedPreviews);
 function findOrigUrlByPreview(relPath){
   if(!_extMap){
@@ -211,11 +216,11 @@ window.addEventListener('error',function(ev){
   }
   el.src=FALLBACK_SVG;
 },true);
-})();</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#eae7df"><meta name="description" content="北宋与南宋专属视觉图库：按18位皇帝与全部年号浏览原始馆藏图像、画面细节、断代与出处。"><title>两宋 · 视觉美术参考 | 中华文明影像库</title><link rel="stylesheet" href="song.css?v=c490b9dff477"><script id="atlasVersionNotice" defer src="./site-version-ui.js?v=1df5aa2d1482"></script><meta id="atlasSnapshotRevision" name="atlas-snapshot-revision" content="4295d529674c720df3906b4833e2965dce7a196d8a362446cce2ff394a17b844"></head>
+})();</script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#eae7df"><meta name="description" content="北宋与南宋专属视觉图库：按18位皇帝与全部年号浏览原始馆藏图像、画面细节、断代与出处。"><title>两宋 · 视觉美术参考 | 中华文明影像库</title><link rel="stylesheet" href="song.css?v=c490b9dff477"><script id="atlasVersionNotice" defer src="./site-version-ui.js?v=1df5aa2d1482"></script><meta id="atlasSnapshotRevision" name="atlas-snapshot-revision" content="38dfe574352d09b12df618136facd91d19521f38a82a693c6cf1a878823e86c2"></head>
 <body><header class="site-header"><a class="brand" href="index.html"><span class="seal">中华<br>文明</span><span>中华文明影像库<small>历史图像 · 视觉美术参考</small></span></a><nav aria-label="主导航"><a href="index.html#explore">返回全库 ↗</a><a href="#periods">分期参考</a><a href="#gallery">影像目录</a><a href="#sources">收录说明</a></nav></header>
 <main><section class="hero"><div class="hero-copy"><div class="eyebrow">THE SONG DYNASTIES · 960–1279</div><h1>两宋之间，<br>看见时代的细节。</h1><p>从汴京的街巷，到临安的湖山。<br>沿着帝王与年号，查找有出处的画面、器物与空间。</p><div class="hero-actions"><a class="primary" href="#periods">按时期寻找参考 ↓</a><a class="secondary" href="#gallery">浏览全部图像</a></div><div class="stats" id="stats" aria-live="polite"></div></div><div id="heroVisual" class="hero-visual"></div></section>
 <div class="era-switch" aria-label="朝代筛选"><button data-dynasty="all" class="active">两宋全览 <small>960—1279</small></button><button data-dynasty="northern-song">北宋 <small>汴京 · 960—1127</small></button><button data-dynasty="southern-song">南宋 <small>临安 · 1127—1279</small></button></div>
 <section id="periods" class="period-section"><div class="section-head"><div><div class="eyebrow">PERIOD ATLAS</div><h2>每个时期，都有画面可循</h2></div><p>18 位皇帝 · 全部年号档案<br>明确区分当期证据与时代风貌参考</p></div><div class="period-layout"><aside class="period-nav"><div class="nav-caption">选择帝王与年号</div><div id="periodTree"></div></aside><div class="period-main"><div id="periodDossier"></div><div class="reference-heading"><h3>本期画面参考</h3><span id="referenceNote"></span></div><div id="periodReferences" class="reference-grid"></div></div></div></section>
 <section id="gallery"><div class="section-head"><div><div class="eyebrow">VISUAL COLLECTION</div><h2 id="galleryTitle">两宋影像目录</h2></div><button id="export" class="secondary">导出当前目录 ↓</button></div><div class="search-row"><label class="search-box"><span>⌕</span><input id="search" type="search" placeholder="搜索画名、窑口、器物、馆藏或材质…" aria-label="搜索两宋图像"></label><button id="reset" class="quiet">重置</button></div><div class="filters"><label>断代分组<select id="dynasty"><option value="all">两宋全部</option><option value="northern-song">明确北宋</option><option value="southern-song">明确南宋</option><option value="song-wide">宋代 · 尚未细分</option></select></label><label>画面主题<select id="category"><option value="all">全部主题</option></select></label><label>来源机构<select id="institution"><option value="all">全部机构</option></select></label><label>排列方式<select id="group"><option value="images">全部独立图像</option><option value="objects">每件藏品一图</option></select></label><label>使用许可<select id="license"><option value="all">全部许可</option><option value="open">仅开放图像</option></select></label><label id="datingFilter">与所选时期的关系<select id="periodMode"><option value="all">全部图像</option><option value="exact">断代落在本期</option><option value="overlap">年代范围与本期相交</option></select></label></div><div class="result-line"><p id="resultCount" aria-live="polite"></p><span>点击图片，查看原始断代与出处</span></div><div id="cards" class="cards"></div><div id="empty" class="empty" hidden><h3>没有符合条件的图像</h3><p>可减少筛选条件，或在上方查看本期风貌参考。</p><button class="secondary" id="emptyReset">重置筛选</button></div><button id="more" class="more">继续浏览 ↓</button></section>
 <section id="sources" class="sources"><div><div class="eyebrow">PROVENANCE & COVERAGE</div><h2>从画面，回到依据。</h2><p>将图像、藏品与历史纪年分别核对。<br>宽断代如实保留，精确纪年有据可查。</p><a href="song-reference-pack.json.gz" download class="secondary">下载完整两宋资料包 ↓</a></div><div id="audit"></div></section></main>
-<footer><span>中华文明影像库 · 北宋与南宋</span><span>以真实遗存为本，以明确出处为据。</span><a href="#">返回顶部 ↑</a></footer><dialog id="detail" aria-labelledby="detailTitle"><button id="close" class="close" aria-label="关闭详情">×</button><div id="detailContent"></div></dialog><div id="toast" role="status"></div><script src="song-data.js?v=d1758eca67ef"></script><script src="song.js?v=17a58dc10545"></script></body></html>
+<footer><span>中华文明影像库 · 北宋与南宋</span><span>以真实遗存为本，以明确出处为据。</span><a href="#">返回顶部 ↑</a></footer><dialog id="detail" aria-labelledby="detailTitle"><button id="close" class="close" aria-label="关闭详情">×</button><div id="detailContent"></div></dialog><div id="toast" role="status"></div><script id="jt-zh-async-loader" data-all="[&quot;song-data.js?v=cf3fb3c6a75e&quot;,&quot;song.js?v=17a58dc10545&quot;]" data-p1="[&quot;song-data.js?v=cf3fb3c6a75e&quot;,&quot;song.js?v=17a58dc10545&quot;]" data-p2="[]">(function(){if(window.__JT_LOCKED__)return;var me=document.getElementById('jt-zh-async-loader');if(!me)return;var p1=JSON.parse(me.getAttribute('data-p1')||'[]'),p2=JSON.parse(me.getAttribute('data-p2')||'[]');if(location.hash==='#expansion'&&p2.length){p1=p1.concat(p2);p2=[];}var pendingDetail=null;document.addEventListener('click',function(e){if(window.__JT_HYDRATED__)return;var b=e.target&&e.target.closest?e.target.closest('[data-detail]'):null;if(b){e.preventDefault();pendingDetail=b.getAttribute('data-detail');}},true);function loadTag(u){return new Promise(function(res){var s=document.createElement('script');s.src=u;s.onload=function(){res(true);};s.onerror=function(){res(false);};document.head.appendChild(s);});}async function runList(list){if(!list.length)return;if(location.protocol==='file:'){for(var i=0;i<list.length;i++)await loadTag(list[i]);return;}var tasks=list.map(function(u){return fetch(u).then(function(r){if(!r.ok)throw new Error(r.status);return r.text();});});for(var j=0;j<list.length;j++){try{var c=await tasks[j];var s=document.createElement('script');s.textContent=c+'\n//# sourceURL='+list[j];document.head.appendChild(s);s.remove();if(c.length>2000000)await new Promise(function(r){setTimeout(r,0);});}catch(err){await loadTag(list[j]);}}}async function boot(){await runList(p1);if(window.__jtSanitizeAll)window.__jtSanitizeAll();window.__JT_HYDRATED__=true;if(['#tangReignDossier','#xixiaReignDossier'].indexOf(location.hash)!==-1)window.dispatchEvent(new Event('load'));if(pendingDetail&&typeof window.detail==='function'){try{window.detail(pendingDetail);}catch(e){}}if(p2.length){var rp=function(){runList(p2);};if(typeof requestIdleCallback==='function')requestIdleCallback(rp,{timeout:600});else setTimeout(rp,350);}}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(boot,0);},{once:true});else setTimeout(boot,0);})();</script></body></html>

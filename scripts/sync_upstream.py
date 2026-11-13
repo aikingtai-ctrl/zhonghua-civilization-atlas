@@ -347,7 +347,7 @@ def git_push_if_changed(repo_dir: Path, repo_name: str, msg: str, auto_push: boo
 # 1. Shengcang Incremental Sync
 # ------------------------------------------------------------------------------
 SHIM_REV = "20261113d1"
-ZH_SHIM_REV = "20261113e4"
+ZH_SHIM_REV = "20261113f2"
 SC_SHIM = """<style>a[href*="signin-with-chatgpt"]{display:none!important}</style><script id="jintai-shengcang-shim">(function(){
 var BASE=new URL('.',location.href).pathname;if(BASE.slice(-1)!=='/')BASE+='/';window.__JT_BASE__=BASE;
 var IS_GH=/github\\.io$/i.test(location.hostname||'');
@@ -606,18 +606,22 @@ function toDomesticSafeImg(u){
 }
 function sanitizePack(pack){
   try{
-    if(!pack||!Array.isArray(pack.records)||pack.__jtSanitized)return;
-    pack.__jtSanitized=true;
-    pack.records.forEach(function(r){
-      if(!r)return;
+    if(!pack||!Array.isArray(pack.records))return;
+    var start=pack.__jtSanitizedLen||0;
+    if(start>=pack.records.length)return;
+    for(var i=start;i<pack.records.length;i++){
+      var r=pack.records[i];
+      if(!r)continue;
       var orig=r.imageUrl||r.originalImageUrl;
-      if(!orig)return;
+      if(!orig)continue;
       if(typeof r.previewUrl==='string'&&/^research-[A-Za-z0-9_-]+\\//.test(r.previewUrl))r.previewUrl=toDomesticSafeImg(orig);
       if(typeof r.localImage==='string'&&/^research-[A-Za-z0-9_-]+\\//.test(r.localImage))r.localImage=toDomesticSafeImg(orig);
       if(typeof r.thumbnailUrl==='string'&&/^research-[A-Za-z0-9_-]+\\//.test(r.thumbnailUrl))r.thumbnailUrl=toDomesticSafeImg(orig);
-    });
+    }
+    pack.__jtSanitizedLen=pack.records.length;
   }catch(e){}
 }
+window.__jtSanitizePack=sanitizePack;
 ['ARCHIVE_DATA','SHANG_DATA','WESTERN_ZHOU_DATA','SPRING_AUTUMN_DATA','WARRING_STATES_DATA','QIN_DATA','WESTERN_HAN_DATA','EASTERN_HAN_DATA','WEIJIN_DATA','SUI_DATA','SONG_DATA','LIAO_DATA','JIN_DATA'].forEach(function(dk){
   var _v=window[dk];if(_v)sanitizePack(_v);
   try{Object.defineProperty(window,dk,{configurable:true,enumerable:true,get:function(){return _v;},set:function(nv){_v=nv;sanitizePack(nv);}});}catch(e){}
@@ -625,6 +629,7 @@ function sanitizePack(pack){
 function sanitizeUnhostedPreviews(){
   try{Object.keys(window).forEach(function(wk){if(wk==='ARCHIVE_DATA'||/_DATA$/.test(wk))sanitizePack(window[wk]);});}catch(e){}
 }
+window.__jtSanitizeAll=sanitizeUnhostedPreviews;
 document.addEventListener('DOMContentLoaded',sanitizeUnhostedPreviews);
 function findOrigUrlByPreview(relPath){
   if(!_extMap){
@@ -679,6 +684,207 @@ def norm_zh_rel(base_doc: str, raw_ref: str):
     if norm.startswith("..") or norm.startswith("/"):
         return None
     return norm
+
+
+ZH_OLD_UNPACK_1 = '((k,d,x)=>{const u=v=>{if(Array.isArray(v))return v.map(u);if(!v||typeof v!=="object")return v;if(Object.hasOwn(v,"$s"))return d[v.$s];const a=v.$o,p=[];for(let i=0;i<a.length;i+=2)p.push([k[a[i]],u(a[i+1])]);return Object.fromEntries(p)};return u(x)})'
+ZH_NEW_UNPACK_1 = '((k,d,x)=>{const u=v=>{if(Array.isArray(v)){const n=v.length,r=new Array(n);for(let i=0;i<n;i++)r[i]=u(v[i]);return r}if(!v||typeof v!=="object")return v;if(v.$s!==undefined)return d[v.$s];const a=v.$o,o={};for(let i=0;i<a.length;i+=2)o[k[a[i]]]=u(a[i+1]);return o};return u(x)})'
+ZH_OLD_UNPACK_2 = '((d,x)=>{const u=v=>Array.isArray(v)?v.map(u):v&&typeof v==="object"?(Object.hasOwn(v,"$s")?d[v.$s]:Object.fromEntries(Object.entries(v).map(([k,w])=>[k,u(w)]))):v;return u(x)})'
+ZH_NEW_UNPACK_2 = '((d,x)=>{const u=v=>{if(Array.isArray(v)){const n=v.length,r=new Array(n);for(let i=0;i<n;i++)r[i]=u(v[i]);return r}if(!v||typeof v!=="object")return v;if(v.$s!==undefined)return d[v.$s];const o={};for(const k in v)o[k]=u(v[k]);return o};return u(x)})'
+ZH_CONCAT_PREFIX = "window.ARCHIVE_DATA.records=window.ARCHIVE_DATA.records.concat("
+ZH_DEFERRED_P2 = {
+    "culture-notes.js",
+    "expansion-audit.js",
+    "expansion-candidates.js",
+    "expansion-queue.js",
+    "expansion-control.js",
+    "expansion-control-ui.js",
+}
+
+
+def optimize_zhonghua_js_bytes(rel: str, data: bytes) -> bytes:
+    if not rel.endswith(".js") or len(data) < 4096:
+        return data
+    try:
+        txt = data.decode("utf-8")
+    except UnicodeDecodeError:
+        return data
+    orig = txt
+    if ZH_OLD_UNPACK_1 in txt:
+        txt = txt.replace(ZH_OLD_UNPACK_1, ZH_NEW_UNPACK_1)
+    if ZH_OLD_UNPACK_2 in txt:
+        txt = txt.replace(ZH_OLD_UNPACK_2, ZH_NEW_UNPACK_2)
+    base_name = os.path.basename(rel)
+    if base_name.startswith("catalog-records-") and txt.startswith(ZH_CONCAT_PREFIX):
+        stripped = txt.rstrip()
+        if stripped.endswith(");"):
+            inner = stripped[len(ZH_CONCAT_PREFIX):-2]
+            txt = (
+                "{const _r=window.ARCHIVE_DATA.records,_c=("
+                + inner
+                + ");for(let _i=0,_n=_c.length;_i<_n;_i++)_r.push(_c[_i]);"
+                "if(window.__jtSanitizePack)window.__jtSanitizePack(window.ARCHIVE_DATA);}\n"
+            )
+    return txt.encode("utf-8") if txt != orig else data
+
+
+def _build_zh_async_loader_tag(all_srcs: list[str], p1: list[str], p2: list[str]) -> str:
+    import html as _html
+    a_attr = _html.escape(json.dumps(all_srcs, ensure_ascii=False, separators=(",", ":")), quote=True)
+    p1_attr = _html.escape(json.dumps(p1, ensure_ascii=False, separators=(",", ":")), quote=True)
+    p2_attr = _html.escape(json.dumps(p2, ensure_ascii=False, separators=(",", ":")), quote=True)
+    code = (
+        "(function(){"
+        "if(window.__JT_LOCKED__)return;"
+        "var me=document.getElementById('jt-zh-async-loader');if(!me)return;"
+        "var p1=JSON.parse(me.getAttribute('data-p1')||'[]'),p2=JSON.parse(me.getAttribute('data-p2')||'[]');"
+        "if(location.hash==='#expansion'&&p2.length){p1=p1.concat(p2);p2=[];}"
+        "var pendingDetail=null;"
+        "document.addEventListener('click',function(e){if(window.__JT_HYDRATED__)return;var b=e.target&&e.target.closest?e.target.closest('[data-detail]'):null;if(b){e.preventDefault();pendingDetail=b.getAttribute('data-detail');}},true);"
+        "function loadTag(u){return new Promise(function(res){var s=document.createElement('script');s.src=u;s.onload=function(){res(true);};s.onerror=function(){res(false);};document.head.appendChild(s);});}"
+        "async function runList(list){if(!list.length)return;if(location.protocol==='file:'){for(var i=0;i<list.length;i++)await loadTag(list[i]);return;}"
+        "var tasks=list.map(function(u){return fetch(u).then(function(r){if(!r.ok)throw new Error(r.status);return r.text();});});"
+        "for(var j=0;j<list.length;j++){try{var c=await tasks[j];var s=document.createElement('script');s.textContent=c+'\\n//# sourceURL='+list[j];document.head.appendChild(s);s.remove();if(c.length>2000000)await new Promise(function(r){setTimeout(r,0);});}catch(err){await loadTag(list[j]);}}}"
+        "async function boot(){await runList(p1);if(window.__jtSanitizeAll)window.__jtSanitizeAll();window.__JT_HYDRATED__=true;"
+        "if(['#tangReignDossier','#xixiaReignDossier'].indexOf(location.hash)!==-1)window.dispatchEvent(new Event('load'));"
+        "if(pendingDetail&&typeof window.detail==='function'){try{window.detail(pendingDetail);}catch(e){}}"
+        "if(p2.length){var rp=function(){runList(p2);};if(typeof requestIdleCallback==='function')requestIdleCallback(rp,{timeout:600});else setTimeout(rp,350);}}"
+        "if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(boot,0);},{once:true});else setTimeout(boot,0);"
+        "})();"
+    )
+    return f'<script id="jt-zh-async-loader" data-all="{a_attr}" data-p1="{p1_attr}" data-p2="{p2_attr}">{code}</script>'
+
+
+def _compute_zhonghua_ssg_payload(site_dir: Path) -> dict | None:
+    if not (site_dir / "data.js").is_file():
+        return None
+    node_js = r"""
+const fs = require('fs'), path = require('path'), vm = require('vm');
+const dir = process.argv[1];
+const ctx = { window: {} };
+vm.createContext(ctx);
+vm.runInContext(fs.readFileSync(path.join(dir, 'data.js'), 'utf8'), ctx);
+for (let i = 1; i <= 20; i++) {
+  const p = path.join(dir, `catalog-records-${i}.js`);
+  if (fs.existsSync(p)) vm.runInContext(fs.readFileSync(p, 'utf8'), ctx);
+}
+const records = (ctx.window.ARCHIVE_DATA && ctx.window.ARCHIVE_DATA.records) || [];
+function displayTitleText(value){const opened={em:[],i:[],b:[],strong:[]};return String(value??'').replace(/<\/?(em|i|b|strong)(?=[\s>])[^>]*>/gi,(tag,name)=>{const key=name.toLowerCase(),closing=tag[1]==='/',plain=new RegExp('^<'+(closing?'/':'')+key+'\\s*>$','i').test(tag);if(!closing){opened[key].push(plain);return plain?'':tag}return plain&&opened[key].pop()===true?'':tag})}
+const esc=(v,display=false)=>String(display===true?displayTitleText(v):(v??'')).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const tangPhases=[['all','全唐'],['early','初唐'],['high','盛唐'],['middle','中唐'],['late','晚唐'],['broad','宽断代／跨期']];
+const phaseLabel=p=>(tangPhases.find(x=>x[0]===p)?.[1]||'唐 · 宽断代／跨期');
+function safeImg(r){
+  let u=r.localImage||r.previewUrl||r.imageUrl||'';
+  const orig=r.imageUrl||r.originalImageUrl||'';
+  if(/^research-[A-Za-z0-9_-]+\//.test(u)&&orig)u=orig;
+  if(/^https?:\/\/(?:[^/]+\.)?(?:clevelandart\.org|artic\.edu|si\.edu|wikimedia\.org|wikipedia\.org|metmuseum\.org)\//i.test(u)){
+    return 'https://wsrv.nl/?url='+encodeURIComponent(u)+'&w=960&output=webp';
+  }
+  return u;
+}
+const cardsHtml = records.slice(0, 12).map((r, idx) => `<article class="card ${r.xiaScope?'xia-card ':''}${r.era==='西夏'?'xixia-card ':''}${r.evidence==='现存建筑'||r.evidence==='历史壁画'?'landscape':''}"><button class="card-picture" data-detail="${esc(r.id)}" aria-label="查看${esc(r.title,true)}的影像与出处">${r.displayMode==='source-only'?'<span class="image-fallback">原站查阅 · 点击查看出处</span>':`<img src="${esc(safeImg(r))}" alt="${esc(r.title,true)}" loading="${idx<4?'eager':'lazy'}" referrerpolicy="no-referrer">`}<span class="badge">${esc(r.metPeriodVersion==='met-period-v3'&&r.era==='跨期／待细分'?'分期待考':r.periodReview?.policyVersion==='mia-source-period-review-v1'&&r.periodReview.resolution!=='exact-source-label'?'制作年代／时期待考':r.crossesDeclaredPeriod?'宽断代 · 跨期':r.dateDisputed?'断代有争议':r.visualScope==='conditional'?'有条件参考':r.crosses1227?'宽断代 · 跨1227年':r.evidence)}</span>${r.imageCredit?'<span class="image-credit">'+esc(r.imageCredit)+'</span>':''}</button><button class="save " data-save="${esc(r.id)}" aria-label="加入参考集：${esc(r.title,true)}" aria-pressed="false">♡</button><div class="card-body"><div class="card-kicker"><span>${esc(r.era==='唐'?phaseLabel(r.tangPhase):r.era)}</span><span class="dot"></span><span>${esc(r.category)}</span></div><button class="card-title" data-detail="${esc(r.id)}">${esc(r.title,true)}</button><p class="card-date" title="${esc(r.date)}">${esc(r.date)}</p>${r.xiaScope?'<p class="xia-kicker">'+esc(r.xiaScope)+'</p>':''}${r.imageObjectDate?'<p class="tang-source-audit">载体：'+esc(r.imageObjectDate)+'</p>':''}${r.lifeFocus&&Array.isArray(r.lifeScenes)?'<p class="card-life-tags">'+esc(r.lifeScenes.slice(0,2).join(' · '))+'</p>':''}<div class="card-bottom"><span>${esc(r.institutionShort)}</span><b>${r.openLicense?'◈ 开放图像':'↗ 出处可查'}</b></div></div></article>`).join('');
+process.stdout.write(JSON.stringify({
+  total: records.length,
+  eras: new Set(records.map(r => r.era)).size,
+  cardsHtml
+}));
+"""
+    r = subprocess.run(["node", "-e", node_js, str(site_dir)], capture_output=True, text=True, encoding="utf-8", timeout=45)
+    if r.returncode != 0 or not r.stdout.strip():
+        return None
+    return json.loads(r.stdout)
+
+
+def optimize_zhonghua_site(site_dir: Path) -> dict:
+    import html as _html
+    js_hashes: dict[str, str] = {}
+    js_modified = 0
+    for jp in sorted(site_dir.glob("*.js")):
+        raw = jp.read_bytes()
+        opt = optimize_zhonghua_js_bytes(jp.name, raw)
+        if opt != raw:
+            jp.write_bytes(opt)
+            js_modified += 1
+        js_hashes[jp.name] = sha256_bytes(opt)[:12]
+
+    ssg = _compute_zhonghua_ssg_payload(site_dir)
+    gate_tag = make_gate_script("金泰 AI · 中华文明影像库")
+    html_modified = 0
+
+    for hp in sorted(site_dir.rglob("*.html")):
+        if ".git" in hp.parts:
+            continue
+        orig = hp.read_text(encoding="utf-8", errors="ignore")
+        txt = orig
+
+        # 1. Refresh unified gate & ZH_SHIM
+        txt = re.sub(r'<style>a\[href\*="signin-with-chatgpt"\][^<]*</style><script id="jintai-zhonghua-cdn-shim">.*?</script>', ZH_SHIM, txt, count=1, flags=re.S)
+        txt = re.sub(r'<script id="jt-unified-gate">.*?</script>', gate_tag, txt, count=1, flags=re.S)
+
+        # 2. SSG pre-render first-screen KPIs & initial 12 cards on index.html
+        if hp == site_dir / "index.html" and ssg and ssg.get("total"):
+            total = int(ssg["total"])
+            eras = int(ssg["eras"])
+            cards_html = ssg["cardsHtml"]
+            rem = max(0, total - 12)
+            txt = re.sub(r'(<strong id="totalCount">)[^<]*(</strong>)', rf"\g<1>{total}\2", txt, count=1)
+            txt = re.sub(r'(<strong id="eraCount">)[^<]*(</strong>)', rf"\g<1>{eras}\2", txt, count=1)
+            txt = re.sub(r'(<span id="allCount">)[^<]*(</span>)', rf"\g<1>{total}\2", txt, count=1)
+            txt = re.sub(
+                r'(<span id="resultCount"[^>]*>)[^<]*(</span>)',
+                rf"\g<1>共 {total} 条影像 · 点击查看出处\2",
+                txt,
+                count=1,
+            )
+            txt = re.sub(
+                r'<div class="cards" id="cards">.*?</div>(?=<div class="empty" id="empty")',
+                lambda _: f'<div class="cards" id="cards">{cards_html}</div>',
+                txt,
+                count=1,
+                flags=re.S,
+            )
+            txt = re.sub(
+                r'<button id="loadMore" class="load-more">.*?</button>',
+                f'<button id="loadMore" class="load-more">继续浏览 <span>↓</span> <small>（还有 {rem} 条）</small></button>',
+                txt,
+                count=1,
+                flags=re.S,
+            )
+
+        # 3. Convert trailing synchronous <script src="..."> tags before </body> into #jt-zh-async-loader
+        m_existing = re.search(r'<script id="jt-zh-async-loader"[^>]*\bdata-all="([^"]+)"[^>]*>.*?</script>(?=\s*</body>)', txt, flags=re.S)
+        m_raw = None if m_existing else re.search(r'((?:<script\s+src="[^"]+"\s*></script>\s*)+)(?=</body>)', txt, flags=re.I)
+        if m_existing or m_raw:
+            if m_existing:
+                raw_srcs = json.loads(_html.unescape(m_existing.group(1)))
+                span_start, span_end = m_existing.span()
+            else:
+                raw_srcs = re.findall(r'<script\s+src="([^"]+)"\s*></script>', m_raw.group(1), flags=re.I)
+                span_start, span_end = m_raw.span(1)
+            updated_srcs = []
+            for s_url in raw_srcs:
+                base_u = s_url.split("?", 1)[0]
+                clean_fn = base_u.lstrip("./")
+                if "/" not in clean_fn and clean_fn in js_hashes and hp.parent == site_dir:
+                    updated_srcs.append(f"{base_u}?v={js_hashes[clean_fn]}")
+                else:
+                    updated_srcs.append(s_url)
+            is_index = (hp == site_dir / "index.html")
+            p1, p2 = [], []
+            for u in updated_srcs:
+                fn = os.path.basename(u.split("?", 1)[0])
+                if is_index and fn in ZH_DEFERRED_P2:
+                    p2.append(u)
+                else:
+                    p1.append(u)
+            loader_tag = _build_zh_async_loader_tag(updated_srcs, p1, p2)
+            txt = txt[:span_start] + loader_tag + txt[span_end:]
+
+        if txt != orig:
+            hp.write_bytes(txt.encode("utf-8"))
+            check_html_js_syntax(hp)
+            html_modified += 1
+
+    return {"js_modified": js_modified, "html_modified": html_modified, "ssg_records": ssg.get("total") if ssg else 0}
 
 
 def sync_zhonghua(site_dir: Path, auto_push: bool = True) -> dict:
@@ -777,10 +983,11 @@ def sync_zhonghua(site_dir: Path, auto_push: bool = True) -> dict:
             else:
                 # Never overwrite gigantic >90MB files (GitHub limit)
                 if len(b) < 90 * 1024 * 1024:
+                    b_opt = optimize_zhonghua_js_bytes(rel, b) if ext == ".js" else b
                     lp = site_dir / rel
                     lp.parent.mkdir(parents=True, exist_ok=True)
-                    if not lp.is_file() or lp.read_bytes() != b:
-                        lp.write_bytes(b)
+                    if not lp.is_file() or lp.read_bytes() != b_opt:
+                        lp.write_bytes(b_opt)
                 if ext == ".css":
                     for ref in re.findall(r'url\(["\']?([^"\')]+)["\']?\)', txt, flags=re.I):
                         nr = norm_zh_rel(rel, ref)
@@ -865,6 +1072,7 @@ def sync_zhonghua(site_dir: Path, auto_push: bool = True) -> dict:
         except Exception:
             pass
 
+    optimize_zhonghua_site(site_dir)
     all_unhosted = sorted((prev_unhosted | newly_unhosted) - {m for m in discovered_media if (site_dir / m).is_file()})
     state_p.write_text(json.dumps({"quick_fp": quick_fp, "docs": len(visited), "new_media": len(missing_media) - len(newly_unhosted), "unhosted_media": all_unhosted}, indent=2), encoding="utf-8")
     changed = git_push_if_changed(site_dir, "zhonghua-civilization-atlas", f"sync(auto): upstream zhonghua atlas ({len(visited)} docs)", auto_push)
@@ -903,10 +1111,16 @@ def main():
     ap.add_argument("--only", choices=["all", "history", "shengcang", "documentary", "zhonghua"], default="all")
     ap.add_argument("--repo-dir", type=str, default="")
     ap.add_argument("--no-push", action="store_true")
+    ap.add_argument("--optimize-zhonghua-local", action="store_true")
     args = ap.parse_args()
 
     auto_push = not args.no_push
     root = Path(r"C:\Users\KingT\Documents\Claude产出\2026-10-30_四大网站国内直连部署")
+
+    if args.optimize_zhonghua_local:
+        d = Path(args.repo_dir) if args.repo_dir else (root / "03_zhonghua-civilization-atlas")
+        print(json.dumps(optimize_zhonghua_site(d), ensure_ascii=False, indent=2))
+        return
 
     results = []
     if args.only in ("all", "history") and not args.repo_dir:
