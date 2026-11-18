@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "projectId": "appgprj_6acf2570ea648191b792eef0f38dd1c6",
-  "buildId": "356ec13e-83d0-424c-b887-c56a605bcdcc",
-  "builtAt": "2026-11-18T08:21:29.368Z",
-  "catalogSha256": "3907806abf2fd29587add990706c5b51ddf1e03edb5dd4cb274756ffa70155f8",
-  "indexSha256": "3d47e8715fb692eed71ffad100425940277e124ddcd77665e44629c6dd952860",
-  "proofs": 289,
-  "records": 7015,
+  "buildId": "ed03f3ee-6d37-4654-bb5d-efe6f17a1abf",
+  "builtAt": "2026-11-18T10:59:59.932Z",
+  "catalogSha256": "49e2170e2f3027d806eeb77b9a8c3bf90f6897895a27baca69fac448a0add5d2",
+  "indexSha256": "0f3651e7524ed49b3b868b50af136a7d88977ef4b29ed817af2df276a87088b7",
+  "proofs": 293,
+  "records": 7056,
   "unsupported": [],
   "unpublished": [],
   "unverified": [],
@@ -38,7 +38,7 @@
       "localBatchId": "aic-2026-10-27-001",
       "publicationDate": "2026-10-27",
       "proofPath": "/publication-proofs/aic/aic-2026-10-27-001.json",
-      "proofSha256": "b7c2ef9e783892cb30bb42758b550c910354ab09bcd7c903733d3f1434e4340d",
+      "proofSha256": "440251474ca8c38b645a535516eaff81c6980c44732cae5fe01b1a49b7c4e4af",
       "recordCount": 18
     },
     {
@@ -46,7 +46,7 @@
       "localBatchId": "aic-2026-10-27-002",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/aic/aic-2026-10-27-002.json",
-      "proofSha256": "e48682085b4e54069b882350d163bb8973c8c3da3be47d4d1f681fd2abf943f0",
+      "proofSha256": "732458b8f0427d16ee013e546c99e66afa7d2baeccfb1c7823a47cfe79a0c7e3",
       "recordCount": 48
     },
     {
@@ -54,7 +54,7 @@
       "localBatchId": "aic-2026-10-27-003",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/aic/aic-2026-10-27-003.json",
-      "proofSha256": "e2d554b86e9acc8cfa8afc104e20a3aaa23df506e9284ab71a2b38f53e65c8c1",
+      "proofSha256": "619043ec086d6fb083825a29148bf9153add965af7f0207761ee3cf28a50d40e",
       "recordCount": 43
     },
     {
@@ -62,7 +62,7 @@
       "localBatchId": "aic-2026-10-27-004",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/aic/aic-2026-10-27-004.json",
-      "proofSha256": "8e9af349954a98e59580bbd1bba70e60e25d151cb89cf36b54041eb6294a30e0",
+      "proofSha256": "d7c97b8678f8a79d584e637f4bd12ddfa0f8c96155ce6c95cac8a72bb3b509c0",
       "recordCount": 37
     },
     {
@@ -70,7 +70,7 @@
       "localBatchId": "aic-2026-10-27-005",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/aic/aic-2026-10-27-005.json",
-      "proofSha256": "46e0d643bf063c0d38623f8690c10f45bca12dedc4b49e3aec708122f400dd8b",
+      "proofSha256": "d7c4f1bb3cafa60ce2cc5c175223fbe11ebdb5424a43ccb85c03add8b4955033",
       "recordCount": 3
     },
     {
@@ -78,7 +78,7 @@
       "localBatchId": "aic-2026-10-27-006",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/aic/aic-2026-10-27-006.json",
-      "proofSha256": "cedc84382b77192a1e86920a9e3979e6ed0907a15a977ca1e8c1e4023e981522",
+      "proofSha256": "add53da4783d6dbf4af9130b2393a6ed925377758037bf50e535c43f0bf33cf1",
       "recordCount": 49
     },
     {
@@ -86,7 +86,7 @@
       "localBatchId": "aic-2026-10-27-007",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/aic/aic-2026-10-27-007.json",
-      "proofSha256": "6b20eaa070b43a9d9ce2a6f3866a9ca642090a2d3a3dd66cb98a0660ac52e725",
+      "proofSha256": "bd6c682c492e912d3a242a18e4480e163872cd9feecaa68b52a50b607cfa35d0",
       "recordCount": 31
     },
     {
@@ -94,7 +94,7 @@
       "localBatchId": "aic-2026-10-27-008",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/aic/aic-2026-10-27-008.json",
-      "proofSha256": "a579810c2c51837c2dad4ec195bde4162d6572ccc483189787a6ad593136a67b",
+      "proofSha256": "3ed66213463d8ee38d5eab7fa181c056c9965d07ce594620b1b0db8879099d81",
       "recordCount": 43
     },
     {
@@ -102,7 +102,7 @@
       "localBatchId": "aic-2026-10-27-009",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/aic/aic-2026-10-27-009.json",
-      "proofSha256": "d5965eed1e102eb90d4cbc7271ffb09f210ea2e69efe8bddc62d490a729e98ca",
+      "proofSha256": "d0dbe55b5f044b1b055238b715c987444491651bc8a1f44d4ec61120b60152fa",
       "recordCount": 41
     },
     {
@@ -110,7 +110,7 @@
       "localBatchId": "aic-2026-10-27-010",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/aic/aic-2026-10-27-010.json",
-      "proofSha256": "9ef7b67cb9bbdcfcd43ca461b7dd04b0875ecf1e037a1172d3e12ab734a48bb3",
+      "proofSha256": "93a88d604766c053b6ae54d69b0c34419d64921cac80c4193e46f53bdd7a5e1e",
       "recordCount": 23
     },
     {
@@ -118,7 +118,7 @@
       "localBatchId": "aic-2026-10-27-011",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/aic/aic-2026-10-27-011.json",
-      "proofSha256": "93e6563065d407438e8f63e31ff46a95370e42f8f6a82ab05defb9d21a34c955",
+      "proofSha256": "11555bd51d49ba234ef09e850ee0d4f6875554e10eb5734efe3f7015065d639b",
       "recordCount": 25
     },
     {
@@ -126,7 +126,7 @@
       "localBatchId": "aic-2026-11-09-001",
       "publicationDate": "2026-11-09",
       "proofPath": "/publication-proofs/aic/aic-2026-11-09-001.json",
-      "proofSha256": "a684aa91c98c70e28ca74f0024f4966d4719e38af2e6d8e17d15ddffde69d9ea",
+      "proofSha256": "80472fc799e08b2d2f000650e7fcd73d01b9f868444c5a32729750fbb45c7148",
       "recordCount": 10
     },
     {
@@ -134,7 +134,7 @@
       "localBatchId": "aic-queue-2026-10-30-001",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-001.json",
-      "proofSha256": "f31c80e862e45a5582029d2173626088f6e94dbcb2805e9e8bbe27960ba18586",
+      "proofSha256": "4022d980430a433b6583bb513ed7d02060ad3135de2009867e476ecdd246fc7b",
       "recordCount": 17
     },
     {
@@ -142,7 +142,7 @@
       "localBatchId": "aic-queue-2026-10-30-002",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-002.json",
-      "proofSha256": "865cc16c3c167dc6ec999faab18f5491f3db293b39b765f21bdafdac90a205c7",
+      "proofSha256": "6e675a2304fbeb7436c7b82976de423eaf8ed44a9af96bc9d32d5f35678b0543",
       "recordCount": 17
     },
     {
@@ -150,7 +150,7 @@
       "localBatchId": "aic-queue-2026-10-30-003",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-003.json",
-      "proofSha256": "9be4d7ae9d8fb4ff0925d8352d43f3cacc3fac2438f021123a5e5dc944e88047",
+      "proofSha256": "af3c645c3e141cdb83d0b559bc36780d2c2e5bb5add87e7ff706db36373ac83c",
       "recordCount": 17
     },
     {
@@ -158,7 +158,7 @@
       "localBatchId": "aic-queue-2026-10-30-004",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-004.json",
-      "proofSha256": "a0f5efd71b4d42dbc3fb7a7676e16ab60cf97499164de36e28cb715315a67557",
+      "proofSha256": "fff35ae0e5ffaaa21f374f3fc66a3a16d6c336bd0c5a1166ebe7c2e52f0165ae",
       "recordCount": 15
     },
     {
@@ -166,7 +166,7 @@
       "localBatchId": "aic-queue-2026-10-30-005",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-005.json",
-      "proofSha256": "457897983c264cbdfc15c5708b5ae01610cc6960bdb02a45500b699b5d0c8f9c",
+      "proofSha256": "f0e0d477ced3349aa8a69a6b04eca0c34047fe380143290f352394ed2684e578",
       "recordCount": 15
     },
     {
@@ -174,7 +174,7 @@
       "localBatchId": "aic-queue-2026-10-30-006",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-006.json",
-      "proofSha256": "b6824d05502b5f8cd7daf43d98908cc1a48785d24c7aeebc3f4c08e6c4483ed1",
+      "proofSha256": "3d0a4839b0c342f1fb9a9896bdc56cd3f50920ca9f32380a2cd57d64e9c478a5",
       "recordCount": 14
     },
     {
@@ -182,7 +182,7 @@
       "localBatchId": "aic-queue-2026-10-30-007",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-007.json",
-      "proofSha256": "bb7861ea6baaafb4190d73df32e8c1283c2ebc548e95b1add5477ba8ad896d2b",
+      "proofSha256": "39c8c8fda21936eb957182da573a918ebeed5e70f2491dc16de6b7dfa69fff92",
       "recordCount": 14
     },
     {
@@ -190,7 +190,7 @@
       "localBatchId": "aic-queue-2026-10-30-008",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-008.json",
-      "proofSha256": "6f1b799af088c681d1a8948efbe25af018bceb6eb33ca690a2b33d8cf583b9b2",
+      "proofSha256": "02ba0958e376982b57193f10de3277a463199f0e630f27e5fe3e1cbb0aa50f20",
       "recordCount": 14
     },
     {
@@ -198,7 +198,7 @@
       "localBatchId": "aic-queue-2026-10-30-009",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-009.json",
-      "proofSha256": "78aedbfd64db1c6032964eb7eab4ac29fc6136d16804e7b15fc048550f51b379",
+      "proofSha256": "31dc18c69d122fa0b6ceae8c404bc67a4b4dcd0f69d7701c817c2c6658679b44",
       "recordCount": 13
     },
     {
@@ -206,7 +206,7 @@
       "localBatchId": "aic-queue-2026-10-30-010",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-010.json",
-      "proofSha256": "56e6fe904b28abb62f67ad9bb3af4d5d9b9c49fccfedfad381dd820d55652b0a",
+      "proofSha256": "e43e100b3bc2b62c3d0df59f8542102dc0d06cc0271b26c733a24cd5b64d30dc",
       "recordCount": 13
     },
     {
@@ -214,7 +214,7 @@
       "localBatchId": "aic-queue-2026-10-30-011",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-011.json",
-      "proofSha256": "85f75e128ca1f8a0c3932d1f9970b61e30d28ccb9298dd9c2075bb403c9bfe9c",
+      "proofSha256": "b205918d67ff8d3c00ab6d4a09349594762f1f308994ac189f552ca3e6fcceb1",
       "recordCount": 13
     },
     {
@@ -222,7 +222,7 @@
       "localBatchId": "aic-queue-2026-10-30-012",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-012.json",
-      "proofSha256": "4d3417b3de43504350a20c14c2cfb6b38b65be375da0f35b34b61f41367ba2c3",
+      "proofSha256": "3b0ad882d7c4d9161b534b90284efac4fc4cfa0160f2388b3e4e2ccb86661838",
       "recordCount": 13
     },
     {
@@ -230,7 +230,7 @@
       "localBatchId": "aic-queue-2026-10-30-013",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-013.json",
-      "proofSha256": "b085a75e5ff61e072e39c3afd72a9ef143042fb5ae9ee03ee99d58aae2c3f638",
+      "proofSha256": "b81907c727d17460980921a381547c2f32288930400257fb98ff336aad58977b",
       "recordCount": 12
     },
     {
@@ -238,7 +238,7 @@
       "localBatchId": "aic-queue-2026-10-30-014",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-014.json",
-      "proofSha256": "fc25d2ee13b405c196ec78820fd22ed18b1d39a93b55a4834dfb89270bb23c5c",
+      "proofSha256": "c4de02f0ffe7cfd6d9569b7ce188d3e4ef731b830cfded05256ec5404f6a1b16",
       "recordCount": 11
     },
     {
@@ -246,7 +246,7 @@
       "localBatchId": "aic-queue-2026-10-30-015",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-015.json",
-      "proofSha256": "024cf89bba94c367ff492dfe8e435b238e8dd5b94f8bc3b39d5d6e3cd5130693",
+      "proofSha256": "40fe50e485718241764ca36fd97f50a7750290a9ea14e3b141190e4a3ab607b6",
       "recordCount": 11
     },
     {
@@ -254,7 +254,7 @@
       "localBatchId": "aic-queue-2026-10-30-016",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-016.json",
-      "proofSha256": "30c385086fd4dde68fdf8921f1b40a69d18fed967c4ba25e6ef41b0d7251be6a",
+      "proofSha256": "afa05346298c6fcc0266e6da010ac317fc6a5f84c05054d7187666cb4c617ff9",
       "recordCount": 10
     },
     {
@@ -262,7 +262,7 @@
       "localBatchId": "aic-queue-2026-10-30-017",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-017.json",
-      "proofSha256": "da71af7abda2ab6b7bfe8e9d8e482a1c7101171b4dd2ec4569fc190ced44955b",
+      "proofSha256": "c2f37d0e4e308aae7e88287675a07bfda1f39211665cb2e86e39205e0ea09093",
       "recordCount": 9
     },
     {
@@ -270,7 +270,7 @@
       "localBatchId": "aic-queue-2026-10-30-018",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-018.json",
-      "proofSha256": "13776833facd8fd219a8556cdfc154e1725b980b072a48eca6d9f1a7852d1cd8",
+      "proofSha256": "f41d50d5289b0dca7d415dbd3ebd17081b5695a7b113b941bb5049d5272de2b1",
       "recordCount": 8
     },
     {
@@ -278,7 +278,7 @@
       "localBatchId": "aic-queue-2026-10-30-019",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-019.json",
-      "proofSha256": "787ef11df875b5db93f531d8b676cee4fa3e3e28033d8de993e27ebccf0f1f91",
+      "proofSha256": "c3dab2ac002aaf9f0d434efb0e4c55510a56c78d06a5f6be87a97d66bda3326c",
       "recordCount": 8
     },
     {
@@ -286,7 +286,7 @@
       "localBatchId": "aic-queue-2026-10-30-020",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-020.json",
-      "proofSha256": "240c5dd7206aa4c16c0f07311f8e7a6d04be8ba0254e060e32e302d1f9596b0d",
+      "proofSha256": "7b84e036d0c5e0d6a3108a4f32f09ef152c7421ff1bfe70d98c0a84e405381f7",
       "recordCount": 8
     },
     {
@@ -294,7 +294,7 @@
       "localBatchId": "aic-queue-2026-10-30-021",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-021.json",
-      "proofSha256": "c7588ced23e4012ddcf5287bde3eb9cb0e09d2d41677b6e7c7b1d700d7ea721d",
+      "proofSha256": "37b9070e3f488b16a8b6c6ae51ec5f836a85d52940546aa97814517d2ab5c65c",
       "recordCount": 8
     },
     {
@@ -302,7 +302,7 @@
       "localBatchId": "aic-queue-2026-10-30-022",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-022.json",
-      "proofSha256": "39217c75c02433b979a624989e1372dcd6e7bea19ce9ef0ca794be351b26afdc",
+      "proofSha256": "ddc427b05eaf6cee7f66161be160e2ba8cda2df8b3feee24764e99e88cfe57e4",
       "recordCount": 6
     },
     {
@@ -310,7 +310,7 @@
       "localBatchId": "aic-queue-2026-10-30-023",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-023.json",
-      "proofSha256": "32787972d375e10301ec7ee9f8b22ae0b2fbee3980b6652752df7e29049df495",
+      "proofSha256": "092f071054082fa74e3a6beba02ead532c4a7f76f69c95213a3313a3195fc648",
       "recordCount": 5
     },
     {
@@ -318,7 +318,7 @@
       "localBatchId": "aic-queue-2026-10-30-024",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-024.json",
-      "proofSha256": "af0369bd9ca4645db19e85353e20966f7fd608ef58e5aa8609ec669ded02fafc",
+      "proofSha256": "741a11a9f39d1a8d37fd900ea714e98ff18ef3dff6d4ad045a5a69e7baac45a6",
       "recordCount": 4
     },
     {
@@ -326,7 +326,7 @@
       "localBatchId": "aic-queue-2026-10-30-025",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-025.json",
-      "proofSha256": "9b9d61598f54d4fbd3c104d3e7d793e282e23d603ebf8569be667600ec919fa3",
+      "proofSha256": "a33d555a826044d4ad75780bbbb3424672765b693bc9ce772e7b1ead8d6d2dbe",
       "recordCount": 4
     },
     {
@@ -334,7 +334,7 @@
       "localBatchId": "aic-queue-2026-10-30-026",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-026.json",
-      "proofSha256": "d42c9feb4529c00d176c4387c04dac92ee292db50c175e30caa0f9ad8f785d70",
+      "proofSha256": "21287cd79ae82343083751082437e4417bdf1943dddd3f3fb10ed7726a7c0cbc",
       "recordCount": 4
     },
     {
@@ -342,7 +342,7 @@
       "localBatchId": "aic-queue-2026-10-30-027",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-027.json",
-      "proofSha256": "45d1361b61b127f36b4092bc87c074f72c3857386662dfe60346160770409918",
+      "proofSha256": "180fd74725db860212dda7107de04b5a8bf8566776507548a0c6e8b49581acb6",
       "recordCount": 4
     },
     {
@@ -350,7 +350,7 @@
       "localBatchId": "aic-queue-2026-10-30-028",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-028.json",
-      "proofSha256": "2c9d0f89c16de642fac10fc401f0d70163b9eb9263b664ee5d1ed7dcec232778",
+      "proofSha256": "510dbbd5000132692a12b56b64077658281f2882f5d6191b8bf28c54e225497b",
       "recordCount": 3
     },
     {
@@ -358,7 +358,7 @@
       "localBatchId": "aic-queue-2026-10-30-029",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-029.json",
-      "proofSha256": "648ce71b267c0e91616e2efb2499dfb56afea58aa66158eacb5cd8dbec059a2f",
+      "proofSha256": "f67ba882cd5ba26ae40d767e5bff1647ce9832c32db15a64a9c58b2b14d28cec",
       "recordCount": 2
     },
     {
@@ -366,7 +366,7 @@
       "localBatchId": "aic-queue-2026-10-30-030",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-030.json",
-      "proofSha256": "1299a9914cd251ef236eb899bf8a59d121ff04b93e4caaedaddd0826bd0409d9",
+      "proofSha256": "c7deddddc3bbeb1bc55019c9f1c426fad4f9ae7d03c5551e683ab6537216ac74",
       "recordCount": 2
     },
     {
@@ -374,7 +374,7 @@
       "localBatchId": "aic-queue-2026-10-30-031",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-031.json",
-      "proofSha256": "43d9d626d55ba30e0b3fd9cb0ab365d1ba9dca8129d1c956c1bd574200681c90",
+      "proofSha256": "8b5e0a4b5fec4b50ffd5c000803a254b529c8fff1642b4e3c4d871a0785db92c",
       "recordCount": 1
     },
     {
@@ -382,7 +382,7 @@
       "localBatchId": "aic-queue-2026-10-30-032",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-032.json",
-      "proofSha256": "a067782885a879b4d1bf8a8cab30bc125359a0509002758659c57215ef352d5f",
+      "proofSha256": "3b9699f48ccb56a9d953138f461b782b5b84f34b58913efce45b541caf6a8cfb",
       "recordCount": 1
     },
     {
@@ -390,7 +390,7 @@
       "localBatchId": "aic-queue-2026-10-30-033",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-033.json",
-      "proofSha256": "171f3696b607ced7ea2046512c02b525ee905295794a40e5120d016bb5644bfa",
+      "proofSha256": "a0a38470013f6bf331aa20e674dc782192be52103e3cf7a0c03e86963e200f15",
       "recordCount": 1
     },
     {
@@ -398,7 +398,7 @@
       "localBatchId": "aic-queue-2026-10-30-034",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-034.json",
-      "proofSha256": "393b69b9c7a2f6ff37bb3709dcd4dcc7bd65f3392878c4adbf8fdd0e06ca126f",
+      "proofSha256": "f24513581cd5ec6d68b61b05fc5e2300576e18ed676b661f0dcd47f8e647191c",
       "recordCount": 1
     },
     {
@@ -406,7 +406,7 @@
       "localBatchId": "aic-queue-2026-10-30-035",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-035.json",
-      "proofSha256": "ee67b3a2649413860f76305f476005a9dfe178f6ed2e3d6b31698c1d9116dd00",
+      "proofSha256": "2c17706f7ee8c0e8c2f38105cd67a7556b9166e52a867cbdb7e537d5a5710743",
       "recordCount": 1
     },
     {
@@ -414,7 +414,7 @@
       "localBatchId": "aic-queue-2026-10-30-036",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-036.json",
-      "proofSha256": "d15f7b0d56212061eb6a88232bd7293a1ae332a2353e1e6b6dc0fbc98dc9d03d",
+      "proofSha256": "5669a1365cdb02649b5d6fc734f6e71a14c37a51dfa6284efc857e96d5ea40e4",
       "recordCount": 1
     },
     {
@@ -422,7 +422,7 @@
       "localBatchId": "aic-queue-2026-10-30-037",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-037.json",
-      "proofSha256": "cd893049fef71f7fc706f64fcae4e4882d1385ed76d9eaa950f55f699df66057",
+      "proofSha256": "ebc241045a97c544620db91a1c7abb9e64baf7dafea67b4874aeb61e5f76574a",
       "recordCount": 1
     },
     {
@@ -430,7 +430,7 @@
       "localBatchId": "aic-queue-2026-10-30-038",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-038.json",
-      "proofSha256": "436a9a255278dc7082e3a84577ab5c2e4b0cac32224dc11816c64db62e40f07a",
+      "proofSha256": "f1a3d0c86c08a24e2b2d5bd86115e69a8e4b3558a9e4c58152a48d95c103b4ab",
       "recordCount": 1
     },
     {
@@ -438,7 +438,7 @@
       "localBatchId": "aic-queue-2026-10-30-039",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-039.json",
-      "proofSha256": "002c355b7079805c9113913883cace604b4edaf77cfd0b3ebc01386d3a7debba",
+      "proofSha256": "3cc03520cbbd4a53a69eb35f3f6d7eb62ca03d401dddfdaad69fd278c4940b06",
       "recordCount": 1
     },
     {
@@ -446,7 +446,7 @@
       "localBatchId": "aic-queue-2026-10-30-040",
       "publicationDate": "2026-10-30",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-10-30-040.json",
-      "proofSha256": "1e043fe32c160ae9a196c231ff3eee2041ef4a2184b2465dc55aca300edbf072",
+      "proofSha256": "0e963485b36aebdfbddaeb6edc6a73b57a3efcc5156dae8d23e908e2c800535a",
       "recordCount": 1
     },
     {
@@ -454,7 +454,7 @@
       "localBatchId": "aic-queue-2026-11-09-001",
       "publicationDate": "2026-11-09",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-11-09-001.json",
-      "proofSha256": "fb1013cd60e8f88b9945173b5cf3186db2ae0cbfbfa03dc0d6649e9a1ec06dd7",
+      "proofSha256": "5b57da915438e7c0da09c80773aecc46ca331d342e5217567c84a9fa276a7ef0",
       "recordCount": 20
     },
     {
@@ -462,7 +462,7 @@
       "localBatchId": "aic-queue-2026-11-09-002",
       "publicationDate": "2026-11-09",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-11-09-002.json",
-      "proofSha256": "166f8a2b839fa60e930e819748546aef32641755705ce188479fec58a77080e3",
+      "proofSha256": "277dac330cd6e6b73930c1488b782b90d903fa5cb119bddc91b711c450b104d2",
       "recordCount": 3
     },
     {
@@ -470,7 +470,7 @@
       "localBatchId": "aic-queue-2026-11-09-003",
       "publicationDate": "2026-11-09",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-11-09-003.json",
-      "proofSha256": "f8ebd57fd68281144ccb76206c139e98e6fbb53b8a88128a588dd01e04e35d07",
+      "proofSha256": "2828f09dd5bcb7438e4f553e7beca52d18e13a406d95d26b3014c383c1918c89",
       "recordCount": 16
     },
     {
@@ -478,7 +478,7 @@
       "localBatchId": "aic-queue-2026-11-09-004",
       "publicationDate": "2026-11-09",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-11-09-004.json",
-      "proofSha256": "d77d9c44dbc72d6a1c1d9f8123fa5ee927ed5f6639b73fbe04530b2bd654b525",
+      "proofSha256": "e47da04dd708f05ccb42f52ec1ebb7f8e31d34d1a7998d567034decd594a871c",
       "recordCount": 18
     },
     {
@@ -486,7 +486,7 @@
       "localBatchId": "aic-queue-2026-11-09-005",
       "publicationDate": "2026-11-09",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-11-09-005.json",
-      "proofSha256": "824d1e28e3971ab1dbf7085475d951f90179e724006165769d44c907a55e4f76",
+      "proofSha256": "98008abaa28d2bbd46b872abe5a7eeed26965fa09dd704d9730a97ebe3a1547f",
       "recordCount": 11
     },
     {
@@ -494,7 +494,7 @@
       "localBatchId": "aic-queue-2026-11-09-006",
       "publicationDate": "2026-11-09",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-11-09-006.json",
-      "proofSha256": "dee77b7d77d02e107294ffca82e4b1a064dc588441ba4a45cb1adcf7456fc056",
+      "proofSha256": "80ae238e5f2ad9f57b40afc87f6986327b6b14b7d3be4b4766a1d0647eb871a6",
       "recordCount": 19
     },
     {
@@ -502,7 +502,7 @@
       "localBatchId": "aic-queue-2026-11-09-007",
       "publicationDate": "2026-11-09",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-11-09-007.json",
-      "proofSha256": "578a30d0e584fcbf50bdd03cec070d39b3a8ee604723c6c7c3df110c894f33d9",
+      "proofSha256": "396f8839ca98e4b014374491d887bb5996c24d6d473b83671ea56e316d174e32",
       "recordCount": 18
     },
     {
@@ -510,7 +510,7 @@
       "localBatchId": "aic-queue-2026-11-09-008",
       "publicationDate": "2026-11-09",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-11-09-008.json",
-      "proofSha256": "dd03caa31aedc6ea51c5dc69ef7bc966c294125effbe9f265e4d7b2938a9794a",
+      "proofSha256": "c0b183fe89d544c80daeab85e010308abfd27e026a5fb94ad4cacfdde57e2c59",
       "recordCount": 18
     },
     {
@@ -518,7 +518,7 @@
       "localBatchId": "aic-queue-2026-11-09-009",
       "publicationDate": "2026-11-09",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-11-09-009.json",
-      "proofSha256": "e976da5bff31fcc599ab9c03106ffd5aebe7c5da2046eb9748ae549883e0732c",
+      "proofSha256": "db95f7866785658f05138381af2c46a69270024e02c04e9fdd85689dcd8431a7",
       "recordCount": 19
     },
     {
@@ -526,7 +526,7 @@
       "localBatchId": "aic-queue-2026-11-09-010",
       "publicationDate": "2026-11-09",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-11-09-010.json",
-      "proofSha256": "5577f0cf632756bbc17ffa57221bb5533834d91957c47006b733a07f78e711f9",
+      "proofSha256": "6875d631cd36fc10f173d99db81f0c08d4dcdb4b2b606db6f7b8fab401ca2cec",
       "recordCount": 18
     },
     {
@@ -534,7 +534,7 @@
       "localBatchId": "aic-queue-2026-11-09-011",
       "publicationDate": "2026-11-09",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-11-09-011.json",
-      "proofSha256": "3a8402c95a5fe94632b2b4ffdfc6b0300623f0c76ec1799839bb6a9c8b96c1b6",
+      "proofSha256": "d0ac5b89684ae1ffaa303dd8aef9d53aedf6729753ad4fed60bf4c9d9502a6a4",
       "recordCount": 17
     },
     {
@@ -542,7 +542,7 @@
       "localBatchId": "aic-queue-2026-11-09-012",
       "publicationDate": "2026-11-09",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-11-09-012.json",
-      "proofSha256": "0f337ffbb4241d9b9860523668eac25616560f030b530340624d780e1e9eeef0",
+      "proofSha256": "7ac98e7a13e3f94e41d210ee54c34369ebcc59075eb5d26297c34b8c681c1fda",
       "recordCount": 5
     },
     {
@@ -550,7 +550,7 @@
       "localBatchId": "aic-queue-2026-11-09-013",
       "publicationDate": "2026-11-09",
       "proofPath": "/publication-proofs/aic/aic-queue-2026-11-09-013.json",
-      "proofSha256": "7dd04a5b26a3d4f406e9677d4a9980cf5ae2d12bea48b2fa0738dfd04a0700ef",
+      "proofSha256": "efa743ba1cdba1c129436dee1fcf32f3c790585ba4bed2c8d331398c048f624a",
       "recordCount": 2
     },
     {
@@ -558,7 +558,7 @@
       "localBatchId": "aic-reassessment-2026-11-03-001",
       "publicationDate": "2026-11-03",
       "proofPath": "/publication-proofs/aic/aic-reassessment-2026-11-03-001.json",
-      "proofSha256": "1e975de0f7f6812b4b148b0b23c433564c552890feef96432903c360dcf9d385",
+      "proofSha256": "4d24ddbd1cf3319640e5dfaf4aab876b7095d211dcb44cb1ae86b1cf3a4dfdfe",
       "recordCount": 1
     },
     {
@@ -566,7 +566,7 @@
       "localBatchId": "aic-reassessment-2026-11-03-002",
       "publicationDate": "2026-11-03",
       "proofPath": "/publication-proofs/aic/aic-reassessment-2026-11-03-002.json",
-      "proofSha256": "9765af691785b42ccdec1f7f1cf9499d484454aff2df73cbaa5e94ddd9e5bcb9",
+      "proofSha256": "aff3e52bc47b0e8068f531f91f605e4a5803cf84cb075968e5c8d932f6a44ef2",
       "recordCount": 2
     },
     {
@@ -574,7 +574,7 @@
       "localBatchId": "aic-reassessment-2026-11-03-003",
       "publicationDate": "2026-11-03",
       "proofPath": "/publication-proofs/aic/aic-reassessment-2026-11-03-003.json",
-      "proofSha256": "5fa14eaa0c6af7459c060e4f7dbf5fbaa78a775e1ec68b3962a8a09a2073920a",
+      "proofSha256": "9cdb1499dbb8a2ab8505e5158f2e6f36c113b44441fad3da3d5e409e4fa95fe7",
       "recordCount": 7
     },
     {
@@ -582,7 +582,7 @@
       "localBatchId": "v106-pending-independent-2026-11-11-001",
       "publicationDate": "2026-11-11",
       "proofPath": "/publication-proofs/aic/v106-pending-independent-2026-11-11-001.json",
-      "proofSha256": "a84efff5b6850fc56b5c9c752477ae551a8d4e0e9b4b211fbd54a72cad580ee1",
+      "proofSha256": "2c806b9e93325750669f8ffa6bcadce68f35ec33125df25f1c35efa8e397f8a5",
       "recordCount": 1
     },
     {
@@ -590,7 +590,7 @@
       "localBatchId": "v109-aic-cache-2026-11-11-001",
       "publicationDate": "2026-11-11",
       "proofPath": "/publication-proofs/aic/v109-aic-cache-2026-11-11-001.json",
-      "proofSha256": "459edba9eb7837dd8432f1c66f3ad12476d70edde7c76c51b9397df15e9c4435",
+      "proofSha256": "3aa402e74034c289fe3c184dd91c188f7c7189090fcbef5554f56e0e773dd57a",
       "recordCount": 5
     },
     {
@@ -598,7 +598,7 @@
       "localBatchId": "v75-visual-2026-11-10-001",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/aic/v75-visual-2026-11-10-001.json",
-      "proofSha256": "b9bdc5c8f3ea2d5ee14a3cecf07553b6b2a39bbfc273b6693b22c6cecd08a385",
+      "proofSha256": "ff495c95783ae4c6c8afc371b11d71015b1a255e7850984227454add415a0756",
       "recordCount": 9
     },
     {
@@ -606,7 +606,7 @@
       "localBatchId": "v77-visual-2026-11-10-001",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/aic/v77-visual-2026-11-10-001.json",
-      "proofSha256": "2950e80e662053dd1c48ba3fbfe81df8179138feccb5a882c6839537d5046e12",
+      "proofSha256": "0effc0f293e4ad2c7181f4a860c77c137606809dc15321271f192eff3bd2f24b",
       "recordCount": 2
     },
     {
@@ -614,7 +614,7 @@
       "localBatchId": "v80-visual-2026-11-10-002",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/aic/v80-visual-2026-11-10-002.json",
-      "proofSha256": "66b692441f51d6ba6becb37997dee55edec88c1c1fb510db593e537c3c1dfbf0",
+      "proofSha256": "4b586a937f18ecef1fb6674755b58f0a695352206c03e6f39af3397f7b67b6cd",
       "recordCount": 2
     },
     {
@@ -622,7 +622,7 @@
       "localBatchId": "v83-visual-2026-11-10-001",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/aic/v83-visual-2026-11-10-001.json",
-      "proofSha256": "9e8862cefdc08daf8a8d193cd810cf409ddd7d2fca47d11a3399dd428390147d",
+      "proofSha256": "7765137508e1b585505cec16c3d7a9ace8db8f52d6ef1de6520ed3286526d7fd",
       "recordCount": 2
     },
     {
@@ -630,7 +630,7 @@
       "localBatchId": "v84-visual-2026-11-10-001",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/aic/v84-visual-2026-11-10-001.json",
-      "proofSha256": "10ba290f3a41baf9318d87b8cfad803497b54dd9ec2daa9a00ba56d6529037bf",
+      "proofSha256": "95ae7ae469841ad9978090bbd721ac5331a45ea311396f695e88c63468882067",
       "recordCount": 1
     },
     {
@@ -638,7 +638,7 @@
       "localBatchId": "cma-2026-10-26-001",
       "publicationDate": "2026-10-26",
       "proofPath": "/publication-proofs/cma/cma-2026-10-26-001.json",
-      "proofSha256": "8c67df22b6c046aad85ad8ca5cd7dd96060a380fa3a49876a58b4fabc3c70d6e",
+      "proofSha256": "0b51faf808b21b624be240137a8c3e9cb175b95187afbe1b874f8213181c165e",
       "recordCount": 51
     },
     {
@@ -646,7 +646,7 @@
       "localBatchId": "cma-2026-10-26-002",
       "publicationDate": "2026-10-26",
       "proofPath": "/publication-proofs/cma/cma-2026-10-26-002.json",
-      "proofSha256": "b288bb1d6f61b68c8d6f6f1a0060c4220e8501621c1faa896d8b31e87d86bf63",
+      "proofSha256": "1a2b306703e14c9990bcc90a8411df973ecee67fa25d9849a7dbc090f08b968d",
       "recordCount": 80
     },
     {
@@ -654,7 +654,7 @@
       "localBatchId": "cma-2026-10-26-003",
       "publicationDate": "2026-10-26",
       "proofPath": "/publication-proofs/cma/cma-2026-10-26-003.json",
-      "proofSha256": "770f1858418659f12defeeeadcfc894f96f48ae234362ba6e3f3d66caaccde1c",
+      "proofSha256": "e624787435f2252a0551622e3b82315586a58b1ca45de4bf54d67220d56c1b54",
       "recordCount": 54
     },
     {
@@ -662,7 +662,7 @@
       "localBatchId": "cma-2026-10-27-005",
       "publicationDate": "2026-10-27",
       "proofPath": "/publication-proofs/cma/cma-2026-10-27-005.json",
-      "proofSha256": "75b28e05a5ae78d2befff8e965d2f7f91edfa2fabe0452a2a1b3e28c80c7b5ed",
+      "proofSha256": "15135a8d9a0c1ad35e1e3bc6c496c7eb1f62dac82f05b0fe514c39edc9d2c47b",
       "recordCount": 8
     },
     {
@@ -670,7 +670,7 @@
       "localBatchId": "cma-2026-10-28-006",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/cma/cma-2026-10-28-006.json",
-      "proofSha256": "9ad17e40242029d8b94276110947581fcb0fb73214389e871e08599a79808eef",
+      "proofSha256": "e0293117fb051fc0bd96fa6ef0606be5c599423c7c8d95931222ac4d27808296",
       "recordCount": 8
     },
     {
@@ -678,7 +678,7 @@
       "localBatchId": "cma-2026-10-28-007",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/cma/cma-2026-10-28-007.json",
-      "proofSha256": "1419e392b8df6a5ab9c30443214d91f5b9c666610238821a1f8d7000542915fb",
+      "proofSha256": "5cddeb15c9b8a227f8ebec4fe2bab3efacd5ee5da9aee43abbad35e508a27073",
       "recordCount": 19
     },
     {
@@ -686,7 +686,7 @@
       "localBatchId": "cma-2026-10-28-008",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/cma/cma-2026-10-28-008.json",
-      "proofSha256": "ac2f6c782410f8b62ffc9f00b5f32cc051fa615e807b12023588702114a95e30",
+      "proofSha256": "f492b15daac6a3da6c716f9353b9a37f1ff44c192c52d7447a51df39213dee8b",
       "recordCount": 15
     },
     {
@@ -694,7 +694,7 @@
       "localBatchId": "cma-2026-10-28-009",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/cma/cma-2026-10-28-009.json",
-      "proofSha256": "4d784927afad15d0f11de3eb6473320880b60c245789f4843e7c7560f97eee8a",
+      "proofSha256": "03cb95cf29998c7a0402a53bd92e4fd3268eda2213b0911678e99748fb72663d",
       "recordCount": 13
     },
     {
@@ -702,7 +702,7 @@
       "localBatchId": "cma-2026-10-28-010",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/cma/cma-2026-10-28-010.json",
-      "proofSha256": "5bfbc7d7f7ab5748973d77a3d367445c8520e0ed37594fff0dfb4380487892f9",
+      "proofSha256": "783a309791d0794a7bad294f60abe74d874cb08359513c8b233b1de23e911de4",
       "recordCount": 14
     },
     {
@@ -710,7 +710,7 @@
       "localBatchId": "cma-2026-10-28-011",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/cma/cma-2026-10-28-011.json",
-      "proofSha256": "0d022dffc4b23f7c7e250b7ba7c53a112e168af947143f854553bce5e9b7eafc",
+      "proofSha256": "f1831f5daea76e68f476d62622633e58f4c1ef4d6c7aa9655fca6429aeedde9a",
       "recordCount": 2
     },
     {
@@ -718,7 +718,7 @@
       "localBatchId": "cma-2026-10-28-012",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/cma/cma-2026-10-28-012.json",
-      "proofSha256": "8390e5b57798a5fe84f19306286ab3331235139e16e7450fa466b88522859184",
+      "proofSha256": "922fb12ede881a08211fcddad450fcca128a47b1da021194d6e595506a6082dd",
       "recordCount": 3
     },
     {
@@ -726,7 +726,7 @@
       "localBatchId": "cma-2026-10-28-013",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/cma/cma-2026-10-28-013.json",
-      "proofSha256": "b1bd177fd24d38f91d66f9cacf1317c4e97404cce9ddddc4846379bf0fece128",
+      "proofSha256": "200cc6d9461646cbf1a76b3194bddd79b0697babd7f384349589af0ba36c3987",
       "recordCount": 4
     },
     {
@@ -734,7 +734,7 @@
       "localBatchId": "cma-2026-10-28-014",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/cma/cma-2026-10-28-014.json",
-      "proofSha256": "f65c5862bdb9fb63c8b800f13176b4ef0c965e47a4d5985f3510af6c5cd6982f",
+      "proofSha256": "22501e5009174468a1e0b33fd83537707d8b3e93d210d6c37d8d869babf40edc",
       "recordCount": 1
     },
     {
@@ -742,7 +742,7 @@
       "localBatchId": "cma-2026-10-28-015",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/cma/cma-2026-10-28-015.json",
-      "proofSha256": "2aee4c51c37005c3936ddf0158171612b01eba424d105071012ebcbb37a81a7b",
+      "proofSha256": "bafccd7969542ff0632e202b67fdc490701702d519b7ad73bc4d2a6507967e87",
       "recordCount": 12
     },
     {
@@ -750,7 +750,7 @@
       "localBatchId": "cma-2026-10-28-016",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/cma/cma-2026-10-28-016.json",
-      "proofSha256": "435b666fe987b8d6cc93595be810c87add27806d9f5ba1fdc5fa722eca237eea",
+      "proofSha256": "fcbfe8f2f5557b9b91827d7743d91db5eba167ae59211f2400c26c8c0f5c20d0",
       "recordCount": 1
     },
     {
@@ -758,7 +758,7 @@
       "localBatchId": "cma-2026-10-28-017",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/cma/cma-2026-10-28-017.json",
-      "proofSha256": "1cc98a0e7314f9fc07887b1a77d1aefa73d8d4c51c268ac7b22291509b528d17",
+      "proofSha256": "a5f6033ef6f83531d1b8c3c5087b7c863dc964f0430130c6fcde4e7e51bb4531",
       "recordCount": 12
     },
     {
@@ -766,7 +766,7 @@
       "localBatchId": "cma-2026-10-28-018",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/cma/cma-2026-10-28-018.json",
-      "proofSha256": "c2c7de38fea6eaeb377a5349f91b510714e85688e0285cd5d5f41b1524f65bbb",
+      "proofSha256": "cdb498a2bc4e9fe45e872951bf16a4448bbf3e03c52704ff7b90be8b9fc7e3c4",
       "recordCount": 10
     },
     {
@@ -774,7 +774,7 @@
       "localBatchId": "cma-2026-10-28-019",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/cma/cma-2026-10-28-019.json",
-      "proofSha256": "732f95c45ccd35841d3886eaf42cae0c42a14cb90331422ed87e1db0058d92aa",
+      "proofSha256": "9008179aec67e6004c84bb5938681007d9e211c2213c75671a1f9dccbf7547ba",
       "recordCount": 9
     },
     {
@@ -782,7 +782,7 @@
       "localBatchId": "cma-2026-10-28-020",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/cma/cma-2026-10-28-020.json",
-      "proofSha256": "e7c03635bc23ef3a5e21d8d12342cee2d44243e24f4ade71188ed2b5b5eb5970",
+      "proofSha256": "29dd2fe154f9a3071af6978d2ac74c5dca385123a424a2334e26f99e175f3157",
       "recordCount": 19
     },
     {
@@ -790,7 +790,7 @@
       "localBatchId": "cma-2026-10-28-021",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/cma/cma-2026-10-28-021.json",
-      "proofSha256": "83f899b8f639388ec8e8da536b4e21c32a7417f6109320bb46c06da9797df684",
+      "proofSha256": "2ddb48d7dfa6982e4ce3a51cdebfdc95144853d8263a82c873071ad1a3c70734",
       "recordCount": 14
     },
     {
@@ -798,7 +798,7 @@
       "localBatchId": "cma-2026-10-28-022",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/cma/cma-2026-10-28-022.json",
-      "proofSha256": "51ee10364385080398c8eefe81765eee4f00f40cbfdac1853850cfd9635a71a0",
+      "proofSha256": "df36aea71180ab0444a1f62817304395e6d480e4f08deb49c1697f70738e51da",
       "recordCount": 9
     },
     {
@@ -806,7 +806,7 @@
       "localBatchId": "cma-2026-10-28-023",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/cma/cma-2026-10-28-023.json",
-      "proofSha256": "cbf4bf3ec62d0284b0a854ad8010135192b22e46d9c5efab80b34cdde0ed1294",
+      "proofSha256": "7f89082e5479322060d095699aab787df4d816ab4e097fb5aeb10e082f1180b2",
       "recordCount": 2
     },
     {
@@ -814,7 +814,7 @@
       "localBatchId": "cma-2026-10-28-024",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/cma/cma-2026-10-28-024.json",
-      "proofSha256": "7076990ef83ff6f3a534bda939487d98b4232c76f01c45de21232f64fcd3909a",
+      "proofSha256": "9366cdd6c83334573b78c52720b3d1aa10494e69a7220d54c07054303503f03e",
       "recordCount": 2
     },
     {
@@ -822,7 +822,7 @@
       "localBatchId": "cma-2026-10-28-025",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/cma/cma-2026-10-28-025.json",
-      "proofSha256": "fb9db5358128aa2bd38c9627e601e248f672569ae970743cf0c2d7849826b2f7",
+      "proofSha256": "623b0dd4421e82fbc87850103ccf6a8cc73244e7402bb5ecc5d5686ed72abb7e",
       "recordCount": 1
     },
     {
@@ -830,7 +830,7 @@
       "localBatchId": "cma-2026-11-09-001",
       "publicationDate": "2026-11-09",
       "proofPath": "/publication-proofs/cma/cma-2026-11-09-001.json",
-      "proofSha256": "b5021bc9d246405577db7f65a35fd02c0a28f35feab18bf848622cc8694c8364",
+      "proofSha256": "723c63fbf2c858b092335af84c2c502e75b60c4cb7ca5d135ece0802c7eeff1d",
       "recordCount": 2
     },
     {
@@ -838,7 +838,7 @@
       "localBatchId": "cma-2026-11-09-003",
       "publicationDate": "2026-11-09",
       "proofPath": "/publication-proofs/cma/cma-2026-11-09-003.json",
-      "proofSha256": "32fa2bd6c1aebab5c6941afbec3006d3df8cd0ff53c66b92b2885950f7638995",
+      "proofSha256": "a9d542b71fb56ac19703db1e127c8efa3a84cafdd6eb8bc8bcac6f61f0fc1d3c",
       "recordCount": 3
     },
     {
@@ -846,7 +846,7 @@
       "localBatchId": "cma-2026-11-09-009",
       "publicationDate": "2026-11-09",
       "proofPath": "/publication-proofs/cma/cma-2026-11-09-009.json",
-      "proofSha256": "4681005b57f4483a6a55e32bc43bba4c80dbe3034fb1eb5f4923f44bdad3f672",
+      "proofSha256": "ae9d62cf10b9e88ecea17d49753b5b11c2ca8a67ef8a65985f659db3cec3d709",
       "recordCount": 1
     },
     {
@@ -854,7 +854,7 @@
       "localBatchId": "cma-2026-11-11-901",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/cma/cma-2026-11-11-901.json",
-      "proofSha256": "13c05cf947c153c5c28e6391c547dca4e8ead708814491ec4f5fb7e5e0468f5c",
+      "proofSha256": "2a90f8ee9c8fb4b11a895c41704638878555b0554509b4ed7724a89d8a214b24",
       "recordCount": 2
     },
     {
@@ -862,7 +862,7 @@
       "localBatchId": "cma-2026-11-11-902",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/cma/cma-2026-11-11-902.json",
-      "proofSha256": "f863ffc15316be4974d5aa6b93cf99eace042cca618bf9d38ebbf2af80141c17",
+      "proofSha256": "7cf2cbdc45930b26c09533a1ae7efdbc651df73cdb84bc2701d333bc36392fd9",
       "recordCount": 8
     },
     {
@@ -870,7 +870,7 @@
       "localBatchId": "review-v119-2026-11-12-001",
       "publicationDate": "2026-11-12",
       "proofPath": "/publication-proofs/cma/review-v119-2026-11-12-001.json",
-      "proofSha256": "0f5b749916649f50c9f1e89053ed10e01584ca035949749e9cbdb862b4bcb1b4",
+      "proofSha256": "317da0483f6ac3896cff3a8dc6cd842da388db7af91c89dfad64472592955204",
       "recordCount": 3
     },
     {
@@ -878,7 +878,7 @@
       "localBatchId": "review-v120-2026-11-12-002",
       "publicationDate": "2026-11-12",
       "proofPath": "/publication-proofs/cma/review-v120-2026-11-12-002.json",
-      "proofSha256": "c823d57885169ecea9f6c34211f40843955b03f90467fdebdbbcbdc3eb3757f1",
+      "proofSha256": "e67fa596bcc7725f6105afd2db4ef7406519559b6c2bfecc787b320319ed5a07",
       "recordCount": 4
     },
     {
@@ -886,7 +886,7 @@
       "localBatchId": "review-v127-2026-11-12-001",
       "publicationDate": "2026-11-12",
       "proofPath": "/publication-proofs/cma/review-v127-2026-11-12-001.json",
-      "proofSha256": "403a054437f4137e22c7da8d0b2b0722d9e47107ce334bba2544ffcd4b0169ac",
+      "proofSha256": "e740038be2a09719effd1c1a545418b3b435e6018386d6ab3302e75a5b9557fc",
       "recordCount": 13
     },
     {
@@ -894,7 +894,7 @@
       "localBatchId": "review-v127-2026-11-12-002",
       "publicationDate": "2026-11-12",
       "proofPath": "/publication-proofs/cma/review-v127-2026-11-12-002.json",
-      "proofSha256": "ab27ef3d8918ce99989e1187648fca1af59d5ed6a9e9d7e503d64430e3c69d7b",
+      "proofSha256": "26914d1e1586537b7d74da2d3b7ee0054071729cd6135ae2fac0357eba13bb1e",
       "recordCount": 9
     },
     {
@@ -902,7 +902,7 @@
       "localBatchId": "review-v128-2026-11-12-002",
       "publicationDate": "2026-11-12",
       "proofPath": "/publication-proofs/cma/review-v128-2026-11-12-002.json",
-      "proofSha256": "ba648a678b5b497e61459326fd64e3b88baeb2a26b5b087e976b0039416ddc2b",
+      "proofSha256": "6eef571dd3d2470a226d9956da49562196698779bcef0c365d13b86219be92bc",
       "recordCount": 20
     },
     {
@@ -910,7 +910,7 @@
       "localBatchId": "review-v129-2026-11-12-001",
       "publicationDate": "2026-11-12",
       "proofPath": "/publication-proofs/cma/review-v129-2026-11-12-001.json",
-      "proofSha256": "19e4a31ccc0eb43b0daf7145f54af51e8775045746917198e94a0195cfa6430d",
+      "proofSha256": "36ee78875a8f02c9d8470dec2697d0662957fde19697d322f3d206965a8999d0",
       "recordCount": 20
     },
     {
@@ -918,7 +918,7 @@
       "localBatchId": "review-v130-2026-11-12-001",
       "publicationDate": "2026-11-12",
       "proofPath": "/publication-proofs/cma/review-v130-2026-11-12-001.json",
-      "proofSha256": "75b653f20846653e9ebd397a265670b2dc5078e7b5ae65e414be4fc64be5ee22",
+      "proofSha256": "619bb3ffb7adb04cebbf341bc651c50f3564da58b90f640eb8e1f689c42a7fc7",
       "recordCount": 19
     },
     {
@@ -926,7 +926,7 @@
       "localBatchId": "review-v131-2026-11-12-001",
       "publicationDate": "2026-11-12",
       "proofPath": "/publication-proofs/cma/review-v131-2026-11-12-001.json",
-      "proofSha256": "83417a1e267867d93b6f775e6023b01b17cb0a15bdb01fa785b20924bf01a549",
+      "proofSha256": "b16b909d9ccc3d7b2b744eb64350f98809fd04b82b332cd1d9145808e95b7498",
       "recordCount": 16
     },
     {
@@ -934,7 +934,7 @@
       "localBatchId": "review-v137-2026-11-13-001",
       "publicationDate": "2026-11-13",
       "proofPath": "/publication-proofs/cma/review-v137-2026-11-13-001.json",
-      "proofSha256": "f28f2ce7e45287ed84c40b025a1e06187d1dfbf5264e4406d39f65f3eade77bb",
+      "proofSha256": "a2890d4ddb489ced660a650cd1c674ff3f06e19f184b0a01a42ff0bd33b7b583",
       "recordCount": 10
     },
     {
@@ -942,7 +942,7 @@
       "localBatchId": "review-v140-2026-11-13-001",
       "publicationDate": "2026-11-13",
       "proofPath": "/publication-proofs/cma/review-v140-2026-11-13-001.json",
-      "proofSha256": "fb4d0b43a25628ec903749b4908842dfd064d5fe0e475d15ad13e7cdf630633c",
+      "proofSha256": "3d4366319f1a1a91330864e19a492471acd9a5e206e357d9688b52ca73dc39e6",
       "recordCount": 4
     },
     {
@@ -950,7 +950,7 @@
       "localBatchId": "review-v144-2026-11-13-001",
       "publicationDate": "2026-11-13",
       "proofPath": "/publication-proofs/cma/review-v144-2026-11-13-001.json",
-      "proofSha256": "408f90a5cacc716375d58e192eb78969016c1cb2f2e449e5c3c3e9a9ae49dc3a",
+      "proofSha256": "41628f4158504a1757cbcc379bd3b9f718eab2cfe7ac827ae5c7ba3afea6d8c7",
       "recordCount": 2
     },
     {
@@ -958,7 +958,7 @@
       "localBatchId": "review-v145-2026-11-13-001",
       "publicationDate": "2026-11-13",
       "proofPath": "/publication-proofs/cma/review-v145-2026-11-13-001.json",
-      "proofSha256": "7a7b56342b851fdfd95648697e8410ff8f1d3a55423240d4724b88245430a8e3",
+      "proofSha256": "20eb4975f375ab936ff832fb58b3ff91ed5aee3ccb52e712586441d0e0b07230",
       "recordCount": 9
     },
     {
@@ -966,7 +966,7 @@
       "localBatchId": "review-v149-2026-11-18-001",
       "publicationDate": "2026-11-18",
       "proofPath": "/publication-proofs/cma/review-v149-2026-11-18-001.json",
-      "proofSha256": "c9e55916567848c8ef4e6e6d352e59829ce690f66a93a3631fd49925c87ac0a4",
+      "proofSha256": "d358e849ba74e082bee51bbfd2e0ba2536a13440f23b6ec94712067cf70dc70d",
       "recordCount": 2
     },
     {
@@ -974,7 +974,7 @@
       "localBatchId": "v105-local-2026-11-11-002",
       "publicationDate": "2026-11-11",
       "proofPath": "/publication-proofs/cma/v105-local-2026-11-11-002.json",
-      "proofSha256": "52f8b4ab1bc39e9a4b48361ffaea8610b9533a8a08ddf497851ef925d5e4320f",
+      "proofSha256": "560975bdd70dda70beb92a647c74c3407b6a7aa0562426b8438bb872acd44efd",
       "recordCount": 1
     },
     {
@@ -982,7 +982,7 @@
       "localBatchId": "v75-visual-2026-11-10-001",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/cma/v75-visual-2026-11-10-001.json",
-      "proofSha256": "0cae345a276a5ec628547db52d099f843822666b74ca5dea9bf2eb099bbf582b",
+      "proofSha256": "b605f838f33833e4cc9312c5f36b7e52b7a2c1cc1b79826d4c0b505cc24e2226",
       "recordCount": 6
     },
     {
@@ -990,7 +990,7 @@
       "localBatchId": "v76-visual-2026-11-10-002",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/cma/v76-visual-2026-11-10-002.json",
-      "proofSha256": "57ccf5aed4ab2a88360fa59e92d8c630504fc900e888184aad7407c882f4240f",
+      "proofSha256": "6aad88e1c794e08fb99b608ae2b7ef4049f74428bc22a864a6f3b3b6888c281e",
       "recordCount": 1
     },
     {
@@ -998,7 +998,7 @@
       "localBatchId": "v77-visual-2026-11-10-001",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/cma/v77-visual-2026-11-10-001.json",
-      "proofSha256": "b20d22dc42d90d6824b4f6635034fb0bd5739cd9d2d4545a5f7301675e268499",
+      "proofSha256": "04e70b4fc2b9a999a5071461da3d376a55edea69ef7c75e872734b66e0be97fb",
       "recordCount": 6
     },
     {
@@ -1006,7 +1006,7 @@
       "localBatchId": "v80-visual-2026-11-10-002",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/cma/v80-visual-2026-11-10-002.json",
-      "proofSha256": "7cef70fac8477b0ae54b4174c915c0c555ab8f46cd74813f208052f80f851255",
+      "proofSha256": "6c34528490ecc4dd3c76bd0d6814e8c85ad025406860352d2003e55b17075bcb",
       "recordCount": 6
     },
     {
@@ -1014,7 +1014,7 @@
       "localBatchId": "v81-visual-2026-11-10-002",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/cma/v81-visual-2026-11-10-002.json",
-      "proofSha256": "dc9a10dea02d9989a4a44225b2829b4a867f2b0ef2234c3ff6a50000522a10f5",
+      "proofSha256": "4205d45f621f88845816452774202bc1aff5895367cb70f559f72aa9a1ad756d",
       "recordCount": 3
     },
     {
@@ -1022,7 +1022,7 @@
       "localBatchId": "v82-visual-2026-11-10-001",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/cma/v82-visual-2026-11-10-001.json",
-      "proofSha256": "f7f15358548c547afe508aa2402566040ac4e2a901150aa3c903cc29494e5890",
+      "proofSha256": "14b2c0b51855d1f8c53dcc24ace72d5b37bb28ae68d5e27d6f34b8e175cf7bc0",
       "recordCount": 4
     },
     {
@@ -1030,7 +1030,7 @@
       "localBatchId": "v83-visual-2026-11-10-001",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/cma/v83-visual-2026-11-10-001.json",
-      "proofSha256": "6e12586b4cff9331a1c36d26ec1e2080dc732abc9e1a42306ef0de3678509c6d",
+      "proofSha256": "24c1fabf4481f2101dab2a20a75edeafd6e810d0c601e88c86394b8ec00e44f0",
       "recordCount": 18
     },
     {
@@ -1038,7 +1038,7 @@
       "localBatchId": "v84-visual-2026-11-10-001",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/cma/v84-visual-2026-11-10-001.json",
-      "proofSha256": "1860ff5c6bf24167f9498e73cbfdf98fe4244eb1f319ba3c85d4bd83ab972f83",
+      "proofSha256": "3fc7912cd5902593178ad6821839b5d2eee28744007ab41eddd0349ec30900f2",
       "recordCount": 19
     },
     {
@@ -1046,7 +1046,7 @@
       "localBatchId": "v85-visual-2026-11-10-001",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/cma/v85-visual-2026-11-10-001.json",
-      "proofSha256": "d8d1389d99114794ab79aa547f3e640e43bf4d60dcf1f8a9c26308bef70821b1",
+      "proofSha256": "d9b3e10ba0ac0ef140385b25092a3e2f5cc34cf80aef9f658def8cb36484e9a7",
       "recordCount": 19
     },
     {
@@ -1054,7 +1054,7 @@
       "localBatchId": "v86-visual-2026-11-10-001",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/cma/v86-visual-2026-11-10-001.json",
-      "proofSha256": "85c6de8b21ad286c40bb61076f4c9f22f17f36eb65590485619fe54473d488ee",
+      "proofSha256": "698743ffeea61f49fdc538211ca11ab5be556655be68100d18fae42191c06acc",
       "recordCount": 11
     },
     {
@@ -1062,7 +1062,7 @@
       "localBatchId": "v87-visual-2026-11-10-001",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/cma/v87-visual-2026-11-10-001.json",
-      "proofSha256": "228ca8ecc6a89cf373ff26490de5d5cdf4382bb428592686d5c415bbc4fc7c25",
+      "proofSha256": "8e7ac67e628ae63c0c252ee349a8806654fa0d7045ebf9cb81bb8941d19ba4e5",
       "recordCount": 8
     },
     {
@@ -1070,7 +1070,7 @@
       "localBatchId": "v88-visual-2026-11-10-001",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/cma/v88-visual-2026-11-10-001.json",
-      "proofSha256": "ca4fa54312d37463ead221c295c7e30f5a64895fef77c4da170fcbb3ca6ab254",
+      "proofSha256": "5d4941e78060ea11bb80bdbf1dcb7180bc98c7312a7946e749caf0180fd5966a",
       "recordCount": 8
     },
     {
@@ -1078,7 +1078,7 @@
       "localBatchId": "v89-visual-2026-11-10-001",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/cma/v89-visual-2026-11-10-001.json",
-      "proofSha256": "67e591bd1e2b857f2d0168eaa190557c9eeb0e9d3729e9b8e2aba4bb9295e5e7",
+      "proofSha256": "8f1f9129f6db681a6318377ded2885f6c66b8fe6973fa9a3cd596ddf919c216c",
       "recordCount": 7
     },
     {
@@ -1086,7 +1086,7 @@
       "localBatchId": "met-2026-10-26-001",
       "publicationDate": "2026-10-26",
       "proofPath": "/publication-proofs/met/met-2026-10-26-001.json",
-      "proofSha256": "6a11ebfb83727cfdf26f459f03f2c7a8ac25c5a5964f5a19955256d5ee083291",
+      "proofSha256": "c697693aaca91a6f1a14404cafc59af7a5df7469b8f57280ea82d04764e6c381",
       "recordCount": 37
     },
     {
@@ -1094,7 +1094,7 @@
       "localBatchId": "met-2026-10-26-002",
       "publicationDate": "2026-10-26",
       "proofPath": "/publication-proofs/met/met-2026-10-26-002.json",
-      "proofSha256": "0bacadf40186c260af0d56897b91a9f282b5dfe5a5a83154514545e5db69e7f4",
+      "proofSha256": "2a80c0c9dd1ec79d06eadd7f4d4be5506ce4c8c264043e5d42a80a692ac42d3d",
       "recordCount": 58
     },
     {
@@ -1102,7 +1102,7 @@
       "localBatchId": "met-2026-10-26-003",
       "publicationDate": "2026-10-26",
       "proofPath": "/publication-proofs/met/met-2026-10-26-003.json",
-      "proofSha256": "4997dc696749376bdcc828ff067103fc8a0d3e724506b0bec84328ecd0a7eac8",
+      "proofSha256": "fb9dbd397695bc38e4707930f747c8a307cb9f6470e8689282db3d29a3bebac2",
       "recordCount": 48
     },
     {
@@ -1110,7 +1110,7 @@
       "localBatchId": "met-2026-10-26-004",
       "publicationDate": "2026-10-26",
       "proofPath": "/publication-proofs/met/met-2026-10-26-004.json",
-      "proofSha256": "d85a6cb31df9c4be475f1e29ac2ccd75858936230fcc93730ab069c9dc3f4982",
+      "proofSha256": "197a7534b8a371d7e32a56885b82e163f0c0b6a1ba2a8b6f364e46f265bb5cd3",
       "recordCount": 39
     },
     {
@@ -1118,7 +1118,7 @@
       "localBatchId": "met-2026-10-26-005",
       "publicationDate": "2026-10-26",
       "proofPath": "/publication-proofs/met/met-2026-10-26-005.json",
-      "proofSha256": "6e69de533f1b250d04d7e8924ee2dba79a86ae426d5716902622264e6a821480",
+      "proofSha256": "352775460342a13e523a397ea76bd85abb2ff25a5ef0bc88dc6c7fb06fa4d70e",
       "recordCount": 40
     },
     {
@@ -1126,7 +1126,7 @@
       "localBatchId": "met-2026-10-26-006",
       "publicationDate": "2026-10-26",
       "proofPath": "/publication-proofs/met/met-2026-10-26-006.json",
-      "proofSha256": "449edd5a30bcefd8d65d2bcc6ab40338fa073a9e8f4968e24cbf46d8d9221402",
+      "proofSha256": "618d59aa84d7795978187ed9f84c5a2c4a57d1cc86a3bd1b5ff9b0a1adae06fb",
       "recordCount": 40
     },
     {
@@ -1134,7 +1134,7 @@
       "localBatchId": "met-2026-10-26-007",
       "publicationDate": "2026-10-26",
       "proofPath": "/publication-proofs/met/met-2026-10-26-007.json",
-      "proofSha256": "f987df5a12f036fa22608c85c3f5598a98af47f259d84df155fe3fb65a9dbbd5",
+      "proofSha256": "ec1b625a99e239cba0002ca6f31105946e03ba6aad40c7f3c483e7b01e5d412b",
       "recordCount": 10
     },
     {
@@ -1142,7 +1142,7 @@
       "localBatchId": "met-2026-10-26-008",
       "publicationDate": "2026-10-26",
       "proofPath": "/publication-proofs/met/met-2026-10-26-008.json",
-      "proofSha256": "18353d9a5262c5688e61713f90f879f36749018057c41c2ad49e9fa8563f433b",
+      "proofSha256": "2997f00b1f220b0c7f58a6d0d44532057ee15ad88b2cb242e221cbab2e2ba831",
       "recordCount": 39
     },
     {
@@ -1150,7 +1150,7 @@
       "localBatchId": "met-2026-10-26-009",
       "publicationDate": "2026-10-27",
       "proofPath": "/publication-proofs/met/met-2026-10-26-009.json",
-      "proofSha256": "d96057140cca44c0161cc36f5c19803ec8eaef32f7523c49c96a5fb78718370d",
+      "proofSha256": "02f565cc2811db1ceda10317820b6d7e8f179955e1dc92a99445621660b45abb",
       "recordCount": 57
     },
     {
@@ -1158,7 +1158,7 @@
       "localBatchId": "met-2026-11-03-001",
       "publicationDate": "2026-11-03",
       "proofPath": "/publication-proofs/met/met-2026-11-03-001.json",
-      "proofSha256": "f4e06f69324dd0744528e690161cb046c55e5848fdbffcf284ead0ea6a17cfa1",
+      "proofSha256": "03971e251cd5fb3461d3cba07b9da7157465f4d033acf3065547cba25cfa9f01",
       "recordCount": 6
     },
     {
@@ -1166,7 +1166,7 @@
       "localBatchId": "met-2026-11-03-002",
       "publicationDate": "2026-11-03",
       "proofPath": "/publication-proofs/met/met-2026-11-03-002.json",
-      "proofSha256": "4c5a5896a794061a60ec15794f35e81b01034674c14fc7c03adf3632150b5a13",
+      "proofSha256": "34bd31aa4c952ceacc12414ca47dfb8a467839ad8443ea8b90c928bea86d8a86",
       "recordCount": 14
     },
     {
@@ -1174,7 +1174,7 @@
       "localBatchId": "met-2026-11-03-003",
       "publicationDate": "2026-11-03",
       "proofPath": "/publication-proofs/met/met-2026-11-03-003.json",
-      "proofSha256": "035fc4ecc2b5c5876614384cb58bdf3d5b9d909f4ef01a2d3f6c74974038a8ec",
+      "proofSha256": "4b998ef6a90f85c8e134be8020c81cfa319fc826b1688ad152ff2e0129a95057",
       "recordCount": 4
     },
     {
@@ -1182,7 +1182,7 @@
       "localBatchId": "met-2026-11-03-004",
       "publicationDate": "2026-11-03",
       "proofPath": "/publication-proofs/met/met-2026-11-03-004.json",
-      "proofSha256": "544278aec2f51226215687049fcaefc869e894227e07eac0d3a9010e367a8cb8",
+      "proofSha256": "4963f29a1b7d9f5f828c084fc1e313027feecc31e1fa96ad4665bb14a4609e51",
       "recordCount": 5
     },
     {
@@ -1190,7 +1190,7 @@
       "localBatchId": "met-2026-11-03-005",
       "publicationDate": "2026-11-03",
       "proofPath": "/publication-proofs/met/met-2026-11-03-005.json",
-      "proofSha256": "b7224c945ebe8dfdb179c9a15649579d5616a394bd9bdc10da81f54e0fa46801",
+      "proofSha256": "523b396bc0602c2a6e9a0fe507da7ed7868db934b9522292e5eed747cee87a23",
       "recordCount": 67
     },
     {
@@ -1198,7 +1198,7 @@
       "localBatchId": "met-2026-11-03-006",
       "publicationDate": "2026-11-03",
       "proofPath": "/publication-proofs/met/met-2026-11-03-006.json",
-      "proofSha256": "d3a658dea761d53904685bbbd1323e9241b6ac3bf3093667e5a3105fe89e9445",
+      "proofSha256": "f5d1754961479a1acb26df45b1105720a4f2ec696616b2783330f8fc3292561c",
       "recordCount": 53
     },
     {
@@ -1206,7 +1206,7 @@
       "localBatchId": "met-2026-11-03-007",
       "publicationDate": "2026-11-03",
       "proofPath": "/publication-proofs/met/met-2026-11-03-007.json",
-      "proofSha256": "fdbbebad2684e8f3ed628977d47162477a7f9596b0ced9924229d780ffb67b3b",
+      "proofSha256": "bede05b16979cf76ca1d76ffc33464e920cacd418214b6ea35197c91e21af277",
       "recordCount": 139
     },
     {
@@ -1214,7 +1214,7 @@
       "localBatchId": "met-2026-11-03-008",
       "publicationDate": "2026-11-03",
       "proofPath": "/publication-proofs/met/met-2026-11-03-008.json",
-      "proofSha256": "46a87ae003fefc30bd5224823430d21dc1c7073004633df0e0cd85a612a781e2",
+      "proofSha256": "dc9e2741614db9fbd0c0fbd86919d7c430cd95f96bb659719330049fe20bd10b",
       "recordCount": 3
     },
     {
@@ -1222,7 +1222,7 @@
       "localBatchId": "met-2026-11-03-009",
       "publicationDate": "2026-11-03",
       "proofPath": "/publication-proofs/met/met-2026-11-03-009.json",
-      "proofSha256": "83f754db4bc59eab4143f8ff81f3471845ecc821c8ecff82e9a57e2d2e493783",
+      "proofSha256": "7a09928a60f4eea1c6fc747f17a85216d406262065ff88f197c73b18d6d2c854",
       "recordCount": 77
     },
     {
@@ -1230,7 +1230,7 @@
       "localBatchId": "met-2026-11-03-010",
       "publicationDate": "2026-11-03",
       "proofPath": "/publication-proofs/met/met-2026-11-03-010.json",
-      "proofSha256": "af2c895cb54dc5417fcc2cb787fea4e1f7f8e3c0dc03f34a5609df2e49678240",
+      "proofSha256": "a1b0cf415f797325e9512313892aa34fad1d034b3c39954586ae82066d9678a3",
       "recordCount": 136
     },
     {
@@ -1238,7 +1238,7 @@
       "localBatchId": "met-2026-11-05-001",
       "publicationDate": "2026-11-05",
       "proofPath": "/publication-proofs/met/met-2026-11-05-001.json",
-      "proofSha256": "df019bc046af7aea01736ca390cfaf6e14442874ed0d2d23b355da3fa8bbcfda",
+      "proofSha256": "a5b8b90ea244b9e3cfeb2d30d1137f0510a85d6b8389c09de35944ca50976ec5",
       "recordCount": 9
     },
     {
@@ -1246,7 +1246,7 @@
       "localBatchId": "met-2026-11-05-120",
       "publicationDate": "2026-11-05",
       "proofPath": "/publication-proofs/met/met-2026-11-05-120.json",
-      "proofSha256": "dd9bc3a3670cc654349dcc3ef5019f0d92a3faccd2f7a1a9cdd1c41a255bfd15",
+      "proofSha256": "cde88f23caa6636e8e6a2f2845b5c71c55933e545285f62f2c74577225354eb7",
       "recordCount": 130
     },
     {
@@ -1254,7 +1254,7 @@
       "localBatchId": "met-2026-11-05-901",
       "publicationDate": "2026-11-05",
       "proofPath": "/publication-proofs/met/met-2026-11-05-901.json",
-      "proofSha256": "7da7b5340d9d58c3caab73a26b44165e3b3960f07c829b5b7d7be420ae5ff56d",
+      "proofSha256": "d223e6efc394837e11c12fd88c813eda1122aa16ab416825299b4fad440fd875",
       "recordCount": 14
     },
     {
@@ -1262,7 +1262,7 @@
       "localBatchId": "met-2026-11-05-902",
       "publicationDate": "2026-11-05",
       "proofPath": "/publication-proofs/met/met-2026-11-05-902.json",
-      "proofSha256": "4678587e114d32a61e3898640fb09b173295b04e10dc6b6381a1dbbb7bb572da",
+      "proofSha256": "33a60cbbf5f53cbc2d1731e1519eec2e983900970f0dff98ef487ed62e96af97",
       "recordCount": 39
     },
     {
@@ -1270,7 +1270,7 @@
       "localBatchId": "met-2026-11-05-903",
       "publicationDate": "2026-11-05",
       "proofPath": "/publication-proofs/met/met-2026-11-05-903.json",
-      "proofSha256": "a5318b7b8bf2413b85ec171870cfc0bd82b5939c048b014439099593e714f480",
+      "proofSha256": "0b410c12297c48874e04932f99b386296803d626c79c48a62de27591b0ccab38",
       "recordCount": 7
     },
     {
@@ -1278,7 +1278,7 @@
       "localBatchId": "met-2026-11-09-002",
       "publicationDate": "2026-11-09",
       "proofPath": "/publication-proofs/met/met-2026-11-09-002.json",
-      "proofSha256": "77df5eeddeee6f4582ca83bb8ec64b5e30aa4e6e81046c47b9c4e69e93d3bd04",
+      "proofSha256": "8b1697ae625647d799fa88236a3db90053ba703e2a274ab06ae2405b28ec4ec7",
       "recordCount": 7
     },
     {
@@ -1286,7 +1286,7 @@
       "localBatchId": "met-2026-11-09-004",
       "publicationDate": "2026-11-09",
       "proofPath": "/publication-proofs/met/met-2026-11-09-004.json",
-      "proofSha256": "c2b6f41dec124365b0a4ff581f3d08db198e7520e7db3bb2882084d112085acd",
+      "proofSha256": "972ca32576aba967be28d0a90aeacda7611a986a30330e1e5caef53fdd7870c4",
       "recordCount": 35
     },
     {
@@ -1294,7 +1294,7 @@
       "localBatchId": "met-2026-11-09-014",
       "publicationDate": "2026-11-09",
       "proofPath": "/publication-proofs/met/met-2026-11-09-014.json",
-      "proofSha256": "03480a964b0a94a02d5d82fa1c6c1cd82f8de05825fafa2e5630e36584c670d8",
+      "proofSha256": "e8c177fa3c8f99acc182c579fdf2342f700dab8d0f880b803abcd035b455af0a",
       "recordCount": 23
     },
     {
@@ -1302,7 +1302,7 @@
       "localBatchId": "met-2026-11-09-015",
       "publicationDate": "2026-11-09",
       "proofPath": "/publication-proofs/met/met-2026-11-09-015.json",
-      "proofSha256": "ff63980d65fd42a7fa99667c17d58cc83fc27c523326b943de8fd6a227e8bb4a",
+      "proofSha256": "3dc7e0131957c87b44dd19891f8ea6a26c133d2c4b28e245c597a255883a2f2d",
       "recordCount": 280
     },
     {
@@ -1310,7 +1310,7 @@
       "localBatchId": "met-2026-11-10-002",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/met/met-2026-11-10-002.json",
-      "proofSha256": "4d7a675835db1b08029af0b28a849f2c8ff796a25a1e052e510566edc76b353b",
+      "proofSha256": "f232098b0837e07881b9af39a4fb9ef72f96252904d735a1e133569ae3aa79aa",
       "recordCount": 4
     },
     {
@@ -1318,7 +1318,7 @@
       "localBatchId": "met-2026-11-10-003",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/met/met-2026-11-10-003.json",
-      "proofSha256": "f3c97296b6884388e3d05776aa2c8f9f50cf2887d04d27488054af4dff532ecb",
+      "proofSha256": "43aed895beca665350ef41b8211b7a1fff29a7cf6a284ce901d283ab7b697a18",
       "recordCount": 10
     },
     {
@@ -1326,7 +1326,7 @@
       "localBatchId": "met-2026-11-10-004",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/met/met-2026-11-10-004.json",
-      "proofSha256": "bf2f448a4d9c2752811c83affb765d3d1e8d29389e3abf2b72e22a32e430c096",
+      "proofSha256": "9072b448f40f126e2a8280c8244f49c29a876afbabf26ad3727fd6593b3fb4b2",
       "recordCount": 28
     },
     {
@@ -1334,7 +1334,7 @@
       "localBatchId": "met-2026-11-11-004",
       "publicationDate": "2026-11-11",
       "proofPath": "/publication-proofs/met/met-2026-11-11-004.json",
-      "proofSha256": "22ca5258632d9f479790b0d12eb85fe8b1e56c788efbfd30765704716b3f9ae0",
+      "proofSha256": "bcb47037b7e7efbf5316fa4a4d754e51837f5c729e07eb7004cfaa0c6ffb0312",
       "recordCount": 4
     },
     {
@@ -1342,7 +1342,7 @@
       "localBatchId": "met-2026-11-11-006",
       "publicationDate": "2026-11-11",
       "proofPath": "/publication-proofs/met/met-2026-11-11-006.json",
-      "proofSha256": "8cb5b94dc92b7ff92b32cead6687c842f70263a20bf309505152ab47e4e2dd72",
+      "proofSha256": "2897986e5ec6f6c0959ea37db00f42a848de11710d90e911d9b70eb7c8dd0179",
       "recordCount": 6
     },
     {
@@ -1350,7 +1350,7 @@
       "localBatchId": "met-2026-11-11-007",
       "publicationDate": "2026-11-11",
       "proofPath": "/publication-proofs/met/met-2026-11-11-007.json",
-      "proofSha256": "17da1e15df31d8826089a1b1a92c9b943320e53d5e88f78d14ea6aa39d1fe774",
+      "proofSha256": "25bba3db331c43340b48680a233e44c09a6bd7fb5931638c7d94f230041f22e1",
       "recordCount": 11
     },
     {
@@ -1358,7 +1358,7 @@
       "localBatchId": "met-2026-11-11-009",
       "publicationDate": "2026-11-11",
       "proofPath": "/publication-proofs/met/met-2026-11-11-009.json",
-      "proofSha256": "ab8c8b7410e85eec5d0f9dcda6d50b1142366cb251c907a5fd37078bc644063c",
+      "proofSha256": "50376e4effe2b85978f752cfed9903501ea9aae2d2f8478813b7adf4710d3675",
       "recordCount": 18
     },
     {
@@ -1366,7 +1366,7 @@
       "localBatchId": "met-2026-11-11-010",
       "publicationDate": "2026-11-11",
       "proofPath": "/publication-proofs/met/met-2026-11-11-010.json",
-      "proofSha256": "13b2460cc85c04d64506086eef7713542ec47764b9a62c6d3e25bd6022b11216",
+      "proofSha256": "18fe0b5843e1e1cd4052d6e4696687e64eac4d1f9e29a50b67aaf1bc8dd83bc2",
       "recordCount": 17
     },
     {
@@ -1374,7 +1374,7 @@
       "localBatchId": "met-2026-11-11-011",
       "publicationDate": "2026-11-11",
       "proofPath": "/publication-proofs/met/met-2026-11-11-011.json",
-      "proofSha256": "f0b4aad743a5b8d5628d297eaba28c372f96a4d4628352ba6ebaf1f4d00845ac",
+      "proofSha256": "242ac3245c7567644b5fd86186a2914bc6cbfeb02218dd0fd52f42ee2e3809c5",
       "recordCount": 20
     },
     {
@@ -1382,7 +1382,7 @@
       "localBatchId": "met-2026-11-11-012",
       "publicationDate": "2026-11-11",
       "proofPath": "/publication-proofs/met/met-2026-11-11-012.json",
-      "proofSha256": "fb1bbf36589d9ffaf5bbe5c4354e33f4402d6a636f7b291c35f8d70e1e467436",
+      "proofSha256": "dbf906263ce88b6a143e986b61543d41fe38fde89e5a8c34be23da65b47c568e",
       "recordCount": 20
     },
     {
@@ -1390,7 +1390,7 @@
       "localBatchId": "met-2026-11-11-013",
       "publicationDate": "2026-11-11",
       "proofPath": "/publication-proofs/met/met-2026-11-11-013.json",
-      "proofSha256": "1ce29969640d9a1944ca1cc71f053d286cc6a29cb3c5275b53c8c24c3415ecd6",
+      "proofSha256": "feeb3fa27c3c246808171e437614ced805fe3f08a32a793a3ec12729393eeb33",
       "recordCount": 19
     },
     {
@@ -1398,7 +1398,7 @@
       "localBatchId": "met-2026-11-11-015",
       "publicationDate": "2026-11-11",
       "proofPath": "/publication-proofs/met/met-2026-11-11-015.json",
-      "proofSha256": "f3c52bc7aa3878837b8f523557022f5f2c72714dcbcaa1c01d9af685ffb7db49",
+      "proofSha256": "f686f22df4bc955a8fa9f958924bc130c5a8d4e70b952b9aae20b818a967049f",
       "recordCount": 17
     },
     {
@@ -1406,7 +1406,7 @@
       "localBatchId": "met-2026-11-11-017",
       "publicationDate": "2026-11-11",
       "proofPath": "/publication-proofs/met/met-2026-11-11-017.json",
-      "proofSha256": "7f57e99d2a6cadb0e44a2214d4d9e1dcaafaf52b2d148d31ebf214b94d18e690",
+      "proofSha256": "40059e3c761f517ff17e193465758bbcd75669ab69a9bf0dbc17e3f3ee3576b9",
       "recordCount": 17
     },
     {
@@ -1414,7 +1414,7 @@
       "localBatchId": "met-2026-11-11-018",
       "publicationDate": "2026-11-11",
       "proofPath": "/publication-proofs/met/met-2026-11-11-018.json",
-      "proofSha256": "933c775d1d3300cc9ac2bcea7b9fb852fa6beb43a045ffb5301c8c796eb9eb1a",
+      "proofSha256": "a910e981296223c019ea165f969da868ef85d7be9bfdd0c0ef6072679bf790b3",
       "recordCount": 1
     },
     {
@@ -1422,7 +1422,7 @@
       "localBatchId": "met-2026-11-11-019",
       "publicationDate": "2026-11-11",
       "proofPath": "/publication-proofs/met/met-2026-11-11-019.json",
-      "proofSha256": "86d15b95befe903f264510c1e1c546081faf054799dc9dc16bcfc115f663fd2b",
+      "proofSha256": "ae7b3e0a9894c8c430ff6fdb9188a403c702bcc80ec5d3629bc3b452ba9a7c2a",
       "recordCount": 16
     },
     {
@@ -1430,7 +1430,7 @@
       "localBatchId": "met-2026-11-11-022",
       "publicationDate": "2026-11-11",
       "proofPath": "/publication-proofs/met/met-2026-11-11-022.json",
-      "proofSha256": "b199409a84067fc27adfde272b8374771f6fb1d0e49372b6689e351c69d0ec11",
+      "proofSha256": "b1484d4d67b36b2a23ea1acd31ed87b0eed407843c32f68b11fb47141819caa9",
       "recordCount": 17
     },
     {
@@ -1438,7 +1438,7 @@
       "localBatchId": "met-2026-11-11-023",
       "publicationDate": "2026-11-11",
       "proofPath": "/publication-proofs/met/met-2026-11-11-023.json",
-      "proofSha256": "9f30c2cba289cc27e9da14d35d2bc6c2ed12578debcd36e345cf4267aee5f718",
+      "proofSha256": "abacb50ef9b4270e0ca4a5aa20d9c659e8156bfc8b0a03f2405b14ea20cc0524",
       "recordCount": 15
     },
     {
@@ -1446,7 +1446,7 @@
       "localBatchId": "met-2026-11-11-024",
       "publicationDate": "2026-11-11",
       "proofPath": "/publication-proofs/met/met-2026-11-11-024.json",
-      "proofSha256": "513f6e2b612c7eff28022f34c968ac27ca9858b5fa8b79fa93279b2873a784df",
+      "proofSha256": "91128f5582deba1737114660055868cc1736cc9b3787c72dd3f1821151288262",
       "recordCount": 17
     },
     {
@@ -1454,7 +1454,7 @@
       "localBatchId": "met-2026-11-11-025",
       "publicationDate": "2026-11-11",
       "proofPath": "/publication-proofs/met/met-2026-11-11-025.json",
-      "proofSha256": "c9c75baf9df4dd870fe57765107d00843769dd283f1dccfa81534a78043753eb",
+      "proofSha256": "0e5ec748b96714761f6b4061fdd767f64cb24fa9a4e0b639efaa08a855d9deb2",
       "recordCount": 14
     },
     {
@@ -1462,7 +1462,7 @@
       "localBatchId": "met-2026-11-11-026",
       "publicationDate": "2026-11-11",
       "proofPath": "/publication-proofs/met/met-2026-11-11-026.json",
-      "proofSha256": "d3a534d9ff235ce54ad7a6f9fdb674933fa4f92fc786319c64d472d67f30ef03",
+      "proofSha256": "6071defb9749938392b019d0527029b2595ea9afdd62ebdaf5cd78761b6284ef",
       "recordCount": 11
     },
     {
@@ -1470,7 +1470,7 @@
       "localBatchId": "met-2026-11-11-027",
       "publicationDate": "2026-11-11",
       "proofPath": "/publication-proofs/met/met-2026-11-11-027.json",
-      "proofSha256": "22c9377c079167d9c6a0d34668432b95398f5844af05511b63a3b2c4322bf8dd",
+      "proofSha256": "a07861c6df0b4ba65ed7e788e519ec1d07dccd94bacb1f041899274716c8a44e",
       "recordCount": 10
     },
     {
@@ -1478,7 +1478,7 @@
       "localBatchId": "met-2026-11-11-028",
       "publicationDate": "2026-11-11",
       "proofPath": "/publication-proofs/met/met-2026-11-11-028.json",
-      "proofSha256": "baac85df5663ecd5fde733b64dc5fa93204f19b4e4ad6d91e79f7063e4c5c311",
+      "proofSha256": "965b146e8457e9a376bb89d9c89c428c09cc36157a1495eeea6904695b6bfc15",
       "recordCount": 77
     },
     {
@@ -1486,7 +1486,7 @@
       "localBatchId": "met-2026-11-11-029",
       "publicationDate": "2026-11-11",
       "proofPath": "/publication-proofs/met/met-2026-11-11-029.json",
-      "proofSha256": "5fc0633cfe597f50de571cfff897c3dbf932e183aef0364478c1cc188409e050",
+      "proofSha256": "7e982f3461d71e197c8664529fb88c1f20a0a87fec09b601a103c4a2fde472fe",
       "recordCount": 86
     },
     {
@@ -1494,7 +1494,7 @@
       "localBatchId": "met-2026-11-11-030",
       "publicationDate": "2026-11-11",
       "proofPath": "/publication-proofs/met/met-2026-11-11-030.json",
-      "proofSha256": "098a0dcc0ed9c4ed092541c5babdfb98dc4bbc35fdcc9ac66aceb0e76af3221b",
+      "proofSha256": "a4ccd740957b66b07bd0a28b41113d155fb8e8c1b86343242bf37fbc4f525430",
       "recordCount": 3
     },
     {
@@ -1502,7 +1502,7 @@
       "localBatchId": "met-modern-2026-11-05-001",
       "publicationDate": "2026-11-05",
       "proofPath": "/publication-proofs/met/met-modern-2026-11-05-001.json",
-      "proofSha256": "1aaffe34db1d59e09c79a2eda2c41d311aded94f2fbddae240ebc59a04ce14ff",
+      "proofSha256": "c3de98c2aaa854e4d4a3824e39c290ab88bee0c3f292520f18893b5014ee879c",
       "recordCount": 1
     },
     {
@@ -1510,7 +1510,7 @@
       "localBatchId": "met-period-v3-2026-11-11-001",
       "publicationDate": "2026-11-11",
       "proofPath": "/publication-proofs/met/met-period-v3-2026-11-11-001.json",
-      "proofSha256": "3454a6be68947850dd5209343fb69ae5a98896488af63a3b14c4170c3a0ac851",
+      "proofSha256": "1e6fdc31de12712e4b83895990058b9599bd496d89321d15c590648f0a51c4a1",
       "recordCount": 14
     },
     {
@@ -1518,7 +1518,7 @@
       "localBatchId": "review-v119-2026-11-12-001",
       "publicationDate": "2026-11-12",
       "proofPath": "/publication-proofs/met/review-v119-2026-11-12-001.json",
-      "proofSha256": "f04e2b37ed2045913ae9829b238de919d98c58be5d4164c01375cb72818da567",
+      "proofSha256": "0231ffdd6487b57c0ea6104af62d8588e31f8956e2f8dc6c457b8e0f82365b06",
       "recordCount": 3
     },
     {
@@ -1526,7 +1526,7 @@
       "localBatchId": "review-v120-2026-11-12-002",
       "publicationDate": "2026-11-12",
       "proofPath": "/publication-proofs/met/review-v120-2026-11-12-002.json",
-      "proofSha256": "97f2d7ee1db9bf6cfe6cadd3b4ee8dfee10b1cfe7457c9def252c7f90a334aaa",
+      "proofSha256": "205e3a4984528757f48f1afab4c88d375890500022f57222c8cddf310d3f92c8",
       "recordCount": 5
     },
     {
@@ -1534,7 +1534,7 @@
       "localBatchId": "review-v127-2026-11-12-002",
       "publicationDate": "2026-11-12",
       "proofPath": "/publication-proofs/met/review-v127-2026-11-12-002.json",
-      "proofSha256": "576c586c7524669377fa23fa9942fd2c3ca706636717867f795c566b9dfc42cf",
+      "proofSha256": "3a62d767365df87401d2e5ac3c011797f4ec82b703a8e186a58603f2e39c1122",
       "recordCount": 4
     },
     {
@@ -1542,7 +1542,7 @@
       "localBatchId": "review-v133-2026-11-12-001",
       "publicationDate": "2026-11-12",
       "proofPath": "/publication-proofs/met/review-v133-2026-11-12-001.json",
-      "proofSha256": "438e083640065dcaac230632c7f29f28e3b760fba9aa1fe11e76413a48bc91ca",
+      "proofSha256": "c24e25800bbbe8913e4ef4edbc3851744aa9e084d2e7056454f3f1206e0804eb",
       "recordCount": 8
     },
     {
@@ -1550,7 +1550,7 @@
       "localBatchId": "review-v135-2026-11-13-001",
       "publicationDate": "2026-11-13",
       "proofPath": "/publication-proofs/met/review-v135-2026-11-13-001.json",
-      "proofSha256": "48d1d4d50570582c5df1280b8ebf820c25675a8e70130d93d3f30807c26ec663",
+      "proofSha256": "1858751eeda075b757e601b8a473680e7cedd501280aafbf964e7ff8281f31fb",
       "recordCount": 10
     },
     {
@@ -1558,7 +1558,7 @@
       "localBatchId": "review-v141-2026-11-13-001",
       "publicationDate": "2026-11-13",
       "proofPath": "/publication-proofs/met/review-v141-2026-11-13-001.json",
-      "proofSha256": "e068c1cb374ec81e0ef02eec3fb038f9dfbd68257a1b46cf84bf30a0c4398a72",
+      "proofSha256": "6fb506b417530941c359f38d24191640865a99d34c824dd405df74a869adcad6",
       "recordCount": 2
     },
     {
@@ -1566,7 +1566,7 @@
       "localBatchId": "review-v147-2026-11-17-001",
       "publicationDate": "2026-11-17",
       "proofPath": "/publication-proofs/met/review-v147-2026-11-17-001.json",
-      "proofSha256": "6212c965e1fb6157a902c7907dcadbb64f1d7d10a66f5b33503f00276af49950",
+      "proofSha256": "d0838df9292b71952ebba76a42dd4f00a0837a0f11efb74b7ca9904ba31c0962",
       "recordCount": 1
     },
     {
@@ -1574,7 +1574,7 @@
       "localBatchId": "review-v148-2026-11-18-001",
       "publicationDate": "2026-11-18",
       "proofPath": "/publication-proofs/met/review-v148-2026-11-18-001.json",
-      "proofSha256": "23253f4f6f79d29438410733ed1eb21cac66a63c5ca9b4d9b4e82303e093ab9a",
+      "proofSha256": "74d6f3ae2473eaa87f6b55a560118a66ab696a803418e03012b4a4d94bdb8b01",
       "recordCount": 4
     },
     {
@@ -1582,7 +1582,7 @@
       "localBatchId": "review-v149-2026-11-18-002",
       "publicationDate": "2026-11-18",
       "proofPath": "/publication-proofs/met/review-v149-2026-11-18-002.json",
-      "proofSha256": "bf34f425f0e413f6bb536a21e361a0a0a2a9de9f7a6eb3b2f9b060f1007c963d",
+      "proofSha256": "21028c701f3c5278e678fab426a052dbb3e005d54d418a270be475787d7c03bd",
       "recordCount": 1
     },
     {
@@ -1590,7 +1590,7 @@
       "localBatchId": "v105-met-2026-11-11-001",
       "publicationDate": "2026-11-11",
       "proofPath": "/publication-proofs/met/v105-met-2026-11-11-001.json",
-      "proofSha256": "952d65261954f6a60b81d8e5d0c8df0befb5205d53ac1699fe28bb8cf30235fc",
+      "proofSha256": "97645b32cc87e871af697938b244154502e05ab27887d174d9fc134149c816af",
       "recordCount": 18
     },
     {
@@ -1598,7 +1598,7 @@
       "localBatchId": "v75-visual-2026-11-10-001",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/met/v75-visual-2026-11-10-001.json",
-      "proofSha256": "732a46e67936d429b364278f138f80f8b1fd3e7be15687f72235be39273711f4",
+      "proofSha256": "62adaa0b43e411fa63fb3743646222e7ecbf148211203c25c6207ce5efcf307f",
       "recordCount": 1
     },
     {
@@ -1606,7 +1606,7 @@
       "localBatchId": "v77-visual-2026-11-10-001",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/met/v77-visual-2026-11-10-001.json",
-      "proofSha256": "8b3597bb5179bed0f9540738a2cccb1e005870e2b1770c26eab1e1c7a6d1e37f",
+      "proofSha256": "ddd0a58dec095cd18749599a95efc8ba9c3b55f8afd6ef9118a5834185d3f3d5",
       "recordCount": 12
     },
     {
@@ -1614,7 +1614,7 @@
       "localBatchId": "v80-visual-2026-11-10-002",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/met/v80-visual-2026-11-10-002.json",
-      "proofSha256": "e28798341e28bbb8c75234f125b789ba192f68e6cb85c805630f0df5f6b4d1f3",
+      "proofSha256": "ea29a08e5fcb5da398f9aed2552fb853bacfa21677d51e0bc7288912c2f1a0fc",
       "recordCount": 11
     },
     {
@@ -1622,7 +1622,7 @@
       "localBatchId": "v81-visual-2026-11-10-002",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/met/v81-visual-2026-11-10-002.json",
-      "proofSha256": "d76cd911160cfc1155ad89e9cade9395632dbb11ed7eb32046bc41e6158063c9",
+      "proofSha256": "4222c48bebf927ca1ff84246ea89706801271381830ad78a00e2904001b2f31d",
       "recordCount": 3
     },
     {
@@ -1630,7 +1630,7 @@
       "localBatchId": "v82-visual-2026-11-10-001",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/met/v82-visual-2026-11-10-001.json",
-      "proofSha256": "43e4dadf3e2cf422b3e5c39dfdeef738859623b40fe23949a558d2bbdf1411e4",
+      "proofSha256": "1167c84d5db0feca533492dfbdf76c73c19a06eef1a91153a45110eed4ffe8fd",
       "recordCount": 16
     },
     {
@@ -1638,7 +1638,7 @@
       "localBatchId": "v90-met-2026-11-10-001",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/met/v90-met-2026-11-10-001.json",
-      "proofSha256": "7c5398b5d16b2e13211b2a5e256db51b4e5c9f56b28c28611db6d6feaa1edd54",
+      "proofSha256": "db3c700beca5c2964a46115d318e55dc7c3aeff69104202e60b1d2a5c4c49532",
       "recordCount": 2
     },
     {
@@ -1646,7 +1646,7 @@
       "localBatchId": "mia-2026-10-28-001",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/mia/mia-2026-10-28-001.json",
-      "proofSha256": "b9fb20cc36371a9fcefb0203778a7b942eb8285df0cbfd5a1da3389a1ef1315f",
+      "proofSha256": "81ec4ec5c30c3d596417cb1740c1cd8b92fccc0be36aea226d3aaffe2040bbe6",
       "recordCount": 31
     },
     {
@@ -1654,7 +1654,7 @@
       "localBatchId": "mia-2026-10-28-002",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/mia/mia-2026-10-28-002.json",
-      "proofSha256": "ac65f5756d2edccadb97acf616a82c7dee50430eb639bf5ed82396360258117a",
+      "proofSha256": "2be918fa63edd560d488f59d25dc1a04a058e326b1649212f391caea558f1b3a",
       "recordCount": 50
     },
     {
@@ -1662,7 +1662,7 @@
       "localBatchId": "mia-2026-10-28-003",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/mia/mia-2026-10-28-003.json",
-      "proofSha256": "8cb73d5fa17a24dd93cc942b4c63967526a84d179e96a2c400613211f569b1ba",
+      "proofSha256": "632b1eb891b764a6246aa955fad38fb1470087310741c8909762d953328b9ed4",
       "recordCount": 34
     },
     {
@@ -1670,7 +1670,7 @@
       "localBatchId": "mia-2026-10-28-004",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/mia/mia-2026-10-28-004.json",
-      "proofSha256": "5b46d080ac8649812e6117a538ad52ea42537c6b5738a831ce15f7b104376da8",
+      "proofSha256": "ccc5da07dfa8d02ac7e17b9b15bcc85e09dac6fa7111511dccc2ffef22ed308c",
       "recordCount": 11
     },
     {
@@ -1678,7 +1678,7 @@
       "localBatchId": "mia-2026-10-28-005",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/mia/mia-2026-10-28-005.json",
-      "proofSha256": "9252c1ef10f166658d80d03acf72ad3999c465c314f50d55d961a69d3996e8da",
+      "proofSha256": "2b784acca5baec84c661ddd9707a149ce8b54f5ad182c9bdd75f9e11c8ec0d26",
       "recordCount": 139
     },
     {
@@ -1686,7 +1686,7 @@
       "localBatchId": "mia-2026-10-28-006",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/mia/mia-2026-10-28-006.json",
-      "proofSha256": "efae513d6a031562b17d2545e25bcc39315400e64496a2d79077edb9e25e9f2d",
+      "proofSha256": "af61be21f24a9033422cde081a7671b94989b2319cad7d5b5aa411441edc0ee4",
       "recordCount": 39
     },
     {
@@ -1694,7 +1694,7 @@
       "localBatchId": "mia-2026-10-28-007",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/mia/mia-2026-10-28-007.json",
-      "proofSha256": "767b73a015bc73e7aa93fcc5258ffba21268a4716ce4f6b76e2c7bcb8287ea70",
+      "proofSha256": "ffb01f51d06f080d50d3cb121d55edab8afa3d256d85c1f2887f2fc80b55947f",
       "recordCount": 15
     },
     {
@@ -1702,7 +1702,7 @@
       "localBatchId": "mia-2026-10-28-008",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/mia/mia-2026-10-28-008.json",
-      "proofSha256": "257dba84f2d7e35c929f2bef038193782232cfd16850c6bd6e4553c62980e9cf",
+      "proofSha256": "a4aa0d622ed2c14c9ce1f4ce95417aaf3c0436846bdb63af7f2a12389ace9646",
       "recordCount": 6
     },
     {
@@ -1710,7 +1710,7 @@
       "localBatchId": "mia-2026-10-28-009",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/mia/mia-2026-10-28-009.json",
-      "proofSha256": "66db342be8b715f716ad033eddcc5f28e23b8aa16a831f31ce64bff27125573c",
+      "proofSha256": "bdd7de0c583f74d965fee949c3574697297499377867b62f0d4c92b25e3fdc93",
       "recordCount": 16
     },
     {
@@ -1718,7 +1718,7 @@
       "localBatchId": "mia-2026-11-06-002",
       "publicationDate": "2026-11-06",
       "proofPath": "/publication-proofs/mia/mia-2026-11-06-002.json",
-      "proofSha256": "c1406da3ddb09dcdb84eee168d25562fda60d7fa19c2aa7376f9961962326b3d",
+      "proofSha256": "22c3eeb93f8cd5c93bf7f5ce8f54a36f9be4b5698f08aba17d7cb6e812097406",
       "recordCount": 119
     },
     {
@@ -1726,7 +1726,7 @@
       "localBatchId": "mia-2026-11-06-003",
       "publicationDate": "2026-11-06",
       "proofPath": "/publication-proofs/mia/mia-2026-11-06-003.json",
-      "proofSha256": "c8eab8df0816a2491ad0fbd93532be078c30732899b8493e65aa41fdae563f3f",
+      "proofSha256": "fd0dedd025a20441f8aef6ea698cef6b9323506dad1b0841f85b2461e72a5f62",
       "recordCount": 137
     },
     {
@@ -1734,7 +1734,7 @@
       "localBatchId": "mia-2026-11-06-004",
       "publicationDate": "2026-11-06",
       "proofPath": "/publication-proofs/mia/mia-2026-11-06-004.json",
-      "proofSha256": "8a8798c56e7cc8fbf060505ef5c1cc16ec14ab377e8bb6c4e60fda5dcbaf0f0d",
+      "proofSha256": "62e51d5eff29367e8d7ae3d7ea8644319895a7bc3791377522be54f185e227bc",
       "recordCount": 127
     },
     {
@@ -1742,7 +1742,7 @@
       "localBatchId": "mia-2026-11-06-005",
       "publicationDate": "2026-11-06",
       "proofPath": "/publication-proofs/mia/mia-2026-11-06-005.json",
-      "proofSha256": "15f06300de70ca56b3e40b7a767a1c4aa23bc3c7bc08653d5df0354300b9df00",
+      "proofSha256": "8944d3a914b052671d680d66bab8161ca50c7ba237e889a034ab941c91826d43",
       "recordCount": 36
     },
     {
@@ -1750,7 +1750,7 @@
       "localBatchId": "mia-2026-11-09-001",
       "publicationDate": "2026-11-09",
       "proofPath": "/publication-proofs/mia/mia-2026-11-09-001.json",
-      "proofSha256": "36b1576ce63afb232e3311c3558857c00083d6a743f5cb37966a17d2f7ee7b69",
+      "proofSha256": "e0531c4ca3669a762e00bbe2487e05fffd15e712a39076bf51e3cd449133dc14",
       "recordCount": 14
     },
     {
@@ -1758,7 +1758,7 @@
       "localBatchId": "mia-reconcile-2026-11-11-001",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/mia/mia-reconcile-2026-11-11-001.json",
-      "proofSha256": "1f8b8c325f5ecc033efa51a1216b55fc29eab2e4d638e7a888537ccd6972d6d5",
+      "proofSha256": "cbec83997acd68fec63c29d96c654d00f75c6c8a656e0c4c1b7f6f51ee35d54a",
       "recordCount": 137
     },
     {
@@ -1766,7 +1766,7 @@
       "localBatchId": "mia-reconcile-2026-11-11-002",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/mia/mia-reconcile-2026-11-11-002.json",
-      "proofSha256": "11513438e283f7ae082ca9cc4882ca88a1c0282deb6b670dc116298e0efb7897",
+      "proofSha256": "61183a8a064dcc69c7f683a9fa9581060197ac048b555a394a6d3eea52d4a95c",
       "recordCount": 51
     },
     {
@@ -1774,7 +1774,7 @@
       "localBatchId": "mia-reconcile-2026-11-11-003",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/mia/mia-reconcile-2026-11-11-003.json",
-      "proofSha256": "2572535c123c11322088af4de5d8e322decb68f492e561024050e28727802fa2",
+      "proofSha256": "9aa18656b01d9b953eae2f3db66a2a3251284517da333e3cf4d364c37baa0969",
       "recordCount": 29
     },
     {
@@ -1782,7 +1782,7 @@
       "localBatchId": "mia-reconcile-2026-11-11-004",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/mia/mia-reconcile-2026-11-11-004.json",
-      "proofSha256": "ca8811437e7e8d6ec7ac32b7557a18ca590b46901d912613ced2733f71912961",
+      "proofSha256": "9e543e88ad5473613eb5209df2b715263e6f3cbd0202b0065d05c99e996e6445",
       "recordCount": 90
     },
     {
@@ -1790,7 +1790,7 @@
       "localBatchId": "mia-reconcile-2026-11-11-005",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/mia/mia-reconcile-2026-11-11-005.json",
-      "proofSha256": "8d1197e8a75040f4bce0ffa573e573814d2fa0220043b80521501c539e47a2b0",
+      "proofSha256": "751b15e392631437fbf2ae5966e9f75fc4d796fb83feaf954e48d0e3f19c4288",
       "recordCount": 1
     },
     {
@@ -1798,7 +1798,7 @@
       "localBatchId": "review-v120-2026-11-12-003",
       "publicationDate": "2026-11-12",
       "proofPath": "/publication-proofs/mia/review-v120-2026-11-12-003.json",
-      "proofSha256": "467444883c5ac74550f8e4bc2601e45b90cba3544629db1855256c4c288a9e1e",
+      "proofSha256": "5f8313aa17fc6fab04ecaacb201bb727e79520d8bb1934e64c50e3f2dc689027",
       "recordCount": 1
     },
     {
@@ -1806,7 +1806,7 @@
       "localBatchId": "review-v139-2026-11-13-001",
       "publicationDate": "2026-11-13",
       "proofPath": "/publication-proofs/mia/review-v139-2026-11-13-001.json",
-      "proofSha256": "b7babcd14022a49f929429d17f156c0b83e6071c16af379bc0be43bbc6bd9f97",
+      "proofSha256": "47353d7d4244972b7ad6be0038e8f3fd893d5a3707c5abf7b2de621c262608c1",
       "recordCount": 2
     },
     {
@@ -1814,7 +1814,7 @@
       "localBatchId": "v105-local-2026-11-11-002",
       "publicationDate": "2026-11-11",
       "proofPath": "/publication-proofs/mia/v105-local-2026-11-11-002.json",
-      "proofSha256": "1a8be0304597fe098d686353b58acbecb9a6b4f8b3d67df318334160a29955f6",
+      "proofSha256": "2f907b0b75dd5252ebdadfd62967d874cfd447d3da3927f8d160ac5e8a33662c",
       "recordCount": 5
     },
     {
@@ -1822,15 +1822,39 @@
       "localBatchId": "v106-pending-independent-2026-11-11-001",
       "publicationDate": "2026-11-11",
       "proofPath": "/publication-proofs/mia/v106-pending-independent-2026-11-11-001.json",
-      "proofSha256": "016611b9319c85ef24527a060670ab684fcafcb7dd80d1ceb4abf86bd05b4cef",
+      "proofSha256": "5888d3a55d848a1c181319e18ac5131d3f51d65d27e97f30c380eed15c2b2310",
       "recordCount": 1
+    },
+    {
+      "provider": "npm",
+      "localBatchId": "npm-2026-11-18-001",
+      "publicationDate": "2026-11-18",
+      "proofPath": "/publication-proofs/npm/npm-2026-11-18-001.json",
+      "proofSha256": "6ba7eb5676f978766780970a6782e2bf125c0f90395dc43c05c4d559074a9702",
+      "recordCount": 1
+    },
+    {
+      "provider": "npm",
+      "localBatchId": "npm-2026-11-18-002",
+      "publicationDate": "2026-11-18",
+      "proofPath": "/publication-proofs/npm/npm-2026-11-18-002.json",
+      "proofSha256": "a55080c12b60739d74f7b1aa8f21104b33aac42e9540f445ed10a2199aed1bee",
+      "recordCount": 4
+    },
+    {
+      "provider": "npm",
+      "localBatchId": "npm-2026-11-18-003",
+      "publicationDate": "2026-11-18",
+      "proofPath": "/publication-proofs/npm/npm-2026-11-18-003.json",
+      "proofSha256": "b92011b9265c61a69a1f110ff4c2af4f5ef720006705ab8ef167f1a71c895e44",
+      "recordCount": 19
     },
     {
       "provider": "si",
       "localBatchId": "review-v119-2026-11-12-001",
       "publicationDate": "2026-11-12",
       "proofPath": "/publication-proofs/si/review-v119-2026-11-12-001.json",
-      "proofSha256": "e73c72da1952837038fabb3e03545872b46caac6a3cad5e2832022d5769ec884",
+      "proofSha256": "e410c196e529f171398da2e63717382b3f001fc3e7d8969ac7d0b9a96037bf8e",
       "recordCount": 1
     },
     {
@@ -1838,7 +1862,7 @@
       "localBatchId": "si-2026-10-28-001",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/si/si-2026-10-28-001.json",
-      "proofSha256": "43f027b220ddc6a5488d6ca0941b78dc2d9898056afd9f0dd2bbce97597c1729",
+      "proofSha256": "fc8ce10d89adabab7f7ae1d4ed630756946bb1544e334d349328797f63a5e0c0",
       "recordCount": 42
     },
     {
@@ -1846,7 +1870,7 @@
       "localBatchId": "si-2026-10-28-002",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/si/si-2026-10-28-002.json",
-      "proofSha256": "32aba9d68815cf3580b06282c463b9461a91473067e2e2a2094c6c769cab7ea9",
+      "proofSha256": "c4661efbb5e8704372ebef77ee75849b85881d802cfc1dccc51a122f6d89926d",
       "recordCount": 90
     },
     {
@@ -1854,7 +1878,7 @@
       "localBatchId": "si-2026-10-28-003",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/si/si-2026-10-28-003.json",
-      "proofSha256": "e6f1d2ae92aaf82819599ace06c6151ee3f462063f60410e17fc8ab90928c150",
+      "proofSha256": "b016ee81a9757f697c332f4a91b73db2da72b0bd8c2a0d117cd981f998139322",
       "recordCount": 4
     },
     {
@@ -1862,7 +1886,7 @@
       "localBatchId": "si-2026-10-28-004",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/si/si-2026-10-28-004.json",
-      "proofSha256": "55118a715b92cb81c147bb5ddf55ecdbeadacb04739a15e25d81eefcb585714c",
+      "proofSha256": "e30472580062a6d19a7f1c02d0a4b876dd9afb5293f67497d68978b7c9e503a9",
       "recordCount": 82
     },
     {
@@ -1870,7 +1894,7 @@
       "localBatchId": "si-2026-10-28-005",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/si/si-2026-10-28-005.json",
-      "proofSha256": "3188141114f9deab945b84034f8d30de62b794bfe221de39f69440e206a5f63e",
+      "proofSha256": "bb3e7131a852f5a56728878adee03ef958296dab2ffd37eec38f03b3e5f0889a",
       "recordCount": 213
     },
     {
@@ -1878,7 +1902,7 @@
       "localBatchId": "si-2026-10-28-006",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/si/si-2026-10-28-006.json",
-      "proofSha256": "2f21ac48334900d870640df409b7705282395a9be62f1f3cdee90b419da18798",
+      "proofSha256": "f1be43b239c082cf09de9a496d2fee434d8556ae981e7d186d93d3ff977bff0d",
       "recordCount": 59
     },
     {
@@ -1886,7 +1910,7 @@
       "localBatchId": "si-2026-10-28-007",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/si/si-2026-10-28-007.json",
-      "proofSha256": "4ea8c4614049d2dfe4896ce163baa33d32f675bcef27fc1b6ffabd59ed0a1f5f",
+      "proofSha256": "bf9d2612639e7d6c5c963d132d09a9446e9a0eb9e48e9a8744024147420b39ee",
       "recordCount": 11
     },
     {
@@ -1894,7 +1918,7 @@
       "localBatchId": "si-2026-10-28-008",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/si/si-2026-10-28-008.json",
-      "proofSha256": "d172d2b3a5e4cb4b6eda8faed6cd92cb41ea9f5813a7f67d4a2c2f9274038c4d",
+      "proofSha256": "2cf92f7121ed9c19f33aedee89eaacc81dd69efc504ebe335bde2442256b3719",
       "recordCount": 5
     },
     {
@@ -1902,7 +1926,7 @@
       "localBatchId": "si-2026-10-28-009",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/si/si-2026-10-28-009.json",
-      "proofSha256": "408e03c3b0c26d4f1006ecd9da6bf41f82c6dc86a7ce5690c9639a1683c9b2a9",
+      "proofSha256": "4741042052d549be3282114bc5bdb702568e85f24070b319f16e6d4c2870162e",
       "recordCount": 1
     },
     {
@@ -1910,7 +1934,7 @@
       "localBatchId": "si-2026-10-28-011",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/si/si-2026-10-28-011.json",
-      "proofSha256": "f4eead67b54c058a26519d37bf4cbde67344a749e655cf04d755ee4538d31adf",
+      "proofSha256": "4f6ff038b1de008365adba3d61055137e20cb6990f3b6675866d515c7c522f7b",
       "recordCount": 1
     },
     {
@@ -1918,7 +1942,7 @@
       "localBatchId": "si-2026-10-28-012",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/si/si-2026-10-28-012.json",
-      "proofSha256": "4ca1f214bdad32f38687ea80ead0e188adf1c3845c02c392e4e1ab79210af1ad",
+      "proofSha256": "f84827a3b4f087eb402b286a210cd5841909bdb4857e3444cc95e68a9956d76c",
       "recordCount": 80
     },
     {
@@ -1926,7 +1950,7 @@
       "localBatchId": "si-2026-10-28-013",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/si/si-2026-10-28-013.json",
-      "proofSha256": "e5a58fb581a2a5be41f9fe9e6602871825a8344082c1aa75431fc7d2c698a411",
+      "proofSha256": "1cb3c8c5ed77a088fdbcca6873a9c6dafa903ee4a91cc9671956ba0bd684bcfa",
       "recordCount": 154
     },
     {
@@ -1934,7 +1958,7 @@
       "localBatchId": "si-2026-10-28-014",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/si/si-2026-10-28-014.json",
-      "proofSha256": "82a7705441fd4d06d7ee7bf4c41c3f94157cf2a97e35a1482ce4641eea73ec76",
+      "proofSha256": "2064b64d95b192aa572f562125d04c7679cc12229c665dfaa367dc6a3dd1b764",
       "recordCount": 16
     },
     {
@@ -1942,7 +1966,7 @@
       "localBatchId": "si-2026-10-29-001",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/si/si-2026-10-29-001.json",
-      "proofSha256": "64dbe44af781c2d7717808f1701499dc1e31ca39973e3b94228cdd0d2f23f7b9",
+      "proofSha256": "cc2ec4816fd9d9673bcf72c75a8c306a7d69c53cfed2c9009f248def034f9a0d",
       "recordCount": 10
     },
     {
@@ -1950,7 +1974,7 @@
       "localBatchId": "si-2026-10-29-015",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/si/si-2026-10-29-015.json",
-      "proofSha256": "09e629363df0c6d2781ca0e81da5bbb1353c71c84e2ddc5263ac789698cec381",
+      "proofSha256": "57010b418cd56ff30d65424946777d7ed6e9ae11a4b4ae321b0de1a7b0841f87",
       "recordCount": 12
     },
     {
@@ -1958,7 +1982,7 @@
       "localBatchId": "si-2026-10-29-016",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/si/si-2026-10-29-016.json",
-      "proofSha256": "c786e83e2dd8a59472934932035d4fab520eb69632f6454f7c94abf3b0e215a2",
+      "proofSha256": "aaaa42d0d1c7e9c96411f73448ad9af1eb72b78856c41231b641f7841b95e1f8",
       "recordCount": 17
     },
     {
@@ -1966,7 +1990,7 @@
       "localBatchId": "si-2026-10-29-017",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/si/si-2026-10-29-017.json",
-      "proofSha256": "5f3b975ba722815f28936b03979d1a48a3d89965e6b5afbec94334f837e7b79f",
+      "proofSha256": "24540767b60a198de2bb4b5919f44e4cbc87aa1d524e41f300ce1694abef2859",
       "recordCount": 14
     },
     {
@@ -1974,7 +1998,7 @@
       "localBatchId": "si-2026-10-29-018",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/si/si-2026-10-29-018.json",
-      "proofSha256": "66494200bba80790306c0167e57603c990938e685e695e1b346d0b50ad2a5260",
+      "proofSha256": "e36a338581f43d14a7148378234a88a81c3ed14d1175a53a75af2514459c657f",
       "recordCount": 12
     },
     {
@@ -1982,7 +2006,7 @@
       "localBatchId": "si-2026-10-29-019",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/si/si-2026-10-29-019.json",
-      "proofSha256": "bd31c2f95f653dbf3457e6db099c8e48e9a930eeb436e2d83e0475ca6986dde4",
+      "proofSha256": "1efd46ef77e971dd174fa44689c2cbe24de363d0086131658162fb8217ff4883",
       "recordCount": 11
     },
     {
@@ -1990,7 +2014,7 @@
       "localBatchId": "si-2026-10-29-020",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/si/si-2026-10-29-020.json",
-      "proofSha256": "f909b675c2d0ca63f2478283a329f548ea31ab7c72e27389ffcefbf3673bbe80",
+      "proofSha256": "1ea87c7042d7efe835a74375522ad1aee42784c7fdd1c10f842413a34c2c0e0f",
       "recordCount": 15
     },
     {
@@ -1998,7 +2022,7 @@
       "localBatchId": "si-2026-10-29-021",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/si/si-2026-10-29-021.json",
-      "proofSha256": "a2f290640614ca4cb151f01c486f5bca67c5aa3ac549ae4a0606dd14a6348a53",
+      "proofSha256": "746eaf5d3a015ea34599be512c63ba80d5dbf315ab7281608faba853a8d9d061",
       "recordCount": 18
     },
     {
@@ -2006,7 +2030,7 @@
       "localBatchId": "si-2026-10-29-022",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/si/si-2026-10-29-022.json",
-      "proofSha256": "6738a017c5cd052edb5ece91a5520d89f49cd1b24cf4ab3ea2c075b8d170adbe",
+      "proofSha256": "d698fde9d867eb44b9166fc84bc320d62aeb125933959e52e2cf1f0db643a4a7",
       "recordCount": 14
     },
     {
@@ -2014,7 +2038,7 @@
       "localBatchId": "si-2026-10-29-023",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/si/si-2026-10-29-023.json",
-      "proofSha256": "b125c043734eb946ddfa536ccd3dbc15865fdaf3ff3b07a2a28aa07f1e8c4794",
+      "proofSha256": "59d14d7972d4aa1cbfde2fbee670fd7ced42cc8ed5feea39b9a9c97d7d17629d",
       "recordCount": 15
     },
     {
@@ -2022,7 +2046,7 @@
       "localBatchId": "si-2026-10-29-024",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/si/si-2026-10-29-024.json",
-      "proofSha256": "e4d3fa5e4590ef52e68608031f28b5c3063cb9a47c6ced8bc545a6a09f176e9d",
+      "proofSha256": "8730a248935ca648c7887758efdb961cb8c58ff937dfea157b399aa38bf79a65",
       "recordCount": 18
     },
     {
@@ -2030,7 +2054,7 @@
       "localBatchId": "si-2026-10-29-025",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/si/si-2026-10-29-025.json",
-      "proofSha256": "bcdd4fb7f4fd6f92321c03152843f6ad0a130db736beab77aa40ce5d6b22017c",
+      "proofSha256": "0874d9fd004b91bdcab161abddb7423abd4dde3eafc403c2354080ebac2698b7",
       "recordCount": 12
     },
     {
@@ -2038,7 +2062,7 @@
       "localBatchId": "si-2026-10-29-026",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/si/si-2026-10-29-026.json",
-      "proofSha256": "eb61427bda6685b41d0130a9e256579c3715f5a3811111d15fe26c0cd017f920",
+      "proofSha256": "8d964d6ac9f94b2f1c0ba7c287a0c5e350c1716475f1081f5bb445b1e086d877",
       "recordCount": 2
     },
     {
@@ -2046,7 +2070,7 @@
       "localBatchId": "si-2026-11-03-001",
       "publicationDate": "2026-11-03",
       "proofPath": "/publication-proofs/si/si-2026-11-03-001.json",
-      "proofSha256": "d9644d2db22fe4ac917fdfc699e8c6af883d4f91744cf8b5a1c605a2cbf3e23c",
+      "proofSha256": "137db4f495e0add8e49751af47bdcd3b6ff3b9589924545b04a685dcb2e2beba",
       "recordCount": 23
     },
     {
@@ -2054,7 +2078,7 @@
       "localBatchId": "si-2026-11-03-002",
       "publicationDate": "2026-11-03",
       "proofPath": "/publication-proofs/si/si-2026-11-03-002.json",
-      "proofSha256": "52f7dd6e52401c03fdb1dadc818b7141e905e1ec9e07564f5a9908c93c21fe43",
+      "proofSha256": "090f001b0d9a547bb18ca9a5825230d997e428aec1bb33feba761efe5b5f2107",
       "recordCount": 12
     },
     {
@@ -2062,7 +2086,7 @@
       "localBatchId": "si-2026-11-03-003",
       "publicationDate": "2026-11-03",
       "proofPath": "/publication-proofs/si/si-2026-11-03-003.json",
-      "proofSha256": "ee7f53916ccd768f3c2069a2872a89001fdba1712f541860302ebef45dfda032",
+      "proofSha256": "0b777aca24b17ca8e5caee711d71d735f25141a9749f6a2639b9fca38486c4d9",
       "recordCount": 9
     },
     {
@@ -2070,7 +2094,7 @@
       "localBatchId": "si-2026-11-03-004",
       "publicationDate": "2026-11-03",
       "proofPath": "/publication-proofs/si/si-2026-11-03-004.json",
-      "proofSha256": "c54552f335738ad0bd79a9d35e9d052cbe45f6d2c4811c7ab518d1ebcccc5328",
+      "proofSha256": "b7edffc28cc74f88a4a0131ee887efef11ef8edd1d6840480a71ffd5bd34ff80",
       "recordCount": 3
     },
     {
@@ -2078,7 +2102,7 @@
       "localBatchId": "si-2026-11-05-905",
       "publicationDate": "2026-11-05",
       "proofPath": "/publication-proofs/si/si-2026-11-05-905.json",
-      "proofSha256": "9e126fd2bdb56f6235b857c8d4eaeb5f0029b863d1e13ea1dabaa7c3953a2bdd",
+      "proofSha256": "d898b90c6e9e74c829eb93899857b261a86f9d678ca85b4c3dd4884b30a14328",
       "recordCount": 4
     },
     {
@@ -2086,7 +2110,7 @@
       "localBatchId": "si-2026-11-09-001",
       "publicationDate": "2026-11-09",
       "proofPath": "/publication-proofs/si/si-2026-11-09-001.json",
-      "proofSha256": "1c85b80dc5ecbe9514be9a249c922e4128cf18de5a5f27d78f28a1b44b14e054",
+      "proofSha256": "b481f010eeb8f2b29f8f60ecb6eae219b80a3b8865d39c8b621905fd66803be7",
       "recordCount": 2
     },
     {
@@ -2094,7 +2118,7 @@
       "localBatchId": "si-bulk-2026-11-11-001",
       "publicationDate": "2026-11-11",
       "proofPath": "/publication-proofs/si/si-bulk-2026-11-11-001.json",
-      "proofSha256": "24d47e8fe882ce5aaa555eb385798b66e55970c42996e0384ac9527252979fe7",
+      "proofSha256": "c2fd5b01d025165f02be544f344867b38a8547d7564fd7092aab78deef6c71a9",
       "recordCount": 38
     },
     {
@@ -2102,7 +2126,7 @@
       "localBatchId": "si-bulk-2026-11-11-002",
       "publicationDate": "2026-11-11",
       "proofPath": "/publication-proofs/si/si-bulk-2026-11-11-002.json",
-      "proofSha256": "f24ef28fb41b044e52a72aebe1f8c63bdce232cf0b2e7a2dd564d8e0c8bf9abd",
+      "proofSha256": "c32a33c08f4e9eb4d657845a4a3f1cd85e534fba2256049b147ba98ecc0f4631",
       "recordCount": 44
     },
     {
@@ -2110,15 +2134,23 @@
       "localBatchId": "si-bulk-2026-11-11-003",
       "publicationDate": "2026-11-11",
       "proofPath": "/publication-proofs/si/si-bulk-2026-11-11-003.json",
-      "proofSha256": "4ea8f74fd57301a2f5891aba9e0bc03714b02461f5aa32b98388ea4f59aca63f",
+      "proofSha256": "2621ea335fbc0295e0a1199add93d72d071b384faf3aecd06e5412569b7f165b",
       "recordCount": 47
+    },
+    {
+      "provider": "si",
+      "localBatchId": "si-bulk-2026-11-18-001",
+      "publicationDate": "2026-11-18",
+      "proofPath": "/publication-proofs/si/si-bulk-2026-11-18-001.json",
+      "proofSha256": "b791c83b57789fb91ddf4bd323b8f73429f9a61c440f08c46fb084fe7ecf238b",
+      "recordCount": 17
     },
     {
       "provider": "si",
       "localBatchId": "si-reconcile-2026-11-11-001",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/si/si-reconcile-2026-11-11-001.json",
-      "proofSha256": "9de5a9ae53e86882b0f37b5cfa1b6e041e386538823aeec0584749135b0a5020",
+      "proofSha256": "a389e28335ab15bd38538a9eea7a4ad09ed3d29c81cd984e271809657e2c512a",
       "recordCount": 141
     },
     {
@@ -2126,7 +2158,7 @@
       "localBatchId": "si-reconcile-2026-11-11-002",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/si/si-reconcile-2026-11-11-002.json",
-      "proofSha256": "db30d09d53e7b61db324081ed7a069b75be64284481ba5fed757a6bfa29b02cd",
+      "proofSha256": "d5fc2fb193c88bb30f9ecb9d9ed5423f5552505dabbc18837f93310721b7115e",
       "recordCount": 128
     },
     {
@@ -2134,7 +2166,7 @@
       "localBatchId": "si-reconcile-2026-11-11-003",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/si/si-reconcile-2026-11-11-003.json",
-      "proofSha256": "f417b703ccc999e32254817ebe386e865d60e3f54b5765aa136b7dbd2a010fe0",
+      "proofSha256": "b031304a8d6d70d8e4bfac5e85c9f12de86dc2f5d0813a040e90eef7fa72fba6",
       "recordCount": 143
     },
     {
@@ -2142,7 +2174,7 @@
       "localBatchId": "si-reconcile-2026-11-11-004",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/si/si-reconcile-2026-11-11-004.json",
-      "proofSha256": "72170131d0dc406549a0372acabfd06996a6dd2a9056a6b9e13ca8d74e87578c",
+      "proofSha256": "ec6ff84d4c3a163e5ec2de226a54af440d58213fa8ed25cd8299ecaeed8661f6",
       "recordCount": 134
     },
     {
@@ -2150,7 +2182,7 @@
       "localBatchId": "si-reconcile-2026-11-11-005",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/si/si-reconcile-2026-11-11-005.json",
-      "proofSha256": "5f35270854d8e98fe61f09e8ca225f83facaea4751fd3d7e687c026951f0ca78",
+      "proofSha256": "c4543c13a39652df3ea8c7912b1631f87fb9451f06cd844124409b8ec440c1f0",
       "recordCount": 147
     },
     {
@@ -2158,7 +2190,7 @@
       "localBatchId": "si-reconcile-2026-11-11-006",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/si/si-reconcile-2026-11-11-006.json",
-      "proofSha256": "f900795b8d40b9ef2d20c27d16c1fdf1016d5b7d2f92e89c6927a6915d35e5d9",
+      "proofSha256": "3a0b403b8101f69d1f1b708ea6fa733e353793e992574c2e454e3b24228fbd48",
       "recordCount": 167
     },
     {
@@ -2166,7 +2198,7 @@
       "localBatchId": "si-reconcile-2026-11-11-007",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/si/si-reconcile-2026-11-11-007.json",
-      "proofSha256": "8412d6c010d3aeba65d86d3f604a4784d88d6030146f6f6816feaa5670bb7175",
+      "proofSha256": "52ee30d718767810f0a7bd71269337974dac48d9b7205af9dfc5c5b77db6063a",
       "recordCount": 151
     },
     {
@@ -2174,7 +2206,7 @@
       "localBatchId": "si-reconcile-2026-11-11-008",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/si/si-reconcile-2026-11-11-008.json",
-      "proofSha256": "2703749a72dd1f4cfea439796a73e42ec643531845c8461854616003eacfc977",
+      "proofSha256": "4be7308db1ce50b52932fd90751ad9735a9812b86639870fe9b17e16ac490511",
       "recordCount": 3
     },
     {
@@ -2182,7 +2214,7 @@
       "localBatchId": "si-reconcile-2026-11-11-009",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/si/si-reconcile-2026-11-11-009.json",
-      "proofSha256": "3c42093ebe0ddb0c9377c25617d62f47fc6e39c68f3147b677beddb5a3bebef3",
+      "proofSha256": "c132a5c2d913aef10af918b07b4948d1bbe934fd584f2b0d2b35be13b72475fd",
       "recordCount": 1
     },
     {
@@ -2190,7 +2222,7 @@
       "localBatchId": "v109-si-approx-2026-11-11-001",
       "publicationDate": "2026-11-11",
       "proofPath": "/publication-proofs/si/v109-si-approx-2026-11-11-001.json",
-      "proofSha256": "8bd5482d6b0fdb5c16290179b343e2ac20bf9141ab257192a582bb1c5f34fb6a",
+      "proofSha256": "b7d908823d7a605251a83e315fad4b93dde0e9dfd99e6f7c5645cf9b1857d525",
       "recordCount": 5
     },
     {
@@ -2198,7 +2230,7 @@
       "localBatchId": "v109-si-approx-2026-11-11-002",
       "publicationDate": "2026-11-11",
       "proofPath": "/publication-proofs/si/v109-si-approx-2026-11-11-002.json",
-      "proofSha256": "2fe74d77beaa408069cbde9fb5559ae029ef30e7eb76cc540e6c2d4a45e922ec",
+      "proofSha256": "30e5aa90b17069d4c13113d4f38987716b8b266b630447350e9d9e07f7b9aa47",
       "recordCount": 3
     },
     {
@@ -2206,7 +2238,7 @@
       "localBatchId": "review-v142-2026-11-13-001",
       "publicationDate": "2026-11-13",
       "proofPath": "/publication-proofs/wellcome/review-v142-2026-11-13-001.json",
-      "proofSha256": "6249390dee46e03555f14209fdc65c4a0027e193aaba95cbf0c119e1a6d77d70",
+      "proofSha256": "75415184444a3e1cfe75f436a8de4021f0f97adde15d9a7bb53020bba3a7de51",
       "recordCount": 1
     },
     {
@@ -2214,7 +2246,7 @@
       "localBatchId": "review-v143-2026-11-13-001",
       "publicationDate": "2026-11-13",
       "proofPath": "/publication-proofs/wellcome/review-v143-2026-11-13-001.json",
-      "proofSha256": "ce1d5805b3c34207d09c4573b68422b35ebd9fd796255035e4296e885ce86c83",
+      "proofSha256": "bbbc423938a63ecbee53d6b222e131627970e8f2bfa2a4c29d207d2e4ceb88f5",
       "recordCount": 1
     },
     {
@@ -2222,7 +2254,7 @@
       "localBatchId": "v76-visual-2026-11-10-002",
       "publicationDate": "2026-11-10",
       "proofPath": "/publication-proofs/wellcome/v76-visual-2026-11-10-002.json",
-      "proofSha256": "d44b721756b8cde9637c2d7a54cc71c6cdd14f6e3967597188d30455becde64a",
+      "proofSha256": "159ce02d8422b616194e09c466304838c53a4364378852a31d657827de9e9bcc",
       "recordCount": 1
     },
     {
@@ -2230,7 +2262,7 @@
       "localBatchId": "wellcome-2026-10-28-001",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/wellcome/wellcome-2026-10-28-001.json",
-      "proofSha256": "4bd912b8770888f87125723dd1d83f8ce6bf77330af3180c0439f0d30ef7a1f4",
+      "proofSha256": "2adbf375dad07842392de59b0943fedac0532977009ce0949ac0d50dfeef8a78",
       "recordCount": 12
     },
     {
@@ -2238,7 +2270,7 @@
       "localBatchId": "wellcome-2026-10-28-002",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/wellcome/wellcome-2026-10-28-002.json",
-      "proofSha256": "399a00fd66a8dc385ca5cad9a530770117d4ff5805696aa84da2d2575fdcc047",
+      "proofSha256": "d317cd39155ce88d49e0b944ae362ccb67ad72d6a9a9d59803ef2e6e1f0d1aab",
       "recordCount": 39
     },
     {
@@ -2246,7 +2278,7 @@
       "localBatchId": "wellcome-2026-10-28-003",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/wellcome/wellcome-2026-10-28-003.json",
-      "proofSha256": "597e9c6b927f1d6db031fb8001279b4953d6ff389c0475c1b8decd524ad66058",
+      "proofSha256": "363c9c5a7644463f9409fc7369e2e8953d40d3764ce1c34e301dfdcf15741029",
       "recordCount": 47
     },
     {
@@ -2254,7 +2286,7 @@
       "localBatchId": "wellcome-2026-10-28-004",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/wellcome/wellcome-2026-10-28-004.json",
-      "proofSha256": "f1b2cd8611e927e5187f1a4b5cf1c40f05b99d2269613008e31b6478c25677b4",
+      "proofSha256": "72c35dad2d654a5fb4e8e419f07ba2026b1078481c33e21937ccd08ca858db30",
       "recordCount": 22
     },
     {
@@ -2262,7 +2294,7 @@
       "localBatchId": "wellcome-2026-10-28-005",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/wellcome/wellcome-2026-10-28-005.json",
-      "proofSha256": "ba67d8f5d0de95b9967b357571fb8ba2990681a4bb29a062bbd50d56d35b5e3a",
+      "proofSha256": "65eda693fd2cc2c93e901115280fad0f9d2b43fd12d3b45ace25a8a1dedb4c3a",
       "recordCount": 19
     },
     {
@@ -2270,7 +2302,7 @@
       "localBatchId": "wellcome-2026-10-28-006",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/wellcome/wellcome-2026-10-28-006.json",
-      "proofSha256": "ff414407b7adee6b2e180303cb851a1339ca705f4e28e52b653c13d85fab49dc",
+      "proofSha256": "77c95251b92f1cb9973fdc69c7eb20b38455b38a8816580a980ae498bcc11ee0",
       "recordCount": 14
     },
     {
@@ -2278,7 +2310,7 @@
       "localBatchId": "wellcome-2026-10-28-008",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/wellcome/wellcome-2026-10-28-008.json",
-      "proofSha256": "6b8f4a533c2e341cb67a5a4556697b2d43c5f39cfcf002b9958cf0f32eb3ca1b",
+      "proofSha256": "8ccbe156c75702c90ced06ff80462627c62d7e719587083470f46ef280047ccd",
       "recordCount": 9
     },
     {
@@ -2286,7 +2318,7 @@
       "localBatchId": "wellcome-2026-10-28-009",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/wellcome/wellcome-2026-10-28-009.json",
-      "proofSha256": "b3c0c27dab97f04186372755b2f2c7553d8f9ae8c33f60a566350d53cddec963",
+      "proofSha256": "4556012deab3592f10d7d94e20d86e018bc3dc9d963b724bffa82800dfeae907",
       "recordCount": 6
     },
     {
@@ -2294,7 +2326,7 @@
       "localBatchId": "wellcome-2026-10-28-010",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/wellcome/wellcome-2026-10-28-010.json",
-      "proofSha256": "625b685424b6ca7d6f0da899cdf9fe76d4c8eefb48d86cc8251d9268d5a8bb96",
+      "proofSha256": "e70fa868cc8daa1f30d736b31720e580a939b500bd8a44238de38931dd9e2f8e",
       "recordCount": 10
     },
     {
@@ -2302,7 +2334,7 @@
       "localBatchId": "wellcome-2026-10-28-011",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/wellcome/wellcome-2026-10-28-011.json",
-      "proofSha256": "b82245de7eec56ea17a92c415c7d803a99d63bf91ab56d7d1db9e9504a2916ec",
+      "proofSha256": "1cf81a1278314557d4e1a281b1abc8b8b45e417c25739025bf3dd0ce9e5ab029",
       "recordCount": 15
     },
     {
@@ -2310,7 +2342,7 @@
       "localBatchId": "wellcome-2026-10-28-012",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/wellcome/wellcome-2026-10-28-012.json",
-      "proofSha256": "000f6f46bbd5ad0265afd8bd85b6b279e65044317e72cdc35858668f93e60746",
+      "proofSha256": "bbc8c34a92246534c86402b7f9b9a61b49475722bcfdbea6d3fa5fd5fa196227",
       "recordCount": 7
     },
     {
@@ -2318,7 +2350,7 @@
       "localBatchId": "wellcome-2026-10-28-013",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/wellcome/wellcome-2026-10-28-013.json",
-      "proofSha256": "a4009010e5fadb8ddac9bca04ebc2c31d90e96ff196b9ab08f2d5ed9ff41fc02",
+      "proofSha256": "65f5b48ed424f793b3d59c633f03439bc361bed302fe02d405aa1dfcd3db4646",
       "recordCount": 7
     },
     {
@@ -2326,7 +2358,7 @@
       "localBatchId": "wellcome-2026-10-28-015",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/wellcome/wellcome-2026-10-28-015.json",
-      "proofSha256": "d5304baec72c7c57d27bf25392aa620a65710a60bee91a4590dca53f40022bbc",
+      "proofSha256": "fc57c71f5fadc6151048be97210dff71c2de306c032248f0892da142a96b8164",
       "recordCount": 7
     },
     {
@@ -2334,7 +2366,7 @@
       "localBatchId": "wellcome-2026-10-28-018",
       "publicationDate": "2026-10-28",
       "proofPath": "/publication-proofs/wellcome/wellcome-2026-10-28-018.json",
-      "proofSha256": "d85ffb45c80a3e73651ac0ef5712e729f74f0fcfb682b8613aee5a51b1d4c200",
+      "proofSha256": "7c2014e1c42b0534bc1ccb1c9860b4e758f2a9d0b0f06c4a12c699a9edae9c01",
       "recordCount": 18
     },
     {
@@ -2342,7 +2374,7 @@
       "localBatchId": "wellcome-2026-10-28-019",
       "publicationDate": "2026-10-29",
       "proofPath": "/publication-proofs/wellcome/wellcome-2026-10-28-019.json",
-      "proofSha256": "8d9448ec7feb1ebb353676392beb99482e62dcf9865dbc7814dc6910ae1a4cf7",
+      "proofSha256": "5aed2df498aa1a9c8dbd3ff550cbda3c8ac9bd4a4b57c9674cdad99097e3b70c",
       "recordCount": 47
     }
   ]
