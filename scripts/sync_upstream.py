@@ -686,6 +686,113 @@ def norm_zh_rel(base_doc: str, raw_ref: str):
     return norm
 
 
+_ZH_CATALOG_LOADER_RE = re.compile(r'(?<![\w./-])(?:\./|/)?catalog-loader\.js\?v=[0-9a-f]{12,64}', re.I)
+_ZH_CATALOG_RECORD_RE = re.compile(r'(?<![\w./-])(?:\./|/)?catalog-records-([1-9][0-9]*)\.js\?v=[0-9a-f]{12,64}', re.I)
+_ZH_CATALOG_BASE_RE = re.compile(r'(?<![\w./-])(?:\./|/)?catalog-base\.json\.gz\?v=[0-9a-f]{12,64}', re.I)
+
+
+def _fetch_zhonghua_catalog_verified(base: str, ref: str) -> bytes:
+    status, body = fetch_bytes(urllib.parse.urljoin(base, ref), retries=3, timeout=30)
+    if status != 200 or not body:
+        raise RuntimeError(f"中华文明原站目录资源不可用：{ref} (HTTP {status})")
+    version_match = re.search(r"[?&]v=([0-9a-f]{12,64})(?:&|$)", ref, flags=re.I)
+    if not version_match:
+        raise RuntimeError(f"中华文明原站目录资源无版本哈希：{ref}")
+    expected = version_match.group(1).lower()
+    actual = sha256_bytes(body)
+    if not actual.startswith(expected):
+        raise RuntimeError(f"中华文明原站目录资源哈希不符：{ref} (SHA-256 {actual[:12]})")
+    return body
+
+
+def _probe_zhonghua_catalog_asset(base: str, ref: str) -> str:
+    """Check a catalog resource without downloading its multi-megabyte body."""
+    url = urllib.parse.urljoin(base, ref)
+    head_status = 0
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept-Encoding": "identity"}, method="HEAD")
+        with urllib.request.urlopen(req, timeout=12) as response:
+            head_status = response.status
+            length = response.headers.get("Content-Length")
+            if head_status == 200 and length and length.isdigit() and int(length) > 0:
+                return length
+    except urllib.error.HTTPError as error:
+        head_status = error.code
+    except Exception:
+        pass
+
+    # Some origins reject HEAD or omit Content-Length. Read only one byte even
+    # when the server ignores Range, so the health check remains lightweight.
+    try:
+        req = urllib.request.Request(
+            url,
+            headers={"User-Agent": UA, "Accept-Encoding": "identity", "Range": "bytes=0-0"},
+        )
+        with urllib.request.urlopen(req, timeout=12) as response:
+            if response.status not in (200, 206) or not response.read(1):
+                raise RuntimeError(f"中华文明原站目录资源为空：{ref} (HTTP {response.status})")
+            content_range = response.headers.get("Content-Range", "")
+            total = content_range.rsplit("/", 1)[-1] if "/" in content_range else ""
+            if total.isdigit() and int(total) > 0:
+                return total
+            length = response.headers.get("Content-Length", "") if response.status == 200 else ""
+            return length if length.isdigit() and int(length) > 0 else ">=1"
+    except urllib.error.HTTPError as error:
+        raise RuntimeError(f"中华文明原站目录资源不可用：{ref} (HEAD {head_status}, GET {error.code})") from error
+    except RuntimeError:
+        raise
+    except Exception as error:
+        raise RuntimeError(f"中华文明原站目录资源不可用：{ref} (HEAD {head_status}, Range GET 失败)") from error
+
+
+def probe_zhonghua_catalog_upstream(base: str, index_bytes: bytes) -> tuple[list[str], dict[str, bytes], str]:
+    """Parse the loader and check every declared catalog asset before sync."""
+    index_text = index_bytes.decode("utf-8", errors="replace")
+    loader_refs = set(_ZH_CATALOG_LOADER_RE.findall(index_text))
+    if len(loader_refs) > 1:
+        raise RuntimeError("中华文明原站目录有多个不同版本的 catalog-loader.js")
+
+    verified_loader = {}
+    catalog_text = index_text
+    if loader_refs:
+        loader_ref = next(iter(loader_refs))
+        loader_rel = norm_zh_rel("index.html", loader_ref)
+        loader_bytes = _fetch_zhonghua_catalog_verified(base, loader_ref)
+        verified_loader[loader_rel] = loader_bytes
+        catalog_text += "\n" + loader_bytes.decode("utf-8", errors="replace")
+
+    record_refs = {}
+    for match in _ZH_CATALOG_RECORD_RE.finditer(catalog_text):
+        number = int(match.group(1))
+        ref = match.group(0)
+        if number in record_refs and record_refs[number] != ref:
+            raise RuntimeError(f"中华文明原站目录分片 {number} 有多个版本")
+        record_refs[number] = ref
+    if not record_refs:
+        raise RuntimeError("中华文明原站未声明 catalog-records 分片，停止覆盖镜像")
+    if sorted(record_refs) != list(range(1, max(record_refs) + 1)):
+        raise RuntimeError("中华文明原站 catalog-records 分片编号不连续")
+
+    base_refs = set(_ZH_CATALOG_BASE_RE.findall(catalog_text))
+    if len(base_refs) > 1:
+        raise RuntimeError("中华文明原站目录基础数据有多个版本")
+    refs = [*record_refs.values(), *base_refs]
+    health = [f"{ref}:{_probe_zhonghua_catalog_asset(base, ref)}" for ref in refs]
+    fingerprint = sha256_bytes("\n".join([*health, sha256_bytes(catalog_text.encode("utf-8"))]).encode("utf-8"))
+    return refs, verified_loader, fingerprint
+
+
+def verify_zhonghua_catalog_upstream(base: str, refs: list[str], verified_loader: dict[str, bytes]) -> dict[str, bytes]:
+    """Only on a changed snapshot, fully hash and cache every catalog asset."""
+    verified = dict(verified_loader)
+    for ref in refs:
+        rel = norm_zh_rel("index.html", ref)
+        if not rel:
+            raise RuntimeError(f"中华文明原站目录引用无效：{ref}")
+        verified[rel] = _fetch_zhonghua_catalog_verified(base, ref)
+    return verified
+
+
 ZH_OLD_UNPACK_1 = '((k,d,x)=>{const u=v=>{if(Array.isArray(v))return v.map(u);if(!v||typeof v!=="object")return v;if(Object.hasOwn(v,"$s"))return d[v.$s];const a=v.$o,p=[];for(let i=0;i<a.length;i+=2)p.push([k[a[i]],u(a[i+1])]);return Object.fromEntries(p)};return u(x)})'
 ZH_NEW_UNPACK_1 = '((k,d,x)=>{const u=v=>{if(Array.isArray(v)){const n=v.length,r=new Array(n);for(let i=0;i<n;i++)r[i]=u(v[i]);return r}if(!v||typeof v!=="object")return v;if(v.$s!==undefined)return d[v.$s];const a=v.$o,o={};for(let i=0;i<a.length;i+=2)o[k[a[i]]]=u(a[i+1]);return o};return u(x)})'
 ZH_OLD_UNPACK_2 = '((d,x)=>{const u=v=>Array.isArray(v)?v.map(u):v&&typeof v==="object"?(Object.hasOwn(v,"$s")?d[v.$s]:Object.fromEntries(Object.entries(v).map(([k,w])=>[k,u(w)]))):v;return u(x)})'
@@ -912,7 +1019,6 @@ def optimize_zhonghua_site(site_dir: Path) -> dict:
 
 
 def sync_zhonghua(site_dir: Path, auto_push: bool = True) -> dict:
-    git_prepare_repo(site_dir, auto_push)
     host = "zhonghua-civilization-atlas.fondcream1.chatgpt.site"
     try:
         with urllib.request.urlopen(urllib.request.Request(f"https://{host}/", headers={"User-Agent": UA}), timeout=15) as r_eff:
@@ -926,15 +1032,21 @@ def sync_zhonghua(site_dir: Path, auto_push: bool = True) -> dict:
     # Quick probe on index.html + data.js + daily-batch.js + app.js
     probe_files = ["index.html", "data.js", "daily-batch.js", "app.js", "song-data.js", "liao-data.js"]
     probe_parts = []
+    index_bytes = b""
     for pf in probe_files:
         st_p, b_p = fetch_bytes(base + ("" if pf == "index.html" else pf))
-        if pf == "index.html" and st_p != 200:
+        if pf == "index.html" and (st_p != 200 or not b_p):
             return {"site": "zhonghua", "status": "upstream_skipped", "http": st_p}
         if st_p == 200:
             if pf.endswith(".html"):
                 b_p = strip_cf_challenge(b_p.decode("utf-8", "ignore")).encode("utf-8")
+                index_bytes = b_p
             probe_parts.append(sha256_bytes(b_p))
-    quick_fp = "|".join(probe_parts + [ZH_SHIM_REV])
+    catalog_refs, verified_loader, catalog_fp = probe_zhonghua_catalog_upstream(base, index_bytes)
+    # Keep the local mirror current with cloud commits even when this upstream
+    # snapshot is unchanged; a broken origin never reaches this Git operation.
+    git_prepare_repo(site_dir, auto_push)
+    quick_fp = "|".join(probe_parts + [catalog_fp, ZH_SHIM_REV])
 
     state_p = site_dir / ".sync_state.json"
     required_aux = (
@@ -948,9 +1060,13 @@ def sync_zhonghua(site_dir: Path, auto_push: bool = True) -> dict:
         except Exception:
             pass
 
+    # The quick pass reads only the small loader and response headers. Download
+    # and hash large catalog chunks only when a new snapshot is actually needed.
+    verified_catalog = verify_zhonghua_catalog_upstream(base, catalog_refs, verified_loader)
+
     text_exts = {".html", ".css", ".js", ".json", ".md", ".svg", ".txt"}
     asset_exts = {".webp", ".jpg", ".jpeg", ".png", ".gif", ".svg", ".ico", ".woff", ".woff2"}
-    to_visit = {"index.html", "site-version.json", "publication-proofs/build-report.json"}
+    to_visit = {"index.html", "site-version.json", "publication-proofs/build-report.json", *verified_catalog}
     visited = set()
     discovered_media = set()
     gate_tag = make_gate_script("金泰 AI · 中华文明影像库")
@@ -960,6 +1076,10 @@ def sync_zhonghua(site_dir: Path, auto_push: bool = True) -> dict:
         if not batch:
             break
         def dl_doc(rel):
+            if rel == "index.html":
+                return rel, 200, index_bytes
+            if rel in verified_catalog:
+                return rel, 200, verified_catalog[rel]
             u = base + ("" if rel == "index.html" else urllib.parse.quote(rel, safe="/"))
             s, b = fetch_bytes(u, retries=3, timeout=30)
             return rel, s, b
