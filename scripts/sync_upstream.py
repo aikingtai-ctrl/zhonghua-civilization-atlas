@@ -695,6 +695,11 @@ def _fetch_zhonghua_catalog_verified(base: str, ref: str) -> bytes:
     status, body = fetch_bytes(urllib.parse.urljoin(base, ref), retries=3, timeout=30)
     if status != 200 or not body:
         raise RuntimeError(f"中华文明原站目录资源不可用：{ref} (HTTP {status})")
+    # The gzip URL uses a cache revision, not the compressed response's hash.
+    if urllib.parse.urlsplit(ref).path.endswith("catalog-base.json.gz"):
+        if not (body.startswith(b"\x1f\x8b") or body.lstrip().startswith(b"{")):
+            raise RuntimeError(f"中华文明原站目录基础数据格式无效：{ref}")
+        return body
     version_match = re.search(r"[?&]v=([0-9a-f]{12,64})(?:&|$)", ref, flags=re.I)
     if not version_match:
         raise RuntimeError(f"中华文明原站目录资源无版本哈希：{ref}")
