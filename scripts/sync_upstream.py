@@ -27,6 +27,8 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
+_NO_WINDOW = getattr(subprocess, "CREATE_NO_WINDOW", 0x08000000) if os.name == "nt" else 0
+
 if getattr(sys, "stdout", None) is not None and hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
@@ -204,7 +206,7 @@ def check_html_js_syntax(html_path: Path):
         with tempfile.NamedTemporaryFile("w", suffix=".js", delete=False, encoding="utf-8") as tf:
             tf.write(code)
             tp = tf.name
-        r = subprocess.run(["node", "--check", tp], capture_output=True, text=True)
+        r = subprocess.run(["node", "--check", tp], capture_output=True, text=True, creationflags=_NO_WINDOW)
         Path(tp).unlink(missing_ok=True)
         if r.returncode != 0:
             raise RuntimeError(f"JS syntax error in {html_path}: {r.stderr}")
@@ -265,8 +267,8 @@ def discover_and_download_vinext_assets(base_url: str, html_text: str, site_dir:
                     for img in re.findall(r'[`"\'](/images/[^`"\'\\?#]+)[`"\']', jt):
                         queue.add(img)
                     jt_patched = patch_vite_preload_js(jt)
-                    # Also rewrite "/images/xxx.png" to relative "./images/xxx.png" inside JS bundles
-                    jt_patched = re.sub(r'(["\'])/images/([^"\']+\.(?:png|jpg|jpeg|webp|svg))', r'\1./images/\2', jt_patched)
+                    # Also rewrite "/images/xxx.png" (including backtick template literals) to relative "./images/xxx.png" inside JS bundles
+                    jt_patched = re.sub(r'([`"\'])/images/([^`"\']+\.(?:png|jpg|jpeg|webp|svg))', r'\1./images/\2', jt_patched)
                     local_p.write_bytes(jt_patched.encode("utf-8"))
                 elif rel.endswith(".css"):
                     ct = data.decode("utf-8", errors="ignore")
@@ -320,27 +322,27 @@ def git_prepare_repo(repo_dir: Path, auto_push: bool):
     if not auto_push or not (repo_dir / ".git").is_dir():
         return
     if (repo_dir / ".git" / "rebase-merge").exists() or (repo_dir / ".git" / "rebase-apply").exists():
-        subprocess.run(["git", "rebase", "--abort"], cwd=str(repo_dir), capture_output=True)
-    subprocess.run(["git", "pull", "--rebase", "-X", "ours", "origin", "main"], cwd=str(repo_dir), capture_output=True)
+        subprocess.run(["git", "rebase", "--abort"], cwd=str(repo_dir), capture_output=True, creationflags=_NO_WINDOW)
+    subprocess.run(["git", "pull", "--rebase", "-X", "ours", "origin", "main"], cwd=str(repo_dir), capture_output=True, creationflags=_NO_WINDOW)
     if (repo_dir / ".git" / "rebase-merge").exists() or (repo_dir / ".git" / "rebase-apply").exists():
-        subprocess.run(["git", "rebase", "--abort"], cwd=str(repo_dir), capture_output=True)
+        subprocess.run(["git", "rebase", "--abort"], cwd=str(repo_dir), capture_output=True, creationflags=_NO_WINDOW)
 
 
 def git_push_if_changed(repo_dir: Path, repo_name: str, msg: str, auto_push: bool) -> list[str]:
     if not (repo_dir / ".git").is_dir():
         return []
-    subprocess.run(["git", "add", "-A"], cwd=str(repo_dir), check=True)
-    st = subprocess.run(["git", "status", "--porcelain"], cwd=str(repo_dir), capture_output=True, text=True, check=True)
+    subprocess.run(["git", "add", "-A"], cwd=str(repo_dir), check=True, creationflags=_NO_WINDOW)
+    st = subprocess.run(["git", "status", "--porcelain"], cwd=str(repo_dir), capture_output=True, text=True, check=True, creationflags=_NO_WINDOW)
     lines = [ln.strip() for ln in st.stdout.splitlines() if ln.strip()]
     if not lines:
         return []
     changed_files = [ln.split(None, 1)[-1].strip('"') for ln in lines]
     if auto_push:
-        subprocess.run(["git", "commit", "-m", msg], cwd=str(repo_dir), check=True)
-        subprocess.run(["git", "pull", "--rebase", "-X", "theirs", "origin", "main"], cwd=str(repo_dir), capture_output=True)
+        subprocess.run(["git", "commit", "-m", msg], cwd=str(repo_dir), check=True, creationflags=_NO_WINDOW)
+        subprocess.run(["git", "pull", "--rebase", "-X", "theirs", "origin", "main"], cwd=str(repo_dir), capture_output=True, creationflags=_NO_WINDOW)
         if (repo_dir / ".git" / "rebase-merge").exists() or (repo_dir / ".git" / "rebase-apply").exists():
-            subprocess.run(["git", "rebase", "--abort"], cwd=str(repo_dir), capture_output=True)
-        subprocess.run(["git", "push", "origin", "HEAD:main"], cwd=str(repo_dir), check=True, timeout=300)
+            subprocess.run(["git", "rebase", "--abort"], cwd=str(repo_dir), capture_output=True, creationflags=_NO_WINDOW)
+        subprocess.run(["git", "push", "origin", "HEAD:main"], cwd=str(repo_dir), check=True, timeout=300, creationflags=_NO_WINDOW)
         purge_jsdelivr(repo_name, changed_files)
     return changed_files
 
@@ -348,8 +350,8 @@ def git_push_if_changed(repo_dir: Path, repo_name: str, msg: str, auto_push: boo
 # ------------------------------------------------------------------------------
 # 1. Shengcang Incremental Sync
 # ------------------------------------------------------------------------------
-SHIM_REV = "20261124k1"
-SC_SHIM_REV = "20261124finder5"
+SHIM_REV = "20261124m1"
+SC_SHIM_REV = "20261124finder6"
 ZH_SHIM_REV = "20261124i1"
 SC_SHIM = """<style>a[href*="signin-with-chatgpt"]{display:none!important}</style><script id="jintai-shengcang-shim">(function(){
 var BASE=new URL('.',location.href).pathname;if(BASE.slice(-1)!=='/')BASE+='/';window.__JT_BASE__=BASE;
@@ -473,7 +475,7 @@ def sync_shengcang(site_dir: Path, auto_push: bool = True) -> dict:
 
     final_html = rewrite_vinext_html(clean_html, make_gate_script("金泰 AI · 声仓（影视声音素材库）"), SC_SHIM)
     (site_dir / "index.html").write_bytes(final_html.encode("utf-8"))
-    subprocess.run([sys.executable, str(finder_patch), str(site_dir)], check=True)
+    subprocess.run([sys.executable, str(finder_patch), str(site_dir)], check=True, creationflags=_NO_WINDOW)
     check_html_js_syntax(site_dir / "index.html")
     state_p.write_bytes(json.dumps({"fingerprint": fp, "sounds_count": len(items)}, indent=2).encode("utf-8"))
 
@@ -1521,7 +1523,7 @@ process.stdout.write(JSON.stringify({
   cardsHtml
 }));
 """
-    r = subprocess.run(["node", "-e", node_js, str(site_dir), catalog_rel], capture_output=True, text=True, encoding="utf-8", timeout=45)
+    r = subprocess.run(["node", "-e", node_js, str(site_dir), catalog_rel], capture_output=True, text=True, encoding="utf-8", timeout=45, creationflags=_NO_WINDOW)
     if r.returncode != 0 or not r.stdout.strip():
         return None
     return json.loads(r.stdout)
@@ -1954,7 +1956,7 @@ def sync_history_site1(auto_push: bool = True) -> dict:
         command = ["git", "--no-lazy-fetch", "-C", str(pub), *args]
         proc = subprocess.Popen(
             command, env=probe_env, stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE, creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
+            stderr=subprocess.PIPE, creationflags=subprocess.CREATE_NEW_PROCESS_GROUP | _NO_WINDOW,
         )
         try:
             stdout, stderr = proc.communicate(timeout=25)
@@ -1962,7 +1964,7 @@ def sync_history_site1(auto_push: bool = True) -> dict:
             try:
                 subprocess.run(
                     ["taskkill", "/PID", str(proc.pid), "/T", "/F"],
-                    capture_output=True, timeout=10, check=False,
+                    capture_output=True, timeout=10, check=False, creationflags=_NO_WINDOW,
                 )
             except subprocess.TimeoutExpired:
                 pass
@@ -1986,7 +1988,7 @@ def sync_history_site1(auto_push: bool = True) -> dict:
         return {"site": "history", "status": "blocked_remote_diverged", "local_head": local_head, "remote_head": remote_head}
 
     sync_ext = hist_mgr.parent / "sync_external_and_verify.py"
-    subprocess.run([sys.executable, str(sync_ext)], check=True)
+    subprocess.run([sys.executable, str(sync_ext)], check=True, creationflags=_NO_WINDOW)
     tracked_targets = [
         "index.html", "browser.html", "d1_idx", "d2_idx",
         "portal.html", "图库总入口.html", "arch5680.html", "arch_data", "myth5000.html", "myth_data",
@@ -2415,6 +2417,28 @@ def sync_portal_and_hbcm_metrics(root: Path, auto_push: bool = True) -> dict:
                 {"name": "📚 影史分镜索引库", "meta": f"250 名片 · {film_wan1}万全库", "cloud": "https://aikingtai-ctrl.github.io/jintai-story2board/#index", "local": "/jintai-story2board/#index"},
             ],
         },
+        {
+            "key": "jt-screenwriter-agent",
+            "fullWidth": True,
+            "title": "6. 金泰 JT Screenwriter Agent · 专业编剧与一键制片小样工作台（公开免密直达）",
+            "tags": [
+                ["5 入口专业编剧 · 32 部世界佳片四层机制", ""],
+                ["56 导演 × 6 款胶片光学编译 · 13 层语义门禁", ""],
+                ["公开免密直达 · 含实渲影片小样", "red"],
+            ],
+            "desc": (
+                "面向成熟编剧的剧本创作与金泰平台一键制片工作台：内置《第七页雨痕》8×H100 实渲小样与四联检视板，"
+                "支持 32 部世界佳片 F/O/H 机制检索与抄袭隔离红线、56 位导演 × 6 款胶片冲突诊断与双语提示词编译、"
+                "专家 System Prompt 一键复制及金泰 AVC 画布 JSON 导出。"
+            ),
+            "cloudUrl": "https://aikingtai-ctrl.github.io/jt-screenwriter-agent/",
+            "localPath": "/jt-screenwriter-agent/",
+            "catTitle": "工作台核心模块与直达入口：",
+            "categories": [
+                {"name": "🎬 编剧小样与四联审片", "meta": "实渲小样 · 13层语义门禁", "cloud": "https://aikingtai-ctrl.github.io/jt-screenwriter-agent/", "local": "/jt-screenwriter-agent/"},
+                {"name": "🎞️ 导演×胶片编译与佳片库", "meta": "56导演×6胶片 · 32部机制库", "cloud": "https://aikingtai-ctrl.github.io/jt-screenwriter-agent/#style-lab", "local": "/jt-screenwriter-agent/#style-lab"},
+            ],
+        },
     ]
 
     p_idx = portal_dir / "index.html"
@@ -2425,7 +2449,8 @@ def sync_portal_and_hbcm_metrics(root: Path, auto_push: bool = True) -> dict:
         f'· 声仓（{m["sc_total"]:,} 条声效 / {m["sc_cats"]} 大类）'
         f'· 纪录片教学库（{m["doc_published"]:,} 部已发布 / {m["doc_total"]:,} 总目）'
         f'· 中华文明影像库（12 断代专卷 / {m["zh_records"]:,} 条馆藏考证）'
-        f'· Story2Board AI 分镜工作台（250 名片 / 58,610 精标母镜）。</p>'
+        f'· Story2Board AI 分镜工作台（250 名片 / 58,610 精标母镜）'
+        f'· JT 编剧智能体工作台（32 部世界佳片 / 56 导演 × 6 胶片 / 一键小样）。</p>'
     )
     sites_js = "  var SITES = " + json.dumps(sites_data, ensure_ascii=False, indent=4) + ";"
     pt = re.sub(r'<p class="lead">.*?</p>', new_lead, orig_pt, count=1, flags=re.S)
