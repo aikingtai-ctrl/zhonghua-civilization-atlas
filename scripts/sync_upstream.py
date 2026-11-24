@@ -9,6 +9,7 @@
 """
 import argparse
 import concurrent.futures
+import gzip
 import hashlib
 import http.client
 import json
@@ -764,24 +765,26 @@ def probe_zhonghua_catalog_upstream(base: str, index_bytes: bytes) -> tuple[list
         loader_rel = norm_zh_rel("index.html", loader_ref)
         loader_bytes = _fetch_zhonghua_catalog_verified(base, loader_ref)
         verified_loader[loader_rel] = loader_bytes
-        catalog_text += "\n" + loader_bytes.decode("utf-8", errors="replace")
-
-    record_refs = {}
-    for match in _ZH_CATALOG_RECORD_RE.finditer(catalog_text):
-        number = int(match.group(1))
-        ref = match.group(0)
-        if number in record_refs and record_refs[number] != ref:
-            raise RuntimeError(f"中华文明原站目录分片 {number} 有多个版本")
-        record_refs[number] = ref
-    if not record_refs:
-        raise RuntimeError("中华文明原站未声明 catalog-records 分片，停止覆盖镜像")
-    if sorted(record_refs) != list(range(1, max(record_refs) + 1)):
-        raise RuntimeError("中华文明原站 catalog-records 分片编号不连续")
-
-    base_refs = set(_ZH_CATALOG_BASE_RE.findall(catalog_text))
-    if len(base_refs) > 1:
-        raise RuntimeError("中华文明原站目录基础数据有多个版本")
-    refs = [*record_refs.values(), *base_refs]
+        loader_text = loader_bytes.decode("utf-8")
+        catalog_text += "\n" + loader_text
+        base_ref, script_refs = zh_catalog_loader_references(loader_text)
+        refs = [base_ref, *script_refs]
+    else:
+        record_refs = {}
+        for match in _ZH_CATALOG_RECORD_RE.finditer(catalog_text):
+            number = int(match.group(1))
+            ref = match.group(0)
+            if number in record_refs and record_refs[number] != ref:
+                raise RuntimeError(f"中华文明原站目录分片 {number} 有多个版本")
+            record_refs[number] = ref
+        if not record_refs:
+            raise RuntimeError("中华文明原站未声明 catalog-records 分片，停止覆盖镜像")
+        if sorted(record_refs) != list(range(1, max(record_refs) + 1)):
+            raise RuntimeError("中华文明原站 catalog-records 分片编号不连续")
+        base_refs = set(_ZH_CATALOG_BASE_RE.findall(catalog_text))
+        if len(base_refs) > 1:
+            raise RuntimeError("中华文明原站目录基础数据有多个版本")
+        refs = [*record_refs.values(), *base_refs]
     health = [f"{ref}:{_probe_zhonghua_catalog_asset(base, ref)}" for ref in refs]
     fingerprint = sha256_bytes("\n".join([*health, sha256_bytes(catalog_text.encode("utf-8"))]).encode("utf-8"))
     return refs, verified_loader, fingerprint
@@ -796,6 +799,111 @@ def verify_zhonghua_catalog_upstream(base: str, refs: list[str], verified_loader
             raise RuntimeError(f"中华文明原站目录引用无效：{ref}")
         verified[rel] = _fetch_zhonghua_catalog_verified(base, ref)
     return verified
+
+
+def zh_catalog_loader_references(source: str) -> tuple[str, list[str]]:
+    """Read the versioned data and script URLs from the upstream loader."""
+    base_match = re.search(r"\bfetch\((['\"])([^'\"]+\.json\.gz(?:\?[^'\"]*)?)\1\)", source)
+    if not base_match:
+        raise ValueError("catalog-loader.js has no gzip catalog reference")
+    base_ref = base_match.group(2)
+    base_rel = norm_zh_rel("catalog-loader.js", base_ref)
+    if not base_rel or not base_rel.endswith(".json.gz"):
+        raise ValueError("catalog-loader.js has an unsafe catalog reference")
+
+    marker = "for(const src of " if "for(const src of " in source else "const __jtLoads="
+    pos = source.find(marker)
+    if pos < 0:
+        raise ValueError("catalog-loader.js has no ordered script list")
+    raw_list, _ = json.JSONDecoder().raw_decode(source[pos + len(marker):])
+    if not isinstance(raw_list, list) or not raw_list:
+        raise ValueError("catalog-loader.js has an empty script list")
+    scripts = []
+    normalized = []
+    for raw in raw_list:
+        rel = norm_zh_rel("catalog-loader.js", raw) if isinstance(raw, str) else None
+        if not rel or not rel.endswith(".js"):
+            raise ValueError(f"catalog-loader.js has an unsafe script reference: {raw!r}")
+        scripts.append(raw)
+        normalized.append(rel)
+    if len(normalized) != len(set(normalized)):
+        raise ValueError("catalog-loader.js has duplicate script references")
+    return base_ref, scripts
+
+
+def zh_catalog_loader_dependencies(source: str) -> tuple[str, list[str]]:
+    """Return safe local paths in the loader's execution order."""
+    base_ref, scripts = zh_catalog_loader_references(source)
+    return (norm_zh_rel("catalog-loader.js", base_ref),
+            [norm_zh_rel("catalog-loader.js", ref) for ref in scripts])
+
+
+def optimize_zh_catalog_loader(data: bytes) -> bytes:
+    """Fetch scripts together while preserving their original execution order."""
+    source = data.decode("utf-8")
+    zh_catalog_loader_dependencies(source)
+    if "const __jtLoads=" in source and "window.__JT_CATALOG_READY__=" in source:
+        return data
+    marker = "for(const src of "
+    start = source.find(marker)
+    if start < 0 or not source.startswith("(async()=>{"):
+        raise ValueError("unknown catalog-loader.js shape; refusing an unsafe rewrite")
+    list_start = start + len(marker)
+    _, consumed = json.JSONDecoder().raw_decode(source[list_start:])
+    list_end = list_start + consumed
+    old_tail = ")await new Promise((resolve,reject)=>{const script=document.createElement('script');script.src=src;script.onload=resolve;script.onerror=()=>reject(Error('脚本加载失败：'+src));document.body.append(script)});"
+    if not source.startswith(old_tail, list_end):
+        raise ValueError("unknown catalog-loader.js loading loop; refusing an unsafe rewrite")
+    source_list = source[list_start:list_end]
+    replacement = (
+        "const __jtLoads=" + source_list
+        + ".map(src=>new Promise((resolve,reject)=>{const script=document.createElement('script');"
+        + "script.async=false;script.src=src;script.onload=resolve;"
+        + "script.onerror=()=>reject(Error('脚本加载失败：'+src));document.body.append(script)}));"
+        + "await Promise.all(__jtLoads);"
+    )
+    patched = source[:start] + replacement + source[list_end + len(old_tail):]
+    return ("window.__JT_CATALOG_READY__=" + patched).encode("utf-8")
+
+
+def validate_zh_catalog_downloads(site_dir: Path, loader: str, fetched: set[str]) -> int:
+    """Fail before committing if any current catalog dependency was not fetched."""
+    base_rel, scripts = zh_catalog_loader_dependencies(loader)
+    required = ["catalog-loader.js", base_rel, *scripts]
+    missing = [rel for rel in required if rel not in fetched or not (site_dir / rel).is_file() or not (site_dir / rel).stat().st_size]
+    if missing:
+        raise RuntimeError("incomplete zhonghua catalog; missing: " + ", ".join(missing))
+    try:
+        catalog_path = site_dir / base_rel
+        with catalog_path.open("rb") as raw:
+            magic = raw.read(2)
+        if magic == b"\x1f\x8b":
+            with gzip.open(catalog_path, "rb") as catalog:
+                while catalog.read(1024 * 1024):
+                    pass
+        else:
+            json.loads(catalog_path.read_text(encoding="utf-8"))
+    except (OSError, EOFError, UnicodeError, json.JSONDecodeError) as error:
+        raise RuntimeError("invalid zhonghua gzip catalog") from error
+    return len(scripts)
+
+
+_ZH_LOCAL_MEDIA_RE = re.compile(
+    r'"((?:\./)?(?:assets|(?:[A-Za-z0-9_-]+-)?images|research-[A-Za-z0-9_-]+)/[^"\\\s?#]+)(?:\?[^"\\\s#]*)?"'
+)
+
+
+def discover_zh_catalog_media(data: bytes) -> set[str]:
+    """Find local image paths embedded in the new compressed catalog."""
+    raw = gzip.decompress(data) if data.startswith(b"\x1f\x8b") else data
+    catalog_text = raw.decode("utf-8")
+    media_exts = {".webp", ".jpg", ".jpeg", ".png", ".gif", ".svg", ".ico", ".woff", ".woff2"}
+    found = set()
+    for match in _ZH_LOCAL_MEDIA_RE.finditer(catalog_text):
+        rel = norm_zh_rel("catalog-base.json.gz", match.group(1))
+        if rel and os.path.splitext(rel)[1].lower() in media_exts:
+            found.add(rel)
+    return found
 
 
 ZH_OLD_UNPACK_1 = '((k,d,x)=>{const u=v=>{if(Array.isArray(v))return v.map(u);if(!v||typeof v!=="object")return v;if(Object.hasOwn(v,"$s"))return d[v.$s];const a=v.$o,p=[];for(let i=0;i<a.length;i+=2)p.push([k[a[i]],u(a[i+1])]);return Object.fromEntries(p)};return u(x)})'
@@ -814,6 +922,8 @@ ZH_DEFERRED_P2 = {
 
 
 def optimize_zhonghua_js_bytes(rel: str, data: bytes) -> bytes:
+    if os.path.basename(rel) == "catalog-loader.js":
+        return optimize_zh_catalog_loader(data)
     if not rel.endswith(".js") or len(data) < 4096:
         return data
     try:
@@ -880,7 +990,8 @@ def _build_zh_async_loader_tag(all_srcs: list[str], p1: list[str], p2: list[str]
         "var el=document.querySelector(sel);if(el)try{el.click();}catch(e){}"
         "}"
         "}"
-        "async function boot(){await runList(p1);if(window.__jtSanitizeAll)window.__jtSanitizeAll();window.__JT_HYDRATED__=true;"
+        "async function boot(){await runList(p1);if(window.__JT_CATALOG_READY__)await window.__JT_CATALOG_READY__;"
+        "if(window.__jtSanitizeAll)window.__jtSanitizeAll();window.__JT_HYDRATED__=true;"
         "if(['#tangReignDossier','#xixiaReignDossier'].indexOf(location.hash)!==-1)window.dispatchEvent(new Event('load'));"
         "await replayPending(true);"
         "if(p2.length){var rp=function(){runList(p2);};if(typeof requestIdleCallback==='function')requestIdleCallback(rp,{timeout:600});else setTimeout(rp,350);}}"
@@ -891,17 +1002,29 @@ def _build_zh_async_loader_tag(all_srcs: list[str], p1: list[str], p2: list[str]
 
 
 def _compute_zhonghua_ssg_payload(site_dir: Path) -> dict | None:
-    if not (site_dir / "data.js").is_file():
+    index_path = site_dir / "index.html"
+    if not index_path.is_file():
+        return None
+    new_catalog = "catalog-loader.js" in index_path.read_text(encoding="utf-8", errors="ignore")
+    catalog_rel = zh_catalog_loader_dependencies((site_dir / "catalog-loader.js").read_text(encoding="utf-8"))[0] if new_catalog else "data.js"
+    if not (site_dir / catalog_rel).is_file():
         return None
     node_js = r"""
-const fs = require('fs'), path = require('path'), vm = require('vm');
+const fs = require('fs'), path = require('path'), vm = require('vm'), zlib = require('zlib');
 const dir = process.argv[1];
+const catalogRel = process.argv[2];
 const ctx = { window: {} };
 vm.createContext(ctx);
-vm.runInContext(fs.readFileSync(path.join(dir, 'data.js'), 'utf8'), ctx);
-for (let i = 1; i <= 20; i++) {
-  const p = path.join(dir, `catalog-records-${i}.js`);
-  if (fs.existsSync(p)) vm.runInContext(fs.readFileSync(p, 'utf8'), ctx);
+if (fs.readFileSync(path.join(dir, 'index.html'), 'utf8').includes('catalog-loader.js')) {
+  const b = fs.readFileSync(path.join(dir, catalogRel));
+  const decoded = b[0]===31 && b[1]===139 ? zlib.gunzipSync(b) : b;
+  ctx.window.ARCHIVE_DATA = JSON.parse(decoded.toString('utf8'));
+} else {
+  vm.runInContext(fs.readFileSync(path.join(dir, 'data.js'), 'utf8'), ctx);
+  for (let i = 1; i <= 20; i++) {
+    const p = path.join(dir, `catalog-records-${i}.js`);
+    if (fs.existsSync(p)) vm.runInContext(fs.readFileSync(p, 'utf8'), ctx);
+  }
 }
 const records = (ctx.window.ARCHIVE_DATA && ctx.window.ARCHIVE_DATA.records) || [];
 function displayTitleText(value){const opened={em:[],i:[],b:[],strong:[]};return String(value??'').replace(/<\/?(em|i|b|strong)(?=[\s>])[^>]*>/gi,(tag,name)=>{const key=name.toLowerCase(),closing=tag[1]==='/',plain=new RegExp('^<'+(closing?'/':'')+key+'\\s*>$','i').test(tag);if(!closing){opened[key].push(plain);return plain?'':tag}return plain&&opened[key].pop()===true?'':tag})}
@@ -924,7 +1047,7 @@ process.stdout.write(JSON.stringify({
   cardsHtml
 }));
 """
-    r = subprocess.run(["node", "-e", node_js, str(site_dir)], capture_output=True, text=True, encoding="utf-8", timeout=45)
+    r = subprocess.run(["node", "-e", node_js, str(site_dir), catalog_rel], capture_output=True, text=True, encoding="utf-8", timeout=45)
     if r.returncode != 0 or not r.stdout.strip():
         return None
     return json.loads(r.stdout)
@@ -1034,7 +1157,7 @@ def sync_zhonghua(site_dir: Path, auto_push: bool = True) -> dict:
         pass
     base = f"https://{host}/"
 
-    # Quick probe on index.html + data.js + daily-batch.js + app.js
+    # The catalog health probe below checks the new versioned gzip and scripts.
     probe_files = ["index.html", "data.js", "daily-batch.js", "app.js", "song-data.js", "liao-data.js"]
     probe_parts = []
     index_bytes = b""
@@ -1048,6 +1171,8 @@ def sync_zhonghua(site_dir: Path, auto_push: bool = True) -> dict:
                 index_bytes = b_p
             probe_parts.append(sha256_bytes(b_p))
     catalog_refs, verified_loader, catalog_fp = probe_zhonghua_catalog_upstream(base, index_bytes)
+    new_catalog_declared = bool(verified_loader)
+    catalog_base_rel = zh_catalog_loader_dependencies(verified_loader["catalog-loader.js"].decode("utf-8"))[0] if new_catalog_declared else None
     # Keep the local mirror current with cloud commits even when this upstream
     # snapshot is unchanged; a broken origin never reaches this Git operation.
     git_prepare_repo(site_dir, auto_push)
@@ -1061,7 +1186,13 @@ def sync_zhonghua(site_dir: Path, auto_push: bool = True) -> dict:
     if state_p.is_file() and required_aux:
         try:
             if json.loads(state_p.read_text(encoding="utf-8")).get("quick_fp") == quick_fp:
-                return {"site": "zhonghua", "status": "up-to-date"}
+                if not new_catalog_declared:
+                    return {"site": "zhonghua", "status": "up-to-date"}
+                loader_bytes = verified_loader.get("catalog-loader.js")
+                if loader_bytes:
+                    base_rel, scripts = zh_catalog_loader_dependencies(loader_bytes.decode("utf-8"))
+                    if all((site_dir / rel).is_file() and (site_dir / rel).stat().st_size for rel in ["catalog-loader.js", base_rel, *scripts]):
+                        return {"site": "zhonghua", "status": "up-to-date"}
         except Exception:
             pass
 
@@ -1073,6 +1204,8 @@ def sync_zhonghua(site_dir: Path, auto_push: bool = True) -> dict:
     asset_exts = {".webp", ".jpg", ".jpeg", ".png", ".gif", ".svg", ".ico", ".woff", ".woff2"}
     to_visit = {"index.html", "site-version.json", "publication-proofs/build-report.json", *verified_catalog}
     visited = set()
+    fetched = set()
+    catalog_loader_source = None
     discovered_media = set()
     gate_tag = make_gate_script("金泰 AI · 中华文明影像库")
 
@@ -1094,8 +1227,9 @@ def sync_zhonghua(site_dir: Path, auto_push: bool = True) -> dict:
             visited.add(rel)
             if s != 200 or not b:
                 continue
+            fetched.add(rel)
             ext = os.path.splitext(rel)[1].lower()
-            txt = b.decode("utf-8", errors="ignore")
+            txt = "" if ext == ".gz" else b.decode("utf-8", errors="ignore")
             if ext == ".html":
                 clean_h = strip_cf_challenge(txt)
                 clean_h = re.sub(r'<style>a\[href\*="signin-with-chatgpt"\][^<]*</style>', '', clean_h, flags=re.S)
@@ -1137,12 +1271,19 @@ def sync_zhonghua(site_dir: Path, auto_push: bool = True) -> dict:
                     lp.parent.mkdir(parents=True, exist_ok=True)
                     if not lp.is_file() or lp.read_bytes() != b_opt:
                         lp.write_bytes(b_opt)
+                if rel == catalog_base_rel:
+                    discovered_media.update(discover_zh_catalog_media(b))
                 if ext == ".css":
                     for ref in re.findall(r'url\(["\']?([^"\')]+)["\']?\)', txt, flags=re.I):
                         nr = norm_zh_rel(rel, ref)
                         if nr:
                             discovered_media.add(nr)
                 elif ext in (".js", ".json"):
+                    if rel == "catalog-loader.js":
+                        catalog_loader_source = txt
+                        catalog_base, catalog_scripts = zh_catalog_loader_dependencies(txt)
+                        to_visit.add(catalog_base)
+                        to_visit.update(catalog_scripts)
                     for m in re.finditer(r'["\'`]((?:\./)?(?:assets|(?:[A-Za-z0-9_-]+-)?images|research-[A-Za-z0-9_-]+)/[^"\'`\s?#]+|(?:[A-Za-z0-9_-]+\.html))(?:\?[^"\'`\s#]*)?["\'`]', txt):
                         nr = norm_zh_rel(rel, m.group(1))
                         if nr:
@@ -1151,6 +1292,11 @@ def sync_zhonghua(site_dir: Path, auto_push: bool = True) -> dict:
                                 to_visit.add(nr)
                             elif rext in asset_exts:
                                 discovered_media.add(nr)
+
+    if new_catalog_declared:
+        if catalog_loader_source is None:
+            raise RuntimeError("upstream declares catalog-loader.js, but it was not fetched")
+        validate_zh_catalog_downloads(site_dir, catalog_loader_source, fetched)
 
     prev_unhosted = set()
     if state_p.is_file():
@@ -1221,7 +1367,9 @@ def sync_zhonghua(site_dir: Path, auto_push: bool = True) -> dict:
         except Exception:
             pass
 
-    optimize_zhonghua_site(site_dir)
+    optimized = optimize_zhonghua_site(site_dir)
+    if new_catalog_declared and not optimized["ssg_records"]:
+        raise RuntimeError("new zhonghua catalog could not be parsed for first-screen rendering")
     all_unhosted = sorted((prev_unhosted | newly_unhosted) - {m for m in discovered_media if (site_dir / m).is_file()})
     state_p.write_text(json.dumps({"quick_fp": quick_fp, "docs": len(visited), "new_media": len(missing_media) - len(newly_unhosted), "unhosted_media": all_unhosted}, indent=2), encoding="utf-8")
     changed = git_push_if_changed(site_dir, "zhonghua-civilization-atlas", f"sync(auto): upstream zhonghua atlas ({len(visited)} docs)", auto_push)
