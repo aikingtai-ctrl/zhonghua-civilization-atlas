@@ -348,7 +348,7 @@ def git_push_if_changed(repo_dir: Path, repo_name: str, msg: str, auto_push: boo
 # ------------------------------------------------------------------------------
 # 1. Shengcang Incremental Sync
 # ------------------------------------------------------------------------------
-SHIM_REV = "20261113d1"
+SHIM_REV = "20261124k1"
 SC_SHIM_REV = "20261124finder5"
 ZH_SHIM_REV = "20261124i1"
 SC_SHIM = """<style>a[href*="signin-with-chatgpt"]{display:none!important}</style><script id="jintai-shengcang-shim">(function(){
@@ -486,36 +486,124 @@ def sync_shengcang(site_dir: Path, auto_push: bool = True) -> dict:
 # ------------------------------------------------------------------------------
 DOC_SHIM = """<style>a[href*="signin-with-chatgpt"]{display:none!important}</style><script id="jintai-doc-shim">(function(){
 var BASE=new URL('.',location.href).pathname;if(BASE.slice(-1)!=='/')BASE+='/';window.__JT_BASE__=BASE;
-var IS_GH=/github\\.io$/i.test(location.hostname||'');
 var RAW='https://raw.githubusercontent.com/aikingtai-ctrl/documentary-classroom-library/main/';
 var CDNS=['https://testingcf.jsdelivr.net/gh/aikingtai-ctrl/documentary-classroom-library@main/','https://gcore.jsdelivr.net/gh/aikingtai-ctrl/documentary-classroom-library@main/'];
 document.addEventListener('click',function(ev){var a=ev.target&&ev.target.closest?ev.target.closest('a'):null;if(!a)return;var hr=a.getAttribute('href')||'';if(hr.indexOf('signin-with-chatgpt')!==-1){ev.preventDefault();return;}if(hr==='/collection-workflow.md'||hr==='/reconciliation-template.csv')a.setAttribute('href',BASE+hr.slice(1));},true);
-var _dbPromise=null;var origFetch=window.fetch.bind(window);
-function _js(v){return Array.isArray(v)?v.join(' '):(v==null?'':String(v));}function getDocDB(){if(_dbPromise)return _dbPromise;var cb='?t='+Math.floor(Date.now()/300000);var urls=[BASE+'data/library_full.json'+cb,RAW+'data/library_full.json'+cb,CDNS[0]+'data/library_full.json'+cb,CDNS[1]+'data/library_full.json'+cb];_dbPromise=(async function(){for(var i=0;i<urls.length;i++){try{var r=await origFetch(urls[i]);if(r.ok){var d=await r.json();(d.films||[]).forEach(function(f,idx){if(f._order==null)f._order=idx;var parts=[f.id,f.title,f.originalTitle,_js(f.aliases),f.year,f.country,f.director,f.region,f.period,f.topic,f.method,f.form,f.summary,f.teaching,f.research,_js(f.courses),_js(f.knowledge)];f._q=parts.filter(Boolean).join(' ').toLowerCase();var ym=String(f.year||'').match(/\\d{4}/);f._yr=ym?parseInt(ym[0],10):9999;f._dec=ym?String(Math.floor(parseInt(ym[0],10)/10)*10):'';});return d;}}catch(e){}}return {stats:{total:4353,published:0,pending:2853,formal:null},target:20000,countedAt:'',facets:{region:[],topic:[],decades:[]},films:[]};})();return _dbPromise;}
-window.fetch=async function(input,init){var urlStr=typeof input==='string'?input:(input&&input.url?input.url:String(input));var u;try{u=new URL(urlStr,location.origin);}catch(e){return origFetch(input,init);}if(u.pathname.indexOf('/api/library')!==-1){var method=((init&&init.method)||(input&&input.method)||'GET').toUpperCase();if(method!=='GET')return new Response(JSON.stringify({error:'国内直连只读教学节点'}),{status:400,headers:{'Content-Type':'application/json;charset=utf-8'}});var db=await getDocDB();if(u.searchParams.get('export')==='1')return new Response(JSON.stringify(db),{status:200,headers:{'Content-Type':'application/json;charset=utf-8'}});var fid=u.searchParams.get('id');if(fid){var found=(db.films||[]).find(function(x){return String(x.id)===String(fid);});if(found)return new Response(JSON.stringify({film:found}),{status:200,headers:{'Content-Type':'application/json;charset=utf-8'}});return new Response(JSON.stringify({error:'未找到该影片记录'}),{status:404,headers:{'Content-Type':'application/json;charset=utf-8'}});}var q=(u.searchParams.get('q')||'').trim().toLowerCase();var terms=q?q.split(/\\s+/).filter(Boolean):[];var dec=u.searchParams.get('decade')||'';var reg=u.searchParams.get('region')||'';var top=u.searchParams.get('topic')||'';var sort=u.searchParams.get('sort')||'year';var page=Math.max(1,parseInt(u.searchParams.get('page')||'1',10)||1);var pageSize=24;var list=(db.films||[]).filter(function(f){if(dec&&f._dec!==dec)return false;if(reg&&f.region!==reg)return false;if(top&&f.topic!==top)return false;if(terms.length){for(var i=0;i<terms.length;i++){if(f._q.indexOf(terms[i])===-1)return false;}}return true;}).slice();if(sort==='title')list.sort(function(a,b){return (a.title||'').localeCompare(b.title||'','zh-CN');});else list.sort(function(a,b){return (a._order-b._order);});var total=list.length;var pages=Math.max(1,Math.ceil(total/pageSize));if(page>pages)page=pages;var slice=list.slice((page-1)*pageSize,page*pageSize);return new Response(JSON.stringify({user:null,films:slice,stats:db.stats,target:db.target,countedAt:db.countedAt,facets:db.facets,pagination:{page:page,pageSize:pageSize,total:total,pages:pages}}),{status:200,headers:{'Content-Type':'application/json;charset=utf-8'}});}return origFetch(input,init);};
+var _dbPromise=null,_byId=null;var origFetch=window.fetch.bind(window);
+function _js(v){return Array.isArray(v)?v.join(' '):(v==null?'':String(v));}
+async function _fetchGzJson(u){var r=await origFetch(u);if(!r.ok)throw new Error('HTTP '+r.status);var buf=await r.arrayBuffer();var u8=new Uint8Array(buf);if(u8.length>=2&&u8[0]===31&&u8[1]===139&&typeof DecompressionStream==='function'){var ds=new Response(new Blob([u8]).stream().pipeThrough(new DecompressionStream('gzip')));return await ds.json();}return JSON.parse(new TextDecoder('utf-8').decode(u8));}
+function getDocDB(){if(_dbPromise)return _dbPromise;var cb='?v=20261124k1';var urls=[BASE+'data/library_full.json.gz'+cb,RAW+'data/library_full.json.gz'+cb,CDNS[0]+'data/library_full.json.gz'+cb,CDNS[1]+'data/library_full.json.gz'+cb,BASE+'data/library_full.json'+cb];_dbPromise=(async function(){for(var i=0;i<urls.length;i++){try{var d=await _fetchGzJson(urls[i]);_byId=new Map();var films=d.films||[];for(var idx=0;idx<films.length;idx++){var f=films[idx];if(f._order==null)f._order=idx;var ym=String(f.year||'').match(/\\d{4}/);f._yr=ym?parseInt(ym[0],10):9999;f._dec=ym?String(Math.floor(parseInt(ym[0],10)/10)*10):'';_byId.set(String(f.id),f);}return d;}catch(e){}}return {stats:{total:40191,published:20533,pending:19632,formal:null},target:50000,countedAt:'',facets:{region:[],topic:[],decades:[]},films:[]};})();return _dbPromise;}
+function _ensureSearchKey(f){if(f._q!==undefined)return f._q;var parts=[f.id,f.title,f.originalTitle,_js(f.aliases),f.year,f.country,f.director,f.region,f.period,f.topic,f.method,f.form,f.summary,f.teaching,f.research,_js(f.courses),_js(f.knowledge)];f._q=parts.filter(Boolean).join(' ').toLowerCase();return f._q;}
+function _withDetailDefaults(f){return Object.assign({aliases:[],period:'',research:'',courses:[],knowledge:[],discussion:'',sourceUrl:'',checkedOn:'',selectionBasis:'',sources:[],materials:[],awards:[],segments:[]},f);}
+window.fetch=async function(input,init){var urlStr=typeof input==='string'?input:(input&&input.url?input.url:String(input));var u;try{u=new URL(urlStr,location.origin);}catch(e){return origFetch(input,init);}if(u.pathname.indexOf('/api/library')!==-1){var method=((init&&init.method)||(input&&input.method)||'GET').toUpperCase();if(method!=='GET')return new Response(JSON.stringify({error:'国内直连只读教学节点'}),{status:400,headers:{'Content-Type':'application/json;charset=utf-8'}});var db=await getDocDB();if(u.searchParams.get('export')==='1')return new Response(JSON.stringify(db),{status:200,headers:{'Content-Type':'application/json;charset=utf-8'}});var fid=u.searchParams.get('id');if(fid){var found=_byId&&_byId.get(String(fid));if(found)return new Response(JSON.stringify({film:_withDetailDefaults(found)}),{status:200,headers:{'Content-Type':'application/json;charset=utf-8'}});return new Response(JSON.stringify({error:'未找到该影片记录'}),{status:404,headers:{'Content-Type':'application/json;charset=utf-8'}});}var q=(u.searchParams.get('q')||'').trim().toLowerCase();var terms=q?q.split(/\\s+/).filter(Boolean):[];var dec=u.searchParams.get('decade')||'';var reg=u.searchParams.get('region')||'';var top=u.searchParams.get('topic')||'';var sort=u.searchParams.get('sort')||'year';var page=Math.max(1,parseInt(u.searchParams.get('page')||'1',10)||1);var pageSize=24;var list=(db.films||[]).filter(function(f){if(dec&&f._dec!==dec)return false;if(reg&&f.region!==reg)return false;if(top&&f.topic!==top)return false;if(terms.length){var fq=_ensureSearchKey(f);for(var i=0;i<terms.length;i++){if(fq.indexOf(terms[i])===-1)return false;}}return true;}).slice();if(sort==='title')list.sort(function(a,b){return (a.title||'').localeCompare(b.title||'','zh-CN');});else list.sort(function(a,b){return (a._order-b._order);});var total=list.length;var pages=Math.max(1,Math.ceil(total/pageSize));if(page>pages)page=pages;var slice=list.slice((page-1)*pageSize,page*pageSize);return new Response(JSON.stringify({user:null,films:slice,stats:db.stats,target:db.target,countedAt:db.countedAt,facets:db.facets,pagination:{page:page,pageSize:pageSize,total:total,pages:pages}}),{status:200,headers:{'Content-Type':'application/json;charset=utf-8'}});}return origFetch(input,init);};
+getDocDB();
 })();</script>"""
 
 
 def sync_documentary(site_dir: Path, auto_push: bool = True) -> dict:
+    import threading
+    import warnings
+    try:
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            import requests as _req_lib
+    except Exception:
+        _req_lib = None
     git_prepare_repo(site_dir, auto_push)
     base = "https://documentary-classroom-library.fondcream1.chatgpt.site"
-    st_h, b_h = fetch_bytes(base + "/")
-    st_p1, b_p1 = fetch_bytes(base + "/api/library?page=1")
-    if st_h != 200 or st_p1 != 200:
-        return {"site": "documentary", "status": "upstream_skipped", "http": [st_h, st_p1]}
+    st_h, b_h = 0, b""
+    try:
+        with urllib.request.urlopen(urllib.request.Request(base + "/", headers={"User-Agent": UA}), timeout=20) as r_eff:
+            eff_netloc = urllib.parse.urlparse(r_eff.geturl()).netloc
+            if eff_netloc:
+                base = f"https://{eff_netloc}"
+            st_h, b_h = r_eff.status, r_eff.read()
+    except Exception:
+        st_h, b_h = fetch_bytes(base + "/")
+    if st_h != 200 or not b_h:
+        return {"site": "documentary", "status": "upstream_skipped", "http": [st_h, 0]}
+
+    tls_local = threading.local()
+    pace_lock = threading.Lock()
+    last_req_ts = [0.0]
+
+    def _reset_sess():
+        sess = getattr(tls_local, "sess", None)
+        if sess is not None:
+            try:
+                sess.close()
+            except Exception:
+                pass
+            tls_local.sess = None
+
+    def _ka_get_json(path_qs: str, retries: int = 12):
+        full_url = base + path_qs
+        for att in range(retries):
+            with pace_lock:
+                wait_s = 0.25 - (time.monotonic() - last_req_ts[0])
+                if wait_s > 0:
+                    time.sleep(wait_s)
+                last_req_ts[0] = time.monotonic()
+            try:
+                if _req_lib is not None:
+                    sess = getattr(tls_local, "sess", None)
+                    if sess is None:
+                        sess = _req_lib.Session()
+                        sess.headers.update({"User-Agent": UA, "Accept": "application/json", "Accept-Encoding": "gzip"})
+                        tls_local.sess = sess
+                    resp = sess.get(full_url, timeout=25)
+                    if resp.status_code == 200 and resp.content:
+                        return resp.json()
+                    if resp.status_code in (429, 500, 502, 503, 504):
+                        _reset_sess()
+                        cd = 3.2 + att * 1.0
+                        with pace_lock:
+                            last_req_ts[0] = time.monotonic() + cd
+                        time.sleep(cd)
+                        continue
+                else:
+                    req = urllib.request.Request(full_url, headers={"User-Agent": UA, "Accept": "application/json", "Accept-Encoding": "gzip"})
+                    with urllib.request.urlopen(req, timeout=25) as resp:
+                        body = resp.read()
+                        if resp.status == 200 and body:
+                            if resp.headers.get("Content-Encoding") == "gzip" or body[:2] == b"\x1f\x8b":
+                                body = gzip.decompress(body)
+                            return json.loads(body.decode("utf-8"))
+            except urllib.error.HTTPError as he:
+                if he.code in (429, 500, 502, 503, 504):
+                    cd = 3.2 + att * 1.0
+                    with pace_lock:
+                        last_req_ts[0] = time.monotonic() + cd
+                    time.sleep(cd)
+                    continue
+                time.sleep(0.8 * (att + 1))
+            except Exception:
+                _reset_sess()
+                time.sleep(1.0 * (att + 1))
+        raise RuntimeError(f"Upstream documentary request failed after {retries} attempts: {path_qs}")
+
+    try:
+        p1 = _ka_get_json("/api/library?page=1")
+    except Exception as exc:
+        return {"site": "documentary", "status": "upstream_skipped", "http": [st_h, 500], "err": str(exc)}
 
     clean_html = strip_cf_challenge(b_h.decode("utf-8"))
-    # Strip dynamic SSR timestamp (countedAt ISO string) for stable change detection
     norm_html_for_fp = re.sub(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z", "TS", clean_html)
-    p1 = json.loads(b_p1.decode("utf-8"))
-    fp_meta = json.dumps({"stats": p1.get("stats"), "facets": p1.get("facets"), "pages": p1.get("pagination", {}).get("pages"), "p1_films": p1.get("films", [])}, ensure_ascii=False, sort_keys=True)
+    expected_total = int((p1.get("pagination") or {}).get("total") or 0)
+    total_pages = int((p1.get("pagination") or {}).get("pages") or 1)
+    fp_meta = json.dumps({"stats": p1.get("stats"), "facets": p1.get("facets"), "pages": total_pages, "p1_films": p1.get("films", [])}, ensure_ascii=False, sort_keys=True)
     fp = sha256_bytes(norm_html_for_fp.encode("utf-8") + b"|" + fp_meta.encode("utf-8") + b"|" + SHIM_REV.encode("ascii"))
 
     state_p = site_dir / ".sync_state.json"
-    if state_p.is_file():
+    lib_gz_p = site_dir / "data" / "library_full.json.gz"
+    lib_meta_p = site_dir / "data" / "library_meta.json"
+    lib_legacy_p = site_dir / "data" / "library_full.json"
+
+    if state_p.is_file() and lib_gz_p.is_file():
         try:
-            if json.loads(state_p.read_text(encoding="utf-8")).get("fingerprint") == fp:
-                return {"site": "documentary", "status": "up-to-date"}
+            prev_st = json.loads(state_p.read_text(encoding="utf-8"))
+            if prev_st.get("fingerprint") == fp and int(prev_st.get("published") or 0) >= expected_total:
+                return {"site": "documentary", "status": "up-to-date", "films": prev_st.get("published")}
         except Exception:
             pass
 
@@ -525,45 +613,86 @@ def sync_documentary(site_dir: Path, auto_push: bool = True) -> dict:
         if se == 200 and be:
             (site_dir / extra.lstrip("/")).write_bytes(be)
 
-    # Load existing cached full film records so unchanged films don't need 678 roundtrips unless modified
+    # Load existing cached full film records from library_full.json.gz or legacy library_full.json
     cached_by_id = {}
-    lib_p = site_dir / "data" / "library_full.json"
-    if lib_p.is_file():
+    for cand_p in (lib_gz_p, lib_legacy_p):
+        if cand_p.is_file():
+            try:
+                raw_c = cand_p.read_bytes()
+                if cand_p.suffix == ".gz":
+                    raw_c = gzip.decompress(raw_c)
+                old_db = json.loads(raw_c.decode("utf-8"))
+                for f in old_db.get("films", []):
+                    if f.get("id") and f["id"] not in cached_by_id:
+                        cached_by_id[f["id"]] = f
+            except Exception:
+                pass
+
+    ckpt_p = Path(tempfile.gettempdir()) / "jintai_doc_pages_ckpt.json"
+    pages_map: dict[int, list] = {1: p1["films"]}
+    if ckpt_p.is_file():
         try:
-            old_db = json.loads(lib_p.read_text(encoding="utf-8"))
-            for f in old_db.get("films", []):
-                if f.get("id"):
-                    cached_by_id[f["id"]] = f
+            ck = json.loads(ckpt_p.read_text(encoding="utf-8"))
+            if ck.get("total_pages") == total_pages and ck.get("expected_total") == expected_total:
+                for k, v in (ck.get("pages") or {}).items():
+                    if isinstance(v, list) and v:
+                        pages_map[int(k)] = v
         except Exception:
             pass
 
-    total_pages = p1["pagination"]["pages"]
-    def fetch_pg(pg):
-        if pg == 1:
-            return 1, p1["films"]
-        s, b = fetch_bytes(f"{base}/api/library?page={pg}")
-        return pg, (json.loads(b.decode("utf-8"))["films"] if s == 200 and b else [])
+    missing_pages = [pg for pg in range(2, total_pages + 1) if pg not in pages_map]
+    if missing_pages:
+        def fetch_pg(pg: int):
+            d = _ka_get_json(f"/api/library?page={pg}")
+            return pg, (d.get("films") or [])
+
+        done_cnt = 0
+        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as ex:
+            for pg, flist in ex.map(fetch_pg, missing_pages):
+                pages_map[pg] = flist
+                done_cnt += 1
+                if done_cnt % 100 == 0 or done_cnt == len(missing_pages):
+                    print(f"[documentary] fetched {len(pages_map)}/{total_pages} pages...", flush=True)
+                    try:
+                        ckpt_p.write_text(json.dumps({"total_pages": total_pages, "expected_total": expected_total, "pages": {str(k): v for k, v in pages_map.items()}}, ensure_ascii=False), encoding="utf-8")
+                    except Exception:
+                        pass
 
     summaries = []
-    with concurrent.futures.ThreadPoolExecutor(max_workers=12) as ex:
-        for _, flist in sorted(ex.map(fetch_pg, range(1, total_pages + 1)), key=lambda x: x[0]):
-            summaries.extend(flist)
+    for pg in range(1, total_pages + 1):
+        summaries.extend(pages_map.get(pg) or [])
+    ckpt_p.unlink(missing_ok=True)
 
-    def resolve_film(idx_item):
-        idx, item = idx_item
+    if expected_total > 0 and len(summaries) < int(expected_total * 0.99):
+        raise RuntimeError(f"Incomplete documentary pagination fetch: got {len(summaries)} of {expected_total}")
+
+    # Preserve already-enriched details and incrementally enrich up to 12 uncached records per run
+    full_films = []
+    need_detail_indices = []
+    for idx, item in enumerate(summaries):
         fid = item["id"]
         old = cached_by_id.get(fid)
         if old and old.get("title") == item.get("title") and old.get("summary") == item.get("summary") and "segments" in old:
             cp = dict(old)
             cp["_order"] = idx
-            return cp
-        s, b = fetch_bytes(f"{base}/api/library?id={urllib.parse.quote(fid)}", retries=4)
-        full = (json.loads(b.decode("utf-8")).get("film") or item) if (s == 200 and b) else dict(item)
-        full["_order"] = idx
-        return full
+            full_films.append(cp)
+        else:
+            cp = dict(item)
+            cp["_order"] = idx
+            full_films.append(cp)
+            if len(need_detail_indices) < 12:
+                need_detail_indices.append(idx)
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=16) as ex:
-        full_films = list(ex.map(resolve_film, enumerate(summaries)))
+    for i in need_detail_indices:
+        fid = full_films[i]["id"]
+        try:
+            d = _ka_get_json(f"/api/library?id={urllib.parse.quote(fid)}", retries=3)
+            if d.get("film"):
+                merged = dict(d["film"])
+                merged["_order"] = i
+                full_films[i] = merged
+        except Exception:
+            pass
 
     bundle = {
         "stats": p1["stats"],
@@ -573,15 +702,27 @@ def sync_documentary(site_dir: Path, auto_push: bool = True) -> dict:
         "films": full_films,
     }
     (site_dir / "data").mkdir(parents=True, exist_ok=True)
-    lib_p.write_bytes(json.dumps(bundle, ensure_ascii=False, separators=(",", ":")).encode("utf-8"))
+    raw_bundle = json.dumps(bundle, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+    buf = io.BytesIO()
+    with gzip.GzipFile(filename="", mode="wb", fileobj=buf, compresslevel=9, mtime=0) as gf:
+        gf.write(raw_bundle)
+    lib_gz_p.write_bytes(buf.getvalue())
+    lib_meta_p.write_text(json.dumps({
+        "stats": p1["stats"],
+        "facets": p1["facets"],
+        "countedAt": p1["countedAt"],
+        "mirrored_films": len(full_films),
+    }, ensure_ascii=False, indent=2), encoding="utf-8")
+    if lib_legacy_p.is_file():
+        lib_legacy_p.unlink(missing_ok=True)
 
     final_html = rewrite_vinext_html(clean_html, make_gate_script("金泰 AI · 纪录片教学资源库"), DOC_SHIM)
     (site_dir / "index.html").write_bytes(final_html.encode("utf-8"))
     check_html_js_syntax(site_dir / "index.html")
     state_p.write_text(json.dumps({"fingerprint": fp, "published": len(full_films)}, indent=2), encoding="utf-8")
 
-    changed = git_push_if_changed(site_dir, "documentary-classroom-library", f"sync(auto): upstream documentary library ({len(full_films)} films)", auto_push)
-    return {"site": "documentary", "status": "updated" if changed else "up-to-date", "changed_files": len(changed), "films": len(full_films)}
+    changed = git_push_if_changed(site_dir, "documentary-classroom-library", f"sync(auto): upstream documentary library ({len(full_films):,} films, gzipped)", auto_push)
+    return {"site": "documentary", "status": "updated" if changed else "up-to-date", "changed_files": len(changed), "films": len(full_films), "gz_bytes": lib_gz_p.stat().st_size}
 
 
 # ------------------------------------------------------------------------------
@@ -1070,6 +1211,7 @@ ZH_OLD_UNPACK_2 = '((d,x)=>{const u=v=>Array.isArray(v)?v.map(u):v&&typeof v==="
 ZH_NEW_UNPACK_2 = '((d,x)=>{const u=v=>{if(Array.isArray(v)){const n=v.length,r=new Array(n);for(let i=0;i<n;i++)r[i]=u(v[i]);return r}if(!v||typeof v!=="object")return v;if(v.$s!==undefined)return d[v.$s];const o={};for(const k in v)o[k]=u(v[k]);return o};return u(x)})'
 ZH_CONCAT_PREFIX = "window.ARCHIVE_DATA.records=window.ARCHIVE_DATA.records.concat("
 ZH_DEFERRED_P2 = {
+    "citation-supplements.js",
     "culture-notes.js",
     "expansion-audit.js",
     "expansion-candidates.js",
@@ -1974,9 +2116,10 @@ def collect_live_4sites_metrics(root: Path) -> dict:
             if p.suffix.lower() in {".webp", ".jpg", ".jpeg", ".png"} and ".git" not in p.parts
         )
 
+    doc_meta = root / "02_documentary-classroom-library" / "data" / "library_meta.json"
     doc_lib = root / "02_documentary-classroom-library" / "data" / "library_full.json"
-    if doc_lib.is_file():
-        dobj = json.loads(doc_lib.read_text(encoding="utf-8"))
+    if doc_meta.is_file() or doc_lib.is_file():
+        dobj = json.loads((doc_meta if doc_meta.is_file() else doc_lib).read_text(encoding="utf-8"))
         st = dobj.get("stats") or {}
         fc = dobj.get("facets") or {}
         if st.get("published"):
