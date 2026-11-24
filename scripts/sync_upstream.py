@@ -10,9 +10,9 @@
 import argparse
 import concurrent.futures
 import gzip
+import io
 import hashlib
 import http.client
-import io
 import json
 import os
 import re
@@ -349,14 +349,16 @@ def git_push_if_changed(repo_dir: Path, repo_name: str, msg: str, auto_push: boo
 # 1. Shengcang Incremental Sync
 # ------------------------------------------------------------------------------
 SHIM_REV = "20261113d1"
+SC_SHIM_REV = "20261124finder5"
 ZH_SHIM_REV = "20261124i1"
 SC_SHIM = """<style>a[href*="signin-with-chatgpt"]{display:none!important}</style><script id="jintai-shengcang-shim">(function(){
 var BASE=new URL('.',location.href).pathname;if(BASE.slice(-1)!=='/')BASE+='/';window.__JT_BASE__=BASE;
 var IS_GH=/github\\.io$/i.test(location.hostname||'');
 var RAW='https://raw.githubusercontent.com/aikingtai-ctrl/shengcang-sound-library/main/';
+var SOURCE='https://shengcang-sound-library.jeaess66.chatgpt.site/';
 var CDNS=['https://testingcf.jsdelivr.net/gh/aikingtai-ctrl/shengcang-sound-library@main/','https://gcore.jsdelivr.net/gh/aikingtai-ctrl/shengcang-sound-library@main/'];
 function resolveMedia(rel){if(!rel||typeof rel!=='string')return rel;var clean=rel.replace(/^\\.\\//,'').replace(/^\\//,'');if(!/^(audio|images)\\//.test(clean))return rel;return BASE+clean;}
-window.addEventListener('error',function(ev){var el=ev.target;if(!el||!el.tagName)return;var tag=el.tagName.toUpperCase();if(tag!=='AUDIO'&&tag!=='SOURCE'&&tag!=='IMG')return;var cur=el.getAttribute('src')||el.src||'';var m=cur.match(/(?:shengcang-sound-library(?:@main|\\/main)\\/|\\/)((?:audio|images)\\/[^?#]+)/);if(!m)return;var clean=m[1];var step=parseInt(el.getAttribute('data-jt-fb')||'0',10);var cands=IS_GH?[RAW+clean,CDNS[0]+clean,CDNS[1]+clean]:[CDNS[0]+clean,RAW+clean];if(step<cands.length){el.setAttribute('data-jt-fb',String(step+1));el.src=cands[step];if(tag==='AUDIO'&&typeof el.load==='function')el.load();}},true);
+window.addEventListener('error',function(ev){var el=ev.target;if(!el||!el.tagName)return;var tag=el.tagName.toUpperCase();if(tag!=='AUDIO'&&tag!=='SOURCE'&&tag!=='IMG')return;var cur=el.getAttribute('src')||el.src||'';var m=cur.match(/(?:shengcang-sound-library(?:@main|\\/main)\\/|\\/)((?:audio|images)\\/[^?#]+)/);if(!m)return;var clean=m[1];var step=parseInt(el.getAttribute('data-jt-fb')||'0',10);var cands=IS_GH?[RAW+clean,CDNS[0]+clean,CDNS[1]+clean]:[CDNS[0]+clean,RAW+clean];if(tag==='AUDIO'||tag==='SOURCE')cands.push(SOURCE+clean);if(step<cands.length){el.setAttribute('data-jt-fb',String(step+1));el.src=cands[step];if(tag==='AUDIO'&&typeof el.load==='function')el.load();}},true);
 document.addEventListener('click',function(ev){var a=ev.target&&ev.target.closest?ev.target.closest('a'):null;if(!a)return;var hr=a.getAttribute('href')||'';if(hr.indexOf('signin-with-chatgpt')!==-1){ev.preventDefault();return;}if(/^\\/(audio|images)\\//.test(hr)){a.setAttribute('href',resolveMedia(hr));}},true);
 var _dbPromise=null;var origFetch=window.fetch.bind(window);window.__jtOrigFetch=origFetch;
 function getSoundsDB(){if(_dbPromise)return _dbPromise;var cb='?t='+Math.floor(Date.now()/300000);var urls=IS_GH?[BASE+'data/sounds.json'+cb,RAW+'data/sounds.json'+cb,CDNS[0]+'data/sounds.json'+cb]:[BASE+'data/sounds.json'+cb,CDNS[0]+'data/sounds.json'+cb];_dbPromise=(async function(){for(var i=0;i<urls.length;i++){try{var r=await origFetch(urls[i]);if(r.ok){var d=await r.json();var arr=Array.isArray(d)?d:(d.sounds||[]);arr.forEach(function(it){if(it.src)it.src=resolveMedia(it.src);if(Array.isArray(it.variants))it.variants.forEach(function(v){if(v&&v.src)v.src=resolveMedia(v.src);});});return Array.isArray(d)?{sounds:arr,raw:arr}:{sounds:arr,raw:d};}}catch(e){}}return {sounds:[],raw:{sounds:[]}};})();return _dbPromise;}
@@ -367,6 +369,13 @@ window.fetch=async function(input,init){var urlStr=typeof input==='string'?input
 def sync_shengcang(site_dir: Path, auto_push: bool = True) -> dict:
     git_prepare_repo(site_dir, auto_push)
     base = "https://shengcang-sound-library.fondcream1.chatgpt.site"
+    try:
+        with urllib.request.urlopen(urllib.request.Request(base + "/", headers={"User-Agent": UA}), timeout=15) as r_eff:
+            eff_netloc = urllib.parse.urlparse(r_eff.geturl()).netloc
+            if eff_netloc:
+                base = f"https://{eff_netloc}"
+    except Exception:
+        pass
     st_h, b_h = fetch_bytes(base + "/")
     st_a, b_a = fetch_bytes(base + "/api/sounds")
     if st_h != 200 or st_a != 200:
@@ -376,7 +385,8 @@ def sync_shengcang(site_dir: Path, auto_push: bool = True) -> dict:
     cat_refs = sorted(set(re.findall(r"/catalogue-[A-Za-z0-9_.-]+\.json", clean_html)))
     api_data = json.loads(b_a.decode("utf-8"))
     norm_sounds = json.dumps(api_data, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
-    fp = sha256_bytes(clean_html.encode("utf-8") + b"|" + norm_sounds + b"|" + SHIM_REV.encode("ascii"))
+    finder_patch = site_dir / "scripts" / "finder_patch.py"
+    fp = sha256_bytes(clean_html.encode("utf-8") + b"|" + norm_sounds + b"|" + SC_SHIM_REV.encode("ascii") + b"|" + finder_patch.read_bytes())
 
     cats_present = all((site_dir / cr.lstrip("/")).is_file() for cr in cat_refs)
     state_p = site_dir / ".sync_state.json"
@@ -463,8 +473,9 @@ def sync_shengcang(site_dir: Path, auto_push: bool = True) -> dict:
 
     final_html = rewrite_vinext_html(clean_html, make_gate_script("金泰 AI · 声仓（影视声音素材库）"), SC_SHIM)
     (site_dir / "index.html").write_bytes(final_html.encode("utf-8"))
+    subprocess.run([sys.executable, str(finder_patch), str(site_dir)], check=True)
     check_html_js_syntax(site_dir / "index.html")
-    state_p.write_text(json.dumps({"fingerprint": fp, "sounds_count": len(items)}, indent=2), encoding="utf-8")
+    state_p.write_bytes(json.dumps({"fingerprint": fp, "sounds_count": len(items)}, indent=2).encode("utf-8"))
 
     changed = git_push_if_changed(site_dir, "shengcang-sound-library", f"sync(auto): upstream shengcang ({len(items)} sounds)", auto_push)
     return {"site": "shengcang", "status": "updated" if changed else "up-to-date", "changed_files": len(changed), "sounds": len(items)}
@@ -1784,12 +1795,54 @@ def sync_zhonghua(site_dir: Path, auto_push: bool = True) -> dict:
     return {"site": "zhonghua", "status": "updated" if changed else "up-to-date", "changed_files": len(changed), "new_media": len(missing_media)}
 
 
-def sync_history_site1() -> dict:
+def sync_history_site1(auto_push: bool = True) -> dict:
     hist_mgr = Path(r"C:\Users\KingT\jintai-internal\中国历史文化图库\每日更新\管理\ensure_domestic_compact_index.py")
     cat_sync = Path(r"C:\Users\KingT\jintai-internal\中国历史文化图库\每日更新\管理\sync_all_category_pages.py")
     pub = Path(r"C:\Users\KingT\jintai-internal\中国历史文化图库\每日更新\publish_checkout_20261012")
     if not hist_mgr.is_file() or not pub.is_dir():
         return {"site": "history", "status": "skipped_not_local"}
+
+    # The remote branch can advance while this partial clone's local HEAD stays
+    # behind. Check before generating pages or staging objects; the publisher
+    # cannot safely push across that divergence. Keep the other sites running.
+    probe_env = os.environ.copy()
+    probe_env["GIT_NO_LAZY_FETCH"] = "1"
+
+    def probe_git(*args: str) -> str:
+        command = ["git", "--no-lazy-fetch", "-C", str(pub), *args]
+        proc = subprocess.Popen(
+            command, env=probe_env, stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE, creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
+        )
+        try:
+            stdout, stderr = proc.communicate(timeout=25)
+        except subprocess.TimeoutExpired:
+            try:
+                subprocess.run(
+                    ["taskkill", "/PID", str(proc.pid), "/T", "/F"],
+                    capture_output=True, timeout=10, check=False,
+                )
+            except subprocess.TimeoutExpired:
+                pass
+            if proc.poll() is None:
+                proc.kill()
+            proc.communicate()
+            raise RuntimeError("history remote-head probe timed out")
+        if proc.returncode:
+            raise subprocess.CalledProcessError(
+                proc.returncode, command, output=stdout, stderr=stderr,
+            )
+        return stdout.decode("utf-8", errors="replace").strip()
+
+    try:
+        local_head = probe_git("rev-parse", "HEAD")
+        remote_line = probe_git("ls-remote", "--heads", "origin", "main")
+    except (OSError, RuntimeError, subprocess.SubprocessError) as exc:
+        return {"site": "history", "status": "blocked_remote_check", "reason": type(exc).__name__}
+    remote_head = remote_line.split("\t", 1)[0] if remote_line else ""
+    if remote_head != local_head:
+        return {"site": "history", "status": "blocked_remote_diverged", "local_head": local_head, "remote_head": remote_head}
+
     sync_ext = hist_mgr.parent / "sync_external_and_verify.py"
     subprocess.run([sys.executable, str(sync_ext)], check=True)
     tracked_targets = [
@@ -1802,13 +1855,8 @@ def sync_history_site1() -> dict:
         "更新记录.html", "changelog.html", "00_每日更新总目录.html", "每日更新/00_每日更新总目录.html",
     ]
     existing_targets = [t for t in tracked_targets if (pub / t).exists()]
-    st = subprocess.run(["git", "-C", str(pub), "status", "--porcelain", "--"] + existing_targets, capture_output=True, text=True)
-    if st.stdout.strip():
-        subprocess.run(["git", "-C", str(pub), "add", "--"] + existing_targets, check=True)
-        subprocess.run(["git", "-C", str(pub), "commit", "-m", "sync(auto): refresh domestic compact index, specialist category pages & WeChat gate"], check=True)
-        subprocess.run(["git", "-C", str(pub), "push", "origin", "HEAD:main"], check=True, timeout=240)
-        return {"site": "history", "status": "updated"}
-    return {"site": "history", "status": "up-to-date"}
+    result = _history_publish_selected(pub, existing_targets, auto_push=auto_push)
+    return {"site": "history", **result}
 
 
 def collect_live_4sites_metrics(root: Path) -> dict:
@@ -2202,6 +2250,28 @@ def sync_portal_and_hbcm_metrics(root: Path, auto_push: bool = True) -> dict:
                 {"name": "🎚️ 声仓首页与使用指南", "meta": "波形预览与下载", "cloud": "https://aikingtai-ctrl.github.io/shengcang-sound-library/", "local": "/shengcang-sound-library/"},
             ],
         },
+        {
+            "key": "story2board",
+            "fullWidth": True,
+            "title": "5. 金泰 Story2Board · AI 分镜副导演与影史分镜工作台（公开免密直达）",
+            "tags": [
+                [f"250 部影史名片蒸馏 · 58,610 精标母镜 · 关联 {m['film_works']:,} 部 / {m['film_shots']:,} 镜", ""],
+                ["AI 副导演拆镜配镜 · 锁脸提示词包 · 20pt 大字场记单", ""],
+                ["公开免密直达 · 离线+隧道实时双模", "red"],
+            ],
+            "desc": (
+                f"内置双预设 8×H100 实渲电影分镜示例（《雨夜霓虹》《长安暮雪》），支持 250 部影史名片离线秒搜与隧道直连 58,610 条精标母镜"
+                f"（关联《影视参考图集》{m['film_works']:,} 部 / {m['film_shots']:,} 镜）、输入故事自动拆镜提供 3 套影史大师机位方案与运镜动机、"
+                "一键复制锁脸提示词包及 20pt 大字场记单打印直出。"
+            ),
+            "cloudUrl": "https://aikingtai-ctrl.github.io/jintai-story2board/",
+            "localPath": "/jintai-story2board/",
+            "catTitle": "工作台核心模式与直达入口：",
+            "categories": [
+                {"name": "🎥 AI 副导演工作台", "meta": "剧本拆镜 · 3 套大师机位", "cloud": "https://aikingtai-ctrl.github.io/jintai-story2board/", "local": "/jintai-story2board/"},
+                {"name": "📚 影史分镜索引库", "meta": f"250 名片 · {film_wan1}万全库", "cloud": "https://aikingtai-ctrl.github.io/jintai-story2board/#index", "local": "/jintai-story2board/#index"},
+            ],
+        },
     ]
 
     p_idx = portal_dir / "index.html"
@@ -2211,11 +2281,12 @@ def sync_portal_and_hbcm_metrics(root: Path, auto_push: bool = True) -> dict:
         f'· 影视参考库（{m["film_works"]:,} 部 / {m["film_shots"]:,} 镜 / {m["film_styles"]} 大流派）'
         f'· 声仓（{m["sc_total"]:,} 条声效 / {m["sc_cats"]} 大类）'
         f'· 纪录片教学库（{m["doc_published"]:,} 部已发布 / {m["doc_total"]:,} 总目）'
-        f'· 中华文明影像库（12 断代专卷 / {m["zh_records"]:,} 条馆藏考证）。</p>'
+        f'· 中华文明影像库（12 断代专卷 / {m["zh_records"]:,} 条馆藏考证）'
+        f'· Story2Board AI 分镜工作台（250 名片 / 58,610 精标母镜）。</p>'
     )
     sites_js = "  var SITES = " + json.dumps(sites_data, ensure_ascii=False, indent=4) + ";"
     pt = re.sub(r'<p class="lead">.*?</p>', new_lead, orig_pt, count=1, flags=re.S)
-    pt = re.sub(r"  var SITES = \[.*?\n  \];", lambda _: sites_js, pt, count=1, flags=re.S)
+    pt = re.sub(r"  var SITES = \[.*?\n\s*\];", lambda _: sites_js, pt, count=1, flags=re.S)
     if pt != orig_pt:
         today_s = time.strftime("%Y-%m-%d")
         pt = re.sub(r"四站全分类网页实时同步（\d{4}-\d{2}-\d{2}）", f"四站全分类网页实时同步（{today_s}）", pt, count=1)
@@ -2299,7 +2370,12 @@ def main():
 
     results = []
     if args.only in ("all", "history") and not args.repo_dir:
-        results.append(sync_history_site1())
+        # A partial-clone diff can lazily download multi-GB Git packs. Keep the
+        # other site mirrors live while disk-space recovery is in progress.
+        if (root / ".pause_history_sync").is_file():
+            results.append({"site": "history", "status": "paused_low_disk"})
+        else:
+            results.append(sync_history_site1(auto_push=auto_push))
     if args.only in ("all", "shengcang"):
         d = Path(args.repo_dir) if args.repo_dir else (root / "01_shengcang-sound-library")
         results.append(sync_shengcang(d, auto_push=auto_push))
