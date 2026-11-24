@@ -4,6 +4,8 @@ import gzip
 import hashlib
 import importlib.util
 import json
+import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -34,6 +36,16 @@ def loader_source(scripts=("a.js?v=1", "b.js?v=2")):
 
 
 class CatalogSyncTests(unittest.TestCase):
+    REVISION = "b" * 64
+
+    @staticmethod
+    def install_shang_inputs(root):
+        (root / "scripts").mkdir(exist_ok=True)
+        for rel in SYNC.SHANG_ALL_INPUTS:
+            destination = root / rel
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(SCRIPT.parent.parent / rel, destination)
+
     @staticmethod
     def upstream_fixture():
         record = {"id": "new", "title": "商代铜鼎", "era": "商", "category": "器物与工艺",
@@ -44,7 +56,7 @@ class CatalogSyncTests(unittest.TestCase):
         ref_b = "b.js?v=" + hashlib.sha256(script_b).hexdigest()[:12]
         loader = loader_source((ref_a, ref_b)).replace("catalog-base.json.gz?v=abc", "catalog-base.json.gz?v=123456789abc").encode("utf-8")
         loader_ref = "catalog-loader.js?v=" + hashlib.sha256(loader).hexdigest()[:12]
-        html = ('<html><head></head><body><strong id="totalCount">—</strong>'
+        html = ('<html><head></head><body><div class="hero-actions"><a href="#explore">开始检索</a></div><strong id="totalCount">—</strong>'
                 '<span id="allCount">—</span><span id="resultCount">—</span>'
                 '<div class="cards" id="cards"></div><div class="empty" id="empty"></div>'
                 '<button id="loadMore" class="load-more">继续浏览</button>'
@@ -55,12 +67,13 @@ class CatalogSyncTests(unittest.TestCase):
             "catalog-base.json.gz": gzip.compress(json.dumps({"records": [record]}).encode("utf-8")),
             "a.js": script_a,
             "b.js": script_b,
-            "site-version.json": b'{}',
+            "site-version.json": json.dumps({"revision": CatalogSyncTests.REVISION}).encode("utf-8"),
             "publication-proofs/build-report.json": b'{}',
         }
 
     @staticmethod
     def run_fake_sync(root, payloads):
+        CatalogSyncTests.install_shang_inputs(root)
         def fake_fetch(url, **_kwargs):
             rel = urlparse(url).path.lstrip("/") or "index.html"
             return (200, payloads[rel]) if rel in payloads else (404, b"")
@@ -150,6 +163,68 @@ vm.runInContext(source,context);
         found = SYNC.discover_zh_catalog_media(gzip.compress(json.dumps(payload).encode("utf-8")))
         self.assertEqual(found, {"assets/new-artifact.webp", "research-western-zhou/images/front.jpg", "assets/second.png"})
 
+    def test_shang_full_snapshot_preserves_records_and_is_deterministic(self):
+        with tempfile.TemporaryDirectory(prefix="zh-shang-all-build-") as tmp:
+            root = Path(tmp)
+            self.install_shang_inputs(root)
+            (root / "site-version.json").write_text(json.dumps({"revision": self.REVISION}), encoding="utf-8")
+            first = {"id": "shang-one", "era": "商", "title": "甲骨", "sourceUrl": "https://example.org/one",
+                     "localImage": "assets/one.webp", "verification": {"reviewerType": "ai"}, "unknownSourceField": [1, {"x": True}]}
+            second = {"id": "shang-two", "era": "商", "title": "铜器", "openLicense": False, "citation": "原始引用"}
+            other = {"id": "zhou-one", "era": "周", "title": "周器"}
+            catalog = root / "catalog-base.json.gz"
+            catalog.write_bytes(gzip.compress(json.dumps({"version": "v-test", "records": [first, other, second]}, ensure_ascii=False).encode("utf-8")))
+            built = SYNC.build_shang_all_snapshot(root, catalog)
+            data = (root / "shang-all-data.json.gz").read_bytes()
+            page = (root / "shang-all.html").read_text(encoding="utf-8")
+            pack = json.loads(gzip.decompress(data))
+            self.assertEqual(pack["records"], [first, second])
+            self.assertEqual(pack["count"], 2)
+            self.assertEqual(pack["version"], "v-test")
+            self.assertEqual(pack["revision"], self.REVISION)
+            self.assertEqual(data[4:8], b"\0\0\0\0")
+            self.assertIn('name="shang-all-data-hash" content="' + built["data_hash"] + '"', page)
+            self.assertIn('name="atlas-snapshot-revision" content="' + self.REVISION + '"', page)
+            self.assertIn('id="jt-unified-gate"', page)
+            self.assertTrue(SYNC.shang_all_snapshot_ready(root))
+            SYNC.build_shang_all_snapshot(root, catalog)
+            self.assertEqual((root / "shang-all-data.json.gz").read_bytes(), data)
+            (root / "shang-all.js").write_text("// changed", encoding="utf-8")
+            self.assertFalse(SYNC.shang_all_snapshot_ready(root))
+            self.install_shang_inputs(root)
+            (root / "shang-all-data.json.gz").write_bytes(b"broken gzip")
+            self.assertFalse(SYNC.shang_all_snapshot_ready(root))
+
+    def test_shang_route_is_early_exact_and_hero_link_is_idempotent(self):
+        with tempfile.TemporaryDirectory(prefix="zh-shang-route-") as tmp:
+            root = Path(tmp)
+            gate = SYNC.make_gate_script("金泰 AI · 中华文明影像库")
+            (root / "index.html").write_text('<html><head>' + gate + '</head><body><div class="hero-actions"><a href="#explore">开始检索</a></div></body></html>', encoding="utf-8")
+            (root / "shang-all.html").write_text('<html><head>' + gate + '</head><body></body></html>', encoding="utf-8")
+            SYNC.optimize_zhonghua_site(root)
+            built = (root / "index.html").read_text(encoding="utf-8")
+            self.assertLess(built.index('id="jt-shang-all-route"'), built.index('id="jt-unified-gate"'))
+            self.assertEqual(built.count('id="jt-shang-all-link"'), 1)
+            self.assertIn('href="./shang-all.html"', built)
+            self.assertTrue(SYNC.shang_all_index_ready(root))
+            route = re.search(r'<script id="jt-shang-all-route">(.*?)</script>', built, re.S).group(1)
+            harness = r"""
+const vm=require('vm'), source=process.argv[1];
+for(const [hash,expected] of [['#era=商',true],['#era=%E5%95%86',true],['#era=商&polity=商',false],['#era=唐',false],['#item=one',false]]){
+  let destination=null;
+  const location={hash,href:'https://mirror.example/index.html'+hash,replace:value=>destination=value};
+  vm.runInNewContext(source,{location,URL,URLSearchParams});
+  if(Boolean(destination)!==expected)throw Error('wrong route for '+hash);
+  if(destination&&destination!=='https://mirror.example/shang-all.html')throw Error('wrong destination '+destination);
+}
+"""
+            run = subprocess.run(["node", "-e", harness, route], capture_output=True, text=True, timeout=5)
+            self.assertEqual(run.returncode, 0, run.stderr)
+            SYNC.optimize_zhonghua_site(root)
+            again = (root / "index.html").read_text(encoding="utf-8")
+            self.assertEqual(again.count('id="jt-shang-all-route"'), 1)
+            self.assertEqual(again.count('id="jt-shang-all-link"'), 1)
+
     def test_new_gzip_catalog_wins_over_stale_legacy_data(self):
         with tempfile.TemporaryDirectory(prefix="zh-catalog-ssg-") as tmp:
             root = Path(tmp)
@@ -193,9 +268,22 @@ vm.runInContext(source,context);
             self.assertTrue((root / "catalog-base.json.gz").is_file())
             self.assertTrue((root / "a.js").is_file())
             self.assertTrue((root / "b.js").is_file())
+            self.assertTrue((root / "shang-all-data.json.gz").is_file())
+            self.assertTrue(SYNC.shang_all_snapshot_ready(root))
+            self.assertEqual(json.loads(gzip.decompress((root / "shang-all-data.json.gz").read_bytes()))["records"][0]["id"], "new")
             built = (root / "index.html").read_text(encoding="utf-8")
             self.assertIn("商代铜鼎", built)
             self.assertIn("await window.__JT_CATALOG_READY__", built)
+            self.assertLess(built.index('id="jt-shang-all-route"'), built.index('id="jt-unified-gate"'))
+            self.assertEqual(self.run_fake_sync(root, self.upstream_fixture())["status"], "up-to-date")
+            (root / "shang-all-data.json.gz").unlink()
+            self.run_fake_sync(root, self.upstream_fixture())
+            self.assertTrue(SYNC.shang_all_snapshot_ready(root))
+            index_path = root / "index.html"
+            index_path.write_text(index_path.read_text(encoding="utf-8").replace('id="jt-shang-all-link"', 'id="removed-link"'), encoding="utf-8")
+            self.assertFalse(SYNC.shang_all_index_ready(root))
+            self.run_fake_sync(root, self.upstream_fixture())
+            self.assertTrue(SYNC.shang_all_index_ready(root))
 
     def test_sync_rejects_missing_current_script_even_with_stale_local_copy(self):
         with tempfile.TemporaryDirectory(prefix="zh-catalog-sync-missing-") as tmp:

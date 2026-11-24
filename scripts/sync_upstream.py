@@ -12,6 +12,7 @@ import concurrent.futures
 import gzip
 import hashlib
 import http.client
+import io
 import json
 import os
 import re
@@ -906,6 +907,122 @@ def discover_zh_catalog_media(data: bytes) -> set[str]:
     return found
 
 
+SHANG_ALL_BUILD_REV = "20261124a"
+SHANG_ALL_INPUTS = ("scripts/shang_all.template.html", "shang-all.js", "shang.css")
+
+
+def shang_all_input_fingerprint(site_dir: Path) -> str:
+    """Regenerate the scoped page when its template, script or CSS changes."""
+    digest = hashlib.sha256(SHANG_ALL_BUILD_REV.encode("ascii"))
+    for rel in SHANG_ALL_INPUTS:
+        path = site_dir / rel
+        if not path.is_file() or not path.stat().st_size:
+            raise RuntimeError(f"missing Shang full-catalog input: {rel}")
+        digest.update(rel.encode("utf-8") + b"\0" + path.read_bytes() + b"\0")
+    return digest.hexdigest()
+
+
+def build_shang_all_snapshot(site_dir: Path, catalog_path: Path) -> dict:
+    """Create a small, deterministic page from every current era=商 record."""
+    shang_all_input_fingerprint(site_dir)
+    version_path = site_dir / "site-version.json"
+    if not version_path.is_file():
+        raise RuntimeError("missing site-version.json for Shang full catalog")
+    revision = json.loads(version_path.read_text(encoding="utf-8")).get("revision", "")
+    if not re.fullmatch(r"[0-9a-f]{64}", revision):
+        raise RuntimeError("invalid site-version revision for Shang full catalog")
+    catalog_bytes = catalog_path.read_bytes()
+    decoded = gzip.decompress(catalog_bytes) if catalog_bytes.startswith(b"\x1f\x8b") else catalog_bytes
+    catalog = json.loads(decoded)
+    if not isinstance(catalog.get("records"), list):
+        raise RuntimeError("Shang source catalog has no records array")
+    records = [record for record in catalog["records"] if isinstance(record, dict) and record.get("era") == "商"]
+    ids = [record.get("id") for record in records]
+    if not records or any(not isinstance(id_, str) or not id_ for id_ in ids) or len(ids) != len(set(ids)):
+        raise RuntimeError("Shang full catalog is empty or has invalid/duplicate IDs")
+    payload = {
+        "version": catalog.get("version"),
+        "revision": revision,
+        "scope": "era=商",
+        "sourcePolicy": catalog.get("sourcePolicy"),
+        "periods": [p for p in catalog.get("periods", []) if isinstance(p, dict) and p.get("name") == "商"],
+        "sourceRevision": revision,
+        "count": len(records),
+        "records": records,
+    }
+    json_bytes = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    buffer = io.BytesIO()
+    with gzip.GzipFile(filename="", mode="wb", fileobj=buffer, compresslevel=6, mtime=0) as archive:
+        archive.write(json_bytes)
+    compressed = buffer.getvalue()
+    data_hash = sha256_bytes(compressed)[:12]
+    template = (site_dir / "scripts" / "shang_all.template.html").read_text(encoding="utf-8")
+    substitutions = {
+        "GATE": make_gate_script("金泰 AI · 中华文明影像库"),
+        "SHIM": ZH_SHIM,
+        "REVISION": revision,
+        "COUNT": str(len(records)),
+        "JS_HASH": sha256_bytes((site_dir / "shang-all.js").read_bytes())[:12],
+        "CSS_HASH": sha256_bytes((site_dir / "shang.css").read_bytes())[:12],
+        "DATA_HASH": data_hash,
+    }
+    if any("{{" + key + "}}" not in template for key in substitutions):
+        raise RuntimeError("Shang full-catalog template is missing required placeholders")
+    html = template
+    for key, value in substitutions.items():
+        html = html.replace("{{" + key + "}}", value)
+    if re.search(r"\{\{[A-Z_]+\}\}", html) or 'id="jt-unified-gate"' not in html:
+        raise RuntimeError("Shang full-catalog template did not render safely")
+    outputs = {
+        "shang-all-data.json.gz": compressed,
+        "shang-all.html": html.encode("utf-8"),
+    }
+    for rel, content in outputs.items():
+        path = site_dir / rel
+        if not path.is_file() or path.read_bytes() != content:
+            path.write_bytes(content)
+    check_html_js_syntax(site_dir / "shang-all.html")
+    return {"count": len(records), "data_hash": data_hash, "revision": revision}
+
+
+def shang_all_snapshot_ready(site_dir: Path) -> bool:
+    """Guard the no-op sync path against missing or stale scoped output."""
+    try:
+        shang_all_input_fingerprint(site_dir)
+        page = (site_dir / "shang-all.html").read_text(encoding="utf-8")
+        data = (site_dir / "shang-all-data.json.gz").read_bytes()
+        revision = json.loads((site_dir / "site-version.json").read_text(encoding="utf-8"))["revision"]
+        payload = json.loads(gzip.decompress(data))
+        records = payload["records"]
+        count = len(records)
+        return (
+            bool(count)
+            and payload.get("count") == count
+            and payload.get("sourceRevision") == revision
+            and payload.get("revision") == revision
+            and all(isinstance(r, dict) and r.get("era") == "商" for r in records)
+            and all(isinstance(r.get("id"), str) and r.get("id") for r in records)
+            and len({r.get("id") for r in records}) == count
+            and f'name="atlas-snapshot-revision" content="{revision}"' in page
+            and f'name="shang-all-data-hash" content="{sha256_bytes(data)[:12]}"' in page
+            and f'shang-all.js?v={sha256_bytes((site_dir / "shang-all.js").read_bytes())[:12]}' in page
+            and f'shang.css?v={sha256_bytes((site_dir / "shang.css").read_bytes())[:12]}' in page
+            and 'id="jt-unified-gate"' in page
+        )
+    except (OSError, KeyError, TypeError, ValueError, EOFError):
+        return False
+
+
+def shang_all_index_ready(site_dir: Path) -> bool:
+    try:
+        page = (site_dir / "index.html").read_text(encoding="utf-8")
+        return ('id="jt-shang-all-route"' in page
+                and 'id="jt-shang-all-link"' in page
+                and page.index('id="jt-shang-all-route"') < page.index('id="jt-unified-gate"'))
+    except (OSError, ValueError):
+        return False
+
+
 ZH_OLD_UNPACK_1 = '((k,d,x)=>{const u=v=>{if(Array.isArray(v))return v.map(u);if(!v||typeof v!=="object")return v;if(Object.hasOwn(v,"$s"))return d[v.$s];const a=v.$o,p=[];for(let i=0;i<a.length;i+=2)p.push([k[a[i]],u(a[i+1])]);return Object.fromEntries(p)};return u(x)})'
 ZH_NEW_UNPACK_1 = '((k,d,x)=>{const u=v=>{if(Array.isArray(v)){const n=v.length,r=new Array(n);for(let i=0;i<n;i++)r[i]=u(v[i]);return r}if(!v||typeof v!=="object")return v;if(v.$s!==undefined)return d[v.$s];const a=v.$o,o={};for(let i=0;i<a.length;i+=2)o[k[a[i]]]=u(a[i+1]);return o};return u(x)})'
 ZH_OLD_UNPACK_2 = '((d,x)=>{const u=v=>Array.isArray(v)?v.map(u):v&&typeof v==="object"?(Object.hasOwn(v,"$s")?d[v.$s]:Object.fromEntries(Object.entries(v).map(([k,w])=>[k,u(w)]))):v;return u(x)})'
@@ -1070,7 +1187,7 @@ def optimize_zhonghua_site(site_dir: Path) -> dict:
     html_modified = 0
 
     for hp in sorted(site_dir.rglob("*.html")):
-        if ".git" in hp.parts:
+        if ".git" in hp.parts or hp == site_dir / "scripts" / "shang_all.template.html":
             continue
         orig = hp.read_text(encoding="utf-8", errors="ignore")
         txt = orig
@@ -1078,6 +1195,27 @@ def optimize_zhonghua_site(site_dir: Path) -> dict:
         # 1. Refresh unified gate & ZH_SHIM
         txt = re.sub(r'<style>a\[href\*="signin-with-chatgpt"\][^<]*</style><script id="jintai-zhonghua-cdn-shim">.*?</script>', ZH_SHIM, txt, count=1, flags=re.S)
         txt = re.sub(r'<script id="jt-unified-gate">.*?</script>', gate_tag, txt, count=1, flags=re.S)
+
+        # The exact full-catalog Shang route is handled before the gated index
+        # starts its heavyweight loader. The destination carries the same gate.
+        if hp == site_dir / "index.html" and (site_dir / "shang-all.html").is_file() and gate_tag in txt:
+            route_tag = ('<script id="jt-shang-all-route">(function(){'
+                         'var p=new URLSearchParams(location.hash.slice(1));'
+                         'if(p.get("era")==="商"&&Array.from(p.keys()).length===1)'
+                         'location.replace(new URL("shang-all.html",location.href).href)'
+                         '})();</script>')
+            txt = re.sub(r'<script id="jt-shang-all-route">.*?</script>', '', txt, count=1, flags=re.S)
+            txt = txt.replace(gate_tag, route_tag + gate_tag, 1)
+            if 'id="jt-shang-all-link"' not in txt:
+                txt = re.sub(
+                    r'(<div class="hero-actions">)(.*?)(</div>)',
+                    lambda m_: (m_.group(1) + m_.group(2)
+                                + '<a class="hero-index-link" id="jt-shang-all-link" href="./shang-all.html">商代全库快览 →</a>'
+                                + m_.group(3)),
+                    txt,
+                    count=1,
+                    flags=re.S,
+                )
 
         # 2. SSG pre-render first-screen KPIs & initial 12 cards on index.html
         if hp == site_dir / "index.html" and ssg and ssg.get("total"):
@@ -1110,8 +1248,9 @@ def optimize_zhonghua_site(site_dir: Path) -> dict:
             )
 
         # 3. Convert trailing synchronous <script src="..."> tags before </body> into #jt-zh-async-loader
-        m_existing = re.search(r'<script id="jt-zh-async-loader"[^>]*\bdata-all="([^"]+)"[^>]*>.*?</script>(?=\s*</body>)', txt, flags=re.S)
-        m_raw = None if m_existing else re.search(r'((?:<script\s+src="[^"]+"\s*></script>\s*)+)(?=</body>)', txt, flags=re.I)
+        is_shang_all = hp == site_dir / "shang-all.html"
+        m_existing = None if is_shang_all else re.search(r'<script id="jt-zh-async-loader"[^>]*\bdata-all="([^"]+)"[^>]*>.*?</script>(?=\s*</body>)', txt, flags=re.S)
+        m_raw = None if is_shang_all or m_existing else re.search(r'((?:<script\s+src="[^"]+"\s*></script>\s*)+)(?=</body>)', txt, flags=re.I)
         if m_existing or m_raw:
             if m_existing:
                 raw_srcs = json.loads(_html.unescape(m_existing.group(1)))
@@ -1158,7 +1297,7 @@ def sync_zhonghua(site_dir: Path, auto_push: bool = True) -> dict:
     base = f"https://{host}/"
 
     # The catalog health probe below checks the new versioned gzip and scripts.
-    probe_files = ["index.html", "data.js", "daily-batch.js", "app.js", "song-data.js", "liao-data.js"]
+    probe_files = ["index.html", "site-version.json", "data.js", "daily-batch.js", "app.js", "song-data.js", "liao-data.js"]
     probe_parts = []
     index_bytes = b""
     for pf in probe_files:
@@ -1176,7 +1315,7 @@ def sync_zhonghua(site_dir: Path, auto_push: bool = True) -> dict:
     # Keep the local mirror current with cloud commits even when this upstream
     # snapshot is unchanged; a broken origin never reaches this Git operation.
     git_prepare_repo(site_dir, auto_push)
-    quick_fp = "|".join(probe_parts + [catalog_fp, ZH_SHIM_REV])
+    quick_fp = "|".join(probe_parts + [catalog_fp, ZH_SHIM_REV, shang_all_input_fingerprint(site_dir) if new_catalog_declared else "legacy"])
 
     state_p = site_dir / ".sync_state.json"
     required_aux = (
@@ -1191,7 +1330,8 @@ def sync_zhonghua(site_dir: Path, auto_push: bool = True) -> dict:
                 loader_bytes = verified_loader.get("catalog-loader.js")
                 if loader_bytes:
                     base_rel, scripts = zh_catalog_loader_dependencies(loader_bytes.decode("utf-8"))
-                    if all((site_dir / rel).is_file() and (site_dir / rel).stat().st_size for rel in ["catalog-loader.js", base_rel, *scripts]):
+                    if (all((site_dir / rel).is_file() and (site_dir / rel).stat().st_size for rel in ["catalog-loader.js", base_rel, *scripts])
+                            and shang_all_snapshot_ready(site_dir) and shang_all_index_ready(site_dir)):
                         return {"site": "zhonghua", "status": "up-to-date"}
         except Exception:
             pass
@@ -1347,6 +1487,9 @@ def sync_zhonghua(site_dir: Path, auto_push: bool = True) -> dict:
         with concurrent.futures.ThreadPoolExecutor(max_workers=24) as ex:
             list(ex.map(dl_media, missing_media))
 
+    if new_catalog_declared:
+        build_shang_all_snapshot(site_dir, site_dir / catalog_base_rel)
+
     # Align <meta name="atlas-snapshot-revision"> in all synced HTML pages with site-version.json so freshly opened tabs never enter a false update-banner loop
     sv_path = site_dir / "site-version.json"
     if sv_path.is_file():
@@ -1354,7 +1497,7 @@ def sync_zhonghua(site_dir: Path, auto_push: bool = True) -> dict:
             sv_rev = json.loads(sv_path.read_text(encoding="utf-8")).get("revision", "")
             if re.fullmatch(r"[0-9a-f]{64}", sv_rev):
                 for hp in site_dir.rglob("*.html"):
-                    if ".git" in hp.parts:
+                    if ".git" in hp.parts or hp == site_dir / "scripts" / "shang_all.template.html":
                         continue
                     htxt = hp.read_text(encoding="utf-8", errors="ignore")
                     hnew = re.sub(
