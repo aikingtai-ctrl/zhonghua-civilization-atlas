@@ -1,6 +1,7 @@
 /* One attribution rule is shared by navigation counts, galleries and exports. */
 (function(root){
-  const normalize=s=>String(s??'').normalize('NFKC').replace(/[祐佑]/g,'祐').replace(/\s/g,'');
+  const _normCache=new Map();
+  const normalize=s=>{const str=String(s??'');let v=_normCache.get(str);if(v===undefined){v=str.normalize('NFKC').replace(/[祐佑]/g,'祐').replace(/\s/g,'');if(_normCache.size<20000)_normCache.set(str,v);}return v;};
   const valid=v=>typeof v==='number'&&Number.isFinite(v)&&v!==0;
   const year=y=>y<0?'前'+Math.abs(y):String(y);
   const years=(a,b)=>valid(a)&&valid(b)?(a===b?year(a):year(a)+'–'+year(b))+'年':'';
@@ -14,40 +15,79 @@
     }
     return out;
   }
+  function hasRecId(node,id){
+    const arr=node.recordIds;if(!arr)return false;
+    if(node._recSet&&node._recSetSrc===arr)return node._recSet.has(id);
+    node._recSetSrc=arr;node._recSet=new Set(arr);return node._recSet.has(id);
+  }
   function create(data,records){
     const entries=data.entries||[],overrides=data.recordDates||{},audit=data.recordAttribution||{};
-    const inPolity=(r,n)=>samePolity(audit[r.id]?.polity?{...r,polity:audit[r.id].polity}:r,n);
-    const dates=new Map,entriesByEra=new Map,countCache=new Map,unassigned=new Map;
-    for(const e of entries){if(!entriesByEra.has(e.parentEra))entriesByEra.set(e.parentEra,[]);entriesByEra.get(e.parentEra).push(e)}
+    const effPolity=r=>audit[r.id]?.polity||r.polity;
+    const inPolity=(r,n)=>{const ep=audit[r.id]?.polity;return samePolity(ep?{era:r.era,polity:ep}:r,n);};
+    const dates=new Map,entriesByEra=new Map,recordsByEra=new Map,scopeCache=new Map,countCache=new Map,unassigned=new Map;
+    for(const e of entries){
+      e._normReign=e.reign?normalize(e.reign):'';
+      if(!entriesByEra.has(e.parentEra))entriesByEra.set(e.parentEra,[]);
+      entriesByEra.get(e.parentEra).push(e);
+    }
+    for(const r of records){
+      if(!recordsByEra.has(r.era))recordsByEra.set(r.era,[]);
+      recordsByEra.get(r.era).push(r);
+    }
+    function getScope(era,pol){
+      const key=(era||'')+'\0'+(pol||'');
+      let sc=scopeCache.get(key);
+      if(sc)return sc;
+      const probe={era,polity:pol};
+      const es=(entriesByEra.get(era)||[]).filter(e=>samePolity(probe,e)&&!e.indexOnly);
+      const rulerIds=[...new Set(es.map(e=>e.rulerId).filter(Boolean))];
+      const rulerMeta=rulerIds.map(id=>{
+        const children=es.filter(e=>e.rulerId===id);
+        return {id,childIds:new Set(children.map(c=>c.id)),spans:spans(children)};
+      });
+      sc={es,datedEs:es.filter(e=>!e.recordIds&&valid(e.start)&&valid(e.end)),rulerMeta};
+      scopeCache.set(key,sc);
+      return sc;
+    }
     const eligible=r=>!!r.sourceUrl&&!r.contextOnly&&!r.dateDisputed&&!['conditional','later-comparison'].includes(r.visualScope)&&!audit[r.id]?.contextOnly&&(!r.dateRelation||r.dateRelation==='object')&&(!audit[r.id]?.relation||audit[r.id].relation==='object');
     for(const r of records){
-      const es=(entriesByEra.get(r.era)||[]).filter(e=>inPolity(r,e)&&!e.indexOnly);
+      const sc=getScope(r.era,effPolity(r)),es=sc.es;
       const broad=/未细分|未作更细|朝代宽断代|不是制造纪年/.test((r.date||'')+(r.datePrecision||''));
       const override=r.era==='唐'&&(r.historicalRange||valid(r.dateStart)&&valid(r.dateEnd))&&!overrides[r.id]?.attribution?null:overrides[r.id];
       let d=override?{...override}:r.historicalRange?{...r.historicalRange}:valid(r.dateStart)&&valid(r.dateEnd)&&!broad?{start:r.dateStart,end:r.dateEnd,note:r.datePrecision||r.datingBasis||'来源著录的年代范围'}:null;
       if(r.id==='arch-tang-foguang-landscape'&&d)d={...d,relation:'foundation',note:'857为东大殿创建纪年；建筑群现状含后世遗存，只作历史关联。'};
-      const named=es.filter(e=>e.reign&&normalize(r.date).includes(normalize(e.reign))&&(!d||d.start<=e.end&&d.end>=e.start));
+      const normRDate=es.length&&r.date?normalize(r.date):'';
+      const named=normRDate?es.filter(e=>e._normReign&&normRDate.includes(e._normReign)&&(!d||d.start<=e.end&&d.end>=e.start)):[];
       if(!d&&named.length===1&&!broad&&!r.contextOnly&&valid(named[0].start)&&valid(named[0].end))d={start:named[0].start,end:named[0].end,note:'来源著录标明年号；公元范围据纪年目录对照'};
       if(d){
         d.relation=audit[r.id]?.relation||r.dateRelation||d.relation||'object';
         d.contextOnly=!eligible(r);
         d.reignIds=d.reignIds?.length?d.reignIds:d.ignoreOriginalReign?[]:r.reignIds?.length?r.reignIds:named.map(e=>e.id);
         d.note=audit[r.id]?.note||d.note;
-        const possible=es.filter(e=>!e.recordIds&&valid(e.start)&&valid(e.end)&&contained(d,e)&&(!d.reignIds.length||d.reignIds.includes(e.id)));
-        d.ambiguousReign=!d.points?.length&&possible.length>1;
-        const rulerIds=[...new Set(es.map(e=>e.rulerId).filter(Boolean))];
-        const possibleRulers=rulerIds.filter(id=>{const children=es.filter(e=>e.rulerId===id);return (!d.reignIds.length||children.some(e=>d.reignIds.includes(e.id)))&&spans(children).some(n=>contained(d,n))});
-        d.ambiguousRuler=!d.points?.length&&possibleRulers.length>1;
+        const rSet=d.reignIds.length?new Set(d.reignIds):null;
+        let possibleCount=0;
+        if(!d.points?.length){
+          for(const e of sc.datedEs){if((!rSet||rSet.has(e.id))&&contained(d,e)){if(++possibleCount>1)break;}}
+        }
+        d.ambiguousReign=!d.points?.length&&possibleCount>1;
+        let possibleRulerCount=0;
+        if(!d.points?.length){
+          for(const rm of sc.rulerMeta){
+            if((!rSet||d.reignIds.some(rid=>rm.childIds.has(rid)))&&rm.spans.some(n=>contained(d,n))){
+              if(++possibleRulerCount>1)break;
+            }
+          }
+        }
+        d.ambiguousRuler=!d.points?.length&&possibleRulerCount>1;
       }
       dates.set(r.id,d);
     }
     function match(r,node,mode='contained'){
-      // Invalid scopes fail closed. The all-dynasties view bypasses this function.
       if(!r||!node||!inPolity(r,node))return false;
-      if(node.parentEra==='唐'&&node.kind==='date-bucket')return !!node.recordIds?.includes(r.id);
-      if(node.kind==='collection')return !!node.recordIds?.includes(r.id);
+      if(node.parentEra==='唐'&&node.kind==='date-bucket')return hasRecId(node,r.id);
+      if(node.kind==='collection')return hasRecId(node,r.id);
       if(node.kind==='undated'){
-        if(!unassigned.has(r.id))unassigned.set(r.id,!(entriesByEra.get(r.era)||[]).some(e=>match(r,{...e,kind:e.kind||'reign'},'contained')));
+        if(!unassigned.has(r.id))unassigned.set(r.id,!(entriesByEra.get(r.era)||[]).some(e=>match(r,e._asNode||(e._asNode={...e,kind:e.kind||'reign'}),'contained')));
         return unassigned.get(r.id);
       }
       if(node.indexOnly)return false;
@@ -56,8 +96,7 @@
       if(node.kind==='ruler'&&d?.rulerIds?.length&&!d.rulerIds.includes(node.id))return false;
       if(mode==='contained'&&(!eligible(r)||d?.contextOnly||d?.relation&&d.relation!=='object'))return false;
       if(node.recordIds){
-        if(!node.recordIds.includes(r.id)||node.qinRulerId&&!(r.qinRulerLinks||[]).some(l=>l.id===node.qinRulerId&&l.relation==='direct'))return false;
-        // An explicit collection link cannot override a known date outside this scope.
+        if(!hasRecId(node,r.id)||node.qinRulerId&&!(r.qinRulerLinks||[]).some(l=>l.id===node.qinRulerId&&l.relation==='direct'))return false;
         if(d&&valid(d.start)&&valid(d.end)&&valid(node.start)&&valid(node.end))return contained(d,node);
         return true;
       }
@@ -66,7 +105,7 @@
       if(node.kind==='reign'&&d.reignIds?.length&&!d.reignIds.includes(node.id))return false;
       if(node.kind==='ruler'&&node.entries&&d.reignIds?.length&&!node.entries.some(e=>d.reignIds.includes(e.id)))return false;
       if(mode==='contained'&&(node.kind==='reign'&&d.ambiguousReign||node.kind==='ruler'&&d.ambiguousRuler))return false;
-      const ranges=node.kind==='ruler'&&node.entries?spans(node.entries):[node];
+      const ranges=node.kind==='ruler'&&node.entries?(node._spans||(node._spans=spans(node.entries))):[node];
       return ranges.some(n=>mode==='overlap'?d.points?.length?d.points.some(y=>y>=n.start&&y<=n.end):d.start<=n.end&&d.end>=n.start:contained(d,n));
     }
     function reason(r){
@@ -88,7 +127,12 @@
     function count(node,mode='contained'){
       if(!node)return 0;
       const key=[node.id,node.kind,node.start,node.end,node.polity,mode].join('|');
-      if(!countCache.has(key))countCache.set(key,records.filter(r=>match(r,node,mode)).length);
+      if(!countCache.has(key)){
+        const bucket=recordsByEra.get(node.parentEra)||[];
+        let cnt=0;
+        for(let i=0;i<bucket.length;i++)if(match(bucket[i],node,mode))cnt++;
+        countCache.set(key,cnt);
+      }
       return countCache.get(key);
     }
     return {dates,match,count,explain,reason};
@@ -96,4 +140,3 @@
   const api={normalize,year,years,create};root.ChronologyCore=api;
   if(typeof module!=='undefined'&&module.exports)module.exports=api;
 })(typeof window==='undefined'?globalThis:window);
-

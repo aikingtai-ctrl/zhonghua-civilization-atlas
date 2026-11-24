@@ -349,7 +349,7 @@ def git_push_if_changed(repo_dir: Path, repo_name: str, msg: str, auto_push: boo
 # 1. Shengcang Incremental Sync
 # ------------------------------------------------------------------------------
 SHIM_REV = "20261113d1"
-ZH_SHIM_REV = "20261113g1"
+ZH_SHIM_REV = "20261124i1"
 SC_SHIM = """<style>a[href*="signin-with-chatgpt"]{display:none!important}</style><script id="jintai-shengcang-shim">(function(){
 var BASE=new URL('.',location.href).pathname;if(BASE.slice(-1)!=='/')BASE+='/';window.__JT_BASE__=BASE;
 var IS_GH=/github\\.io$/i.test(location.hostname||'');
@@ -840,30 +840,60 @@ def zh_catalog_loader_dependencies(source: str) -> tuple[str, list[str]]:
 
 
 def optimize_zh_catalog_loader(data: bytes) -> bytes:
-    """Fetch scripts together while preserving their original execution order."""
+    """Fetch scripts together while preserving their original execution order, with fast-catalog hook."""
     source = data.decode("utf-8")
     zh_catalog_loader_dependencies(source)
-    if "const __jtLoads=" in source and "window.__JT_CATALOG_READY__=" in source:
+    if "const __jtLoads=" in source and "window.__JT_CATALOG_READY__=" in source and "__JT_SKIP_P2__" in source:
         return data
-    marker = "for(const src of "
-    start = source.find(marker)
-    if start < 0 or not source.startswith("(async()=>{"):
-        raise ValueError("unknown catalog-loader.js shape; refusing an unsafe rewrite")
-    list_start = start + len(marker)
-    _, consumed = json.JSONDecoder().raw_decode(source[list_start:])
-    list_end = list_start + consumed
-    old_tail = ")await new Promise((resolve,reject)=>{const script=document.createElement('script');script.src=src;script.onload=resolve;script.onerror=()=>reject(Error('脚本加载失败：'+src));document.body.append(script)});"
-    if not source.startswith(old_tail, list_end):
-        raise ValueError("unknown catalog-loader.js loading loop; refusing an unsafe rewrite")
-    source_list = source[list_start:list_end]
+    if source.startswith("window.__JT_CATALOG_READY__="):
+        source = source[len("window.__JT_CATALOG_READY__="):]
+    if "const __jtLoads=" in source and "__JT_SKIP_P2__" not in source:
+        m_prev = re.search(
+            r"const __jtLoads=(\[.*?\])\.map\(src=>new Promise\(\(resolve,reject\)=>\{const script=document\.createElement\('script'\);script\.async=false;script\.src=src;script\.onload=resolve;script\.onerror=\(\)=>reject\(Error\('脚本加载失败：'\+src\)\);document\.body\.append\(script\)\}\)\);await Promise\.all\(__jtLoads\);",
+            source,
+            flags=re.S,
+        )
+        if not m_prev:
+            raise ValueError("unknown previously-patched catalog-loader.js shape")
+        source_list = m_prev.group(1)
+        span_s, span_e = m_prev.span()
+    else:
+        marker = "for(const src of "
+        start = source.find(marker)
+        if start < 0 or not source.startswith("(async()=>{"):
+            raise ValueError("unknown catalog-loader.js shape; refusing an unsafe rewrite")
+        list_start = start + len(marker)
+        _, consumed = json.JSONDecoder().raw_decode(source[list_start:])
+        list_end = list_start + consumed
+        old_tail = ")await new Promise((resolve,reject)=>{const script=document.createElement('script');script.src=src;script.onload=resolve;script.onerror=()=>reject(Error('脚本加载失败：'+src));document.body.append(script)});"
+        if not source.startswith(old_tail, list_end):
+            raise ValueError("unknown catalog-loader.js loading loop; refusing an unsafe rewrite")
+        source_list = source[list_start:list_end]
+        span_s, span_e = start, list_end + len(old_tail)
+
     replacement = (
         "const __jtLoads=" + source_list
+        + ".filter(src=>!(typeof window!=='undefined'&&window.__JT_SKIP_P2__&&window.__JT_SKIP_P2__(src)))"
         + ".map(src=>new Promise((resolve,reject)=>{const script=document.createElement('script');"
         + "script.async=false;script.src=src;script.onload=resolve;"
         + "script.onerror=()=>reject(Error('脚本加载失败：'+src));document.body.append(script)}));"
         + "await Promise.all(__jtLoads);"
     )
-    patched = source[:start] + replacement + source[list_end + len(old_tail):]
+    patched = source[:span_s] + replacement + source[span_e:]
+    m_fetch_block = re.search(
+        r"""(const response=await fetch\((['"])([^'"]+\.json\.gz(?:\?[^'"]*)?)\2\);.*?window\.ARCHIVE_DATA=JSON\.parse\(await new Response\(decoded\)\.text\(\)\);)""",
+        patched,
+        flags=re.S,
+    )
+    if m_fetch_block and "__JT_FAST_ARCHIVE_PROMISE__" not in patched:
+        orig_block = m_fetch_block.group(1)
+        fast_block = (
+            "if(typeof window!=='undefined'&&window.__JT_FAST_ARCHIVE_PROMISE__){"
+            "window.__JT_BASE_CATALOG_URL__=" + json.dumps(m_fetch_block.group(3)) + ";"
+            "window.ARCHIVE_DATA=await window.__JT_FAST_ARCHIVE_PROMISE__;"
+            "}else{" + orig_block + "}"
+        )
+        patched = patched[:m_fetch_block.start()] + fast_block + patched[m_fetch_block.end():]
     return ("window.__JT_CATALOG_READY__=" + patched).encode("utf-8")
 
 
@@ -1038,7 +1068,179 @@ ZH_DEFERRED_P2 = {
 }
 
 
+ZH_FAST_DETAIL_ONLY_KEYS = {
+    "citation", "verification", "previewVerification", "sourceMetadata", "rights", "rightsUrl",
+    "additionalSources", "provenance", "apiUrl", "verifiedAt", "sourceType", "physicalDescription",
+    "dimensions", "documentPage", "originalMaterial", "originalDate", "imageViewDescription",
+    "datingBasis", "metPeriodNote", "sourceRecordSha256", "imageSha256", "rightsEvidence",
+    "sourceEvidence", "thumbnailUrl", "previewHash", "sourceHttpBodySha256", "localEvidenceImage",
+    "fileHash", "reconciliation",
+}
+
+
+def prune_retired_zhonghua_chunks(site_dir: Path) -> list[str]:
+    """Remove unreferenced legacy data.js & catalog-records-*.js once catalog-loader.js is active."""
+    idx_p = site_dir / "index.html"
+    if not idx_p.is_file() or not (site_dir / "catalog-loader.js").is_file() or not (site_dir / "catalog-base.json.gz").is_file():
+        return []
+    if "catalog-loader.js" not in idx_p.read_text(encoding="utf-8", errors="ignore"):
+        return []
+    candidates = [p for p in sorted(site_dir.glob("catalog-records-*.js"))]
+    if (site_dir / "data.js").is_file():
+        candidates.append(site_dir / "data.js")
+    if not candidates:
+        return []
+    cand_names = {p.name for p in candidates}
+    referenced = set()
+    for doc in list(site_dir.rglob("*.html")) + list(site_dir.glob("*.js")):
+        if ".git" in doc.parts or doc.name in cand_names:
+            continue
+        txt = doc.read_text(encoding="utf-8", errors="ignore")
+        for m in re.finditer(r"(?<![A-Za-z0-9_-])(data\.js|catalog-records-\d+\.js)\b", txt):
+            referenced.add(m.group(1))
+    removed = []
+    for p in candidates:
+        if p.name not in referenced:
+            p.unlink(missing_ok=True)
+            removed.append(p.name)
+    return removed
+
+
+def build_zhonghua_fast_catalog(site_dir: Path) -> dict | None:
+    """Build deterministic columnar catalog-fast.json.gz (~65% smaller) for instant t=0 hydration."""
+    from collections import Counter
+    loader_p = site_dir / "catalog-loader.js"
+    if not loader_p.is_file():
+        return None
+    try:
+        catalog_rel, scripts = zh_catalog_loader_dependencies(loader_p.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    cat_p = site_dir / catalog_rel
+    if not cat_p.is_file():
+        return None
+    raw_b = cat_p.read_bytes()
+    dec_b = gzip.decompress(raw_b) if raw_b.startswith(b"\x1f\x8b") else raw_b
+    obj = json.loads(dec_b.decode("utf-8"))
+    recs = obj.get("records")
+    if not isinstance(recs, list) or not recs:
+        return None
+
+    p1_props = {
+        "id", "catalogNumber", "title", "originalTitle", "era", "polity", "date", "originalPeriod",
+        "material", "institution", "institutionShort", "objectNumber", "category", "evidence",
+        "openLicense", "localImage", "previewUrl", "imageUrl", "originalImageUrl", "displayMode",
+        "imageCredit", "tangPhase", "xiaScope", "crosses1227", "crossesDeclaredPeriod",
+        "dateDisputed", "visualScope", "metPeriodVersion", "periodReview", "lifeFocus",
+        "lifeScenes", "socialGroups", "batch", "batchId", "sourceTitle", "sourceUrl",
+        "provenanceKind", "locator", "publicationLabel", "visualSubcategoryLabels", "subjects",
+        "relatedCategories", "visibleDetails", "sceneUse", "description", "notes", "findspot",
+        "imageObjectDate", "historicalDate", "chronologyRelation", "rulerLinks",
+    }
+    p2_all = ZH_DEFERRED_P2 | {"library-quality-ui.js"}
+    for s in scripts:
+        fn = os.path.basename(s)
+        if fn in p2_all or fn.endswith("-data.js") or not (site_dir / s).is_file():
+            continue
+        stxt = (site_dir / s).read_text(encoding="utf-8", errors="ignore")
+        for m in re.finditer(r"\b(?:r|rec|record|item|x)\.([A-Za-z_][A-Za-z0-9_]*)", stxt):
+            p1_props.add(m.group(1))
+
+    all_keys = set()
+    for r in recs:
+        if isinstance(r, dict):
+            all_keys.update(r.keys())
+    cols = sorted((all_keys & p1_props) - ZH_FAST_DETAIL_ONLY_KEYS)
+
+    str_counts = Counter()
+    for r in recs:
+        loc_img = r.get("localImage")
+        has_hosted_local = isinstance(loc_img, str) and bool(loc_img) and not loc_img.startswith("research-")
+        for c in cols:
+            v = r.get(c)
+            if v is None:
+                continue
+            if has_hosted_local and c in ("previewUrl", "imageUrl", "originalImageUrl"):
+                continue
+            if c == "previewUrl" and v == loc_img:
+                continue
+            if c == "originalImageUrl" and v == r.get("imageUrl"):
+                continue
+            if isinstance(v, str) and len(v) >= 3:
+                str_counts[v] += 1
+
+    str_list = [s for s, cnt in str_counts.most_common() if cnt >= 3 and len(s) * (cnt - 1) > 12]
+    str_to_id = {s: idx for idx, s in enumerate(str_list)}
+
+    rows = []
+    cma_pins = {}
+    for idx_r, r in enumerate(recs):
+        if "cma-101711" in str(r.get("id", "")) and "sourceRecordSha256" in r:
+            cma_pins[str(idx_r)] = r["sourceRecordSha256"]
+        loc_img = r.get("localImage")
+        has_hosted_local = isinstance(loc_img, str) and bool(loc_img) and not loc_img.startswith("research-")
+        img_url = r.get("imageUrl")
+        row = []
+        for c in cols:
+            v = r.get(c)
+            if v is None or (has_hosted_local and c in ("previewUrl", "imageUrl", "originalImageUrl")):
+                row.append(None)
+            elif c == "previewUrl" and v == loc_img:
+                row.append(-1)
+            elif c == "originalImageUrl" and v == img_url:
+                row.append(-2)
+            elif isinstance(v, str) and v in str_to_id:
+                row.append(chr(1) + format(str_to_id[v], "x"))
+            else:
+                row.append(v)
+        while row and row[-1] is None:
+            row.pop()
+        rows.append(row)
+
+    meta = {k: v for k, v in obj.items() if k != "records"}
+    pack = {"v": 1, "meta": meta, "cols": cols, "dict": str_list, "rows": rows, "cmaPins": cma_pins}
+    raw_out = json.dumps(pack, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+    buf = io.BytesIO()
+    with gzip.GzipFile(filename="", mode="wb", fileobj=buf, compresslevel=6, mtime=0) as gz:
+        gz.write(raw_out)
+    gz_bytes = buf.getvalue()
+    out_p = site_dir / "catalog-fast.json.gz"
+    if not out_p.is_file() or out_p.read_bytes() != gz_bytes:
+        out_p.write_bytes(gz_bytes)
+    p1_urls = [
+        f"./{s}?v={sha256_bytes((site_dir / s).read_bytes())[:12]}"
+        for s in scripts
+        if os.path.basename(s) not in p2_all and (site_dir / s).is_file()
+    ]
+    p2_urls = [
+        f"./{s}?v={sha256_bytes((site_dir / s).read_bytes())[:12]}"
+        for s in scripts
+        if os.path.basename(s) in p2_all and (site_dir / s).is_file()
+    ]
+    return {
+        "fast_hash": sha256_bytes(gz_bytes)[:12],
+        "fast_bytes": len(gz_bytes),
+        "p1_urls": p1_urls,
+        "p2_urls": p2_urls,
+    }
+
+
+ZH_FAST_CHRONOLOGY_CORE = "/* One attribution rule is shared by navigation counts, galleries and exports. */\n(function(root){\n  const _normCache=new Map();\n  const normalize=s=>{const str=String(s??'');let v=_normCache.get(str);if(v===undefined){v=str.normalize('NFKC').replace(/[祐佑]/g,'祐').replace(/\\s/g,'');if(_normCache.size<20000)_normCache.set(str,v);}return v;};\n  const valid=v=>typeof v==='number'&&Number.isFinite(v)&&v!==0;\n  const year=y=>y<0?'前'+Math.abs(y):String(y);\n  const years=(a,b)=>valid(a)&&valid(b)?(a===b?year(a):year(a)+'–'+year(b))+'年':'';\n  const samePolity=(r,n)=>r.era===n.parentEra&&(n.parentEra==='唐'?(['date-bucket','undated','collection'].includes(n.kind)||!r.polity||r.polity===(n.polity||n.parentEra)):(!n.polity||n.polity===n.parentEra||r.polity===n.polity));\n  const contained=(d,n)=>d.points?.length?d.points.some(y=>y>=n.start&&y<=n.end):d.start>=n.start&&d.end<=n.end;\n  function spans(entries){\n    const out=[];\n    for(const e of entries.filter(e=>!e.indexOnly&&valid(e.start)&&valid(e.end)).sort((a,b)=>a.start-b.start)){\n      const last=out.at(-1);\n      if(last&&e.start<=last.end+1)last.end=Math.max(last.end,e.end);else out.push({start:e.start,end:e.end});\n    }\n    return out;\n  }\n  function hasRecId(node,id){\n    const arr=node.recordIds;if(!arr)return false;\n    if(node._recSet&&node._recSetSrc===arr)return node._recSet.has(id);\n    node._recSetSrc=arr;node._recSet=new Set(arr);return node._recSet.has(id);\n  }\n  function create(data,records){\n    const entries=data.entries||[],overrides=data.recordDates||{},audit=data.recordAttribution||{};\n    const effPolity=r=>audit[r.id]?.polity||r.polity;\n    const inPolity=(r,n)=>{const ep=audit[r.id]?.polity;return samePolity(ep?{era:r.era,polity:ep}:r,n);};\n    const dates=new Map,entriesByEra=new Map,recordsByEra=new Map,scopeCache=new Map,countCache=new Map,unassigned=new Map;\n    for(const e of entries){\n      e._normReign=e.reign?normalize(e.reign):'';\n      if(!entriesByEra.has(e.parentEra))entriesByEra.set(e.parentEra,[]);\n      entriesByEra.get(e.parentEra).push(e);\n    }\n    for(const r of records){\n      if(!recordsByEra.has(r.era))recordsByEra.set(r.era,[]);\n      recordsByEra.get(r.era).push(r);\n    }\n    function getScope(era,pol){\n      const key=(era||'')+'\\0'+(pol||'');\n      let sc=scopeCache.get(key);\n      if(sc)return sc;\n      const probe={era,polity:pol};\n      const es=(entriesByEra.get(era)||[]).filter(e=>samePolity(probe,e)&&!e.indexOnly);\n      const rulerIds=[...new Set(es.map(e=>e.rulerId).filter(Boolean))];\n      const rulerMeta=rulerIds.map(id=>{\n        const children=es.filter(e=>e.rulerId===id);\n        return {id,childIds:new Set(children.map(c=>c.id)),spans:spans(children)};\n      });\n      sc={es,datedEs:es.filter(e=>!e.recordIds&&valid(e.start)&&valid(e.end)),rulerMeta};\n      scopeCache.set(key,sc);\n      return sc;\n    }\n    const eligible=r=>!!r.sourceUrl&&!r.contextOnly&&!r.dateDisputed&&!['conditional','later-comparison'].includes(r.visualScope)&&!audit[r.id]?.contextOnly&&(!r.dateRelation||r.dateRelation==='object')&&(!audit[r.id]?.relation||audit[r.id].relation==='object');\n    for(const r of records){\n      const sc=getScope(r.era,effPolity(r)),es=sc.es;\n      const broad=/未细分|未作更细|朝代宽断代|不是制造纪年/.test((r.date||'')+(r.datePrecision||''));\n      const override=r.era==='唐'&&(r.historicalRange||valid(r.dateStart)&&valid(r.dateEnd))&&!overrides[r.id]?.attribution?null:overrides[r.id];\n      let d=override?{...override}:r.historicalRange?{...r.historicalRange}:valid(r.dateStart)&&valid(r.dateEnd)&&!broad?{start:r.dateStart,end:r.dateEnd,note:r.datePrecision||r.datingBasis||'来源著录的年代范围'}:null;\n      if(r.id==='arch-tang-foguang-landscape'&&d)d={...d,relation:'foundation',note:'857为东大殿创建纪年；建筑群现状含后世遗存，只作历史关联。'};\n      const normRDate=es.length&&r.date?normalize(r.date):'';\n      const named=normRDate?es.filter(e=>e._normReign&&normRDate.includes(e._normReign)&&(!d||d.start<=e.end&&d.end>=e.start)):[];\n      if(!d&&named.length===1&&!broad&&!r.contextOnly&&valid(named[0].start)&&valid(named[0].end))d={start:named[0].start,end:named[0].end,note:'来源著录标明年号；公元范围据纪年目录对照'};\n      if(d){\n        d.relation=audit[r.id]?.relation||r.dateRelation||d.relation||'object';\n        d.contextOnly=!eligible(r);\n        d.reignIds=d.reignIds?.length?d.reignIds:d.ignoreOriginalReign?[]:r.reignIds?.length?r.reignIds:named.map(e=>e.id);\n        d.note=audit[r.id]?.note||d.note;\n        const rSet=d.reignIds.length?new Set(d.reignIds):null;\n        let possibleCount=0;\n        if(!d.points?.length){\n          for(const e of sc.datedEs){if((!rSet||rSet.has(e.id))&&contained(d,e)){if(++possibleCount>1)break;}}\n        }\n        d.ambiguousReign=!d.points?.length&&possibleCount>1;\n        let possibleRulerCount=0;\n        if(!d.points?.length){\n          for(const rm of sc.rulerMeta){\n            if((!rSet||d.reignIds.some(rid=>rm.childIds.has(rid)))&&rm.spans.some(n=>contained(d,n))){\n              if(++possibleRulerCount>1)break;\n            }\n          }\n        }\n        d.ambiguousRuler=!d.points?.length&&possibleRulerCount>1;\n      }\n      dates.set(r.id,d);\n    }\n    function match(r,node,mode='contained'){\n      if(!r||!node||!inPolity(r,node))return false;\n      if(node.parentEra==='唐'&&node.kind==='date-bucket')return hasRecId(node,r.id);\n      if(node.kind==='collection')return hasRecId(node,r.id);\n      if(node.kind==='undated'){\n        if(!unassigned.has(r.id))unassigned.set(r.id,!(entriesByEra.get(r.era)||[]).some(e=>match(r,e._asNode||(e._asNode={...e,kind:e.kind||'reign'}),'contained')));\n        return unassigned.get(r.id);\n      }\n      if(node.indexOnly)return false;\n      const d=dates.get(r.id);\n      if(mode==='contained'&&node.kind==='reign'&&d?.rulerOnly)return false;\n      if(node.kind==='ruler'&&d?.rulerIds?.length&&!d.rulerIds.includes(node.id))return false;\n      if(mode==='contained'&&(!eligible(r)||d?.contextOnly||d?.relation&&d.relation!=='object'))return false;\n      if(node.recordIds){\n        if(!hasRecId(node,r.id)||node.qinRulerId&&!(r.qinRulerLinks||[]).some(l=>l.id===node.qinRulerId&&l.relation==='direct'))return false;\n        if(d&&valid(d.start)&&valid(d.end)&&valid(node.start)&&valid(node.end))return contained(d,node);\n        return true;\n      }\n      if(!d||!valid(d.start)||!valid(d.end)||!valid(node.start)||!valid(node.end))return false;\n      if(Boolean(d.relation&&d.relation!=='object')!==(mode==='context'))return false;\n      if(node.kind==='reign'&&d.reignIds?.length&&!d.reignIds.includes(node.id))return false;\n      if(node.kind==='ruler'&&node.entries&&d.reignIds?.length&&!node.entries.some(e=>d.reignIds.includes(e.id)))return false;\n      if(mode==='contained'&&(node.kind==='reign'&&d.ambiguousReign||node.kind==='ruler'&&d.ambiguousRuler))return false;\n      const ranges=node.kind==='ruler'&&node.entries?(node._spans||(node._spans=spans(node.entries))):[node];\n      return ranges.some(n=>mode==='overlap'?d.points?.length?d.points.some(y=>y>=n.start&&y<=n.end):d.start<=n.end&&d.end>=n.start:contained(d,n));\n    }\n    function reason(r){\n      const d=dates.get(r.id);\n      if(audit[r.id]?.note)return audit[r.id].note;\n      if(!eligible(r)||d?.contextOnly||d?.relation&&d.relation!=='object')return '关联背景、载体差异或存疑资料，不能作为具体纪年的直接图证';\n      if(!d)return '来源未提供可归入具体纪年的断代';\n      if(d.ambiguousReign)return '同年改元或纪年重叠，现有依据无法唯一确定年号';\n      return '原始断代跨度超过单个纪年，或尚无明确的纪年归属依据';\n    }\n    function explain(r,node){\n      if(node?.kind==='undated')return reason(r);\n      const d=dates.get(r.id);\n      if(node?.qinRulerId)return (r.qinRulerLinks||[]).find(l=>l.id===node.qinRulerId&&l.relation==='direct')?.reason||'以直接纪年和铭文为据';\n      if(node?.recordIds)return '依据馆藏、铭文或考古分期关联；未推定公元确年';\n      if(d?.points?.length)return '依据分立题记年份 '+d.points.filter(y=>y>=node.start&&y<=node.end).map(year).join('、')+'；不是连续制作年代';\n      return (d?.note||'来源断代完整落入所选时期')+'（'+years(d?.start,d?.end)+'）';\n    }\n    function count(node,mode='contained'){\n      if(!node)return 0;\n      const key=[node.id,node.kind,node.start,node.end,node.polity,mode].join('|');\n      if(!countCache.has(key)){\n        const bucket=recordsByEra.get(node.parentEra)||[];\n        let cnt=0;\n        for(let i=0;i<bucket.length;i++)if(match(bucket[i],node,mode))cnt++;\n        countCache.set(key,cnt);\n      }\n      return countCache.get(key);\n    }\n    return {dates,match,count,explain,reason};\n  }\n  const api={normalize,year,years,create};root.ChronologyCore=api;\n  if(typeof module!=='undefined'&&module.exports)module.exports=api;\n})(typeof window==='undefined'?globalThis:window);\n"
+
+
 def optimize_zhonghua_js_bytes(rel: str, data: bytes) -> bytes:
+    if os.path.basename(rel) == "chronology-core.js" and b"root.ChronologyCore=api" in data:
+        return ZH_FAST_CHRONOLOGY_CORE.encode("utf-8")
+    if os.path.basename(rel) == "chronology.js" and b"function renderChronology(){" in data:
+        t_ch = data.decode("utf-8")
+        if "__JT_DEFER_CHRON__" not in t_ch:
+            t_ch = re.sub(
+                r"(function\s+renderChronology\(\)\s*\{\s*if\s*\(!chronologyIndex)\)(\s*return;)",
+                r"\1||(typeof window!=='undefined'&&window.__JT_DEFER_CHRON__))\2",
+                t_ch,
+                count=1,
+            )
+        return t_ch.encode("utf-8")
     if os.path.basename(rel) == "catalog-loader.js":
         return optimize_zh_catalog_loader(data)
     if not rel.endswith(".js") or len(data) < 4096:
@@ -1107,11 +1309,13 @@ def _build_zh_async_loader_tag(all_srcs: list[str], p1: list[str], p2: list[str]
         "var el=document.querySelector(sel);if(el)try{el.click();}catch(e){}"
         "}"
         "}"
-        "async function boot(){await runList(p1);if(window.__JT_CATALOG_READY__)await window.__JT_CATALOG_READY__;"
+        "async function boot(){await runList(p1);if(window.__JT_CATALOG_READY__)await window.__JT_CATALOG_READY__;if(window.__JT_DEFER_CHRON__){window.__JT_DEFER_CHRON__=false;if(typeof renderChronology==='function')renderChronology();}"
         "if(window.__jtSanitizeAll)window.__jtSanitizeAll();window.__JT_HYDRATED__=true;"
+        "if(window.__jtInstallDetailHydrator)window.__jtInstallDetailHydrator();"
         "if(['#tangReignDossier','#xixiaReignDossier'].indexOf(location.hash)!==-1)window.dispatchEvent(new Event('load'));"
         "await replayPending(true);"
-        "if(p2.length){var rp=function(){runList(p2);};if(typeof requestIdleCallback==='function')requestIdleCallback(rp,{timeout:600});else setTimeout(rp,350);}}"
+        "var bg=function(){var extra=(window.__JT_DEFERRED_P2_URLS__||[]).concat(p2);p2=[];runList(extra).then(function(){if(window.__jtEnsureFullCatalog)window.__jtEnsureFullCatalog();});};"
+        "if(typeof requestIdleCallback==='function')requestIdleCallback(bg,{timeout:500});else setTimeout(bg,250);}"
         "if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(boot,0);},{once:true});else setTimeout(boot,0);"
         "})();"
     )
@@ -1172,6 +1376,7 @@ process.stdout.write(JSON.stringify({
 
 def optimize_zhonghua_site(site_dir: Path) -> dict:
     import html as _html
+    pruned_chunks = prune_retired_zhonghua_chunks(site_dir)
     js_hashes: dict[str, str] = {}
     js_modified = 0
     for jp in sorted(site_dir.glob("*.js")):
@@ -1182,6 +1387,7 @@ def optimize_zhonghua_site(site_dir: Path) -> dict:
             js_modified += 1
         js_hashes[jp.name] = sha256_bytes(opt)[:12]
 
+    fast_cat = build_zhonghua_fast_catalog(site_dir)
     ssg = _compute_zhonghua_ssg_payload(site_dir)
     gate_tag = make_gate_script("金泰 AI · 中华文明影像库")
     html_modified = 0
@@ -1216,6 +1422,65 @@ def optimize_zhonghua_site(site_dir: Path) -> dict:
                     count=1,
                     flags=re.S,
                 )
+
+        # 1b. Inject t=0 streaming fast-catalog + HTTP/2 P1 prefetch on index.html
+        txt = re.sub(r'<link id="jt-zh-fast-preload"[^>]*>', '', txt)
+        txt = re.sub(r'<script id="jt-zh-fast-boot">.*?</script>', '', txt, flags=re.S)
+        if hp == site_dir / "index.html" and fast_cat and ZH_SHIM in txt:
+            f_url = f"./catalog-fast.json.gz?v={fast_cat['fast_hash']}"
+            p1_json = json.dumps(fast_cat["p1_urls"], ensure_ascii=False, separators=(",", ":"))
+            p2_json = json.dumps(fast_cat["p2_urls"], ensure_ascii=False, separators=(",", ":"))
+            p2_names_json = json.dumps(sorted(ZH_DEFERRED_P2 | {"library-quality-ui.js"}), ensure_ascii=False, separators=(",", ":"))
+            fast_tag = (
+                f'<link id="jt-zh-fast-preload" rel="preload" href="{f_url}" as="fetch" crossorigin>'
+                '<script id="jt-zh-fast-boot">(function(){'
+                'if(window.__JT_LOCKED__||location.protocol==="file:")return;'
+                f'var fastUrl={json.dumps(f_url)},p1Urls={p1_json},p2Urls={p2_json},p2Set=new Set({p2_names_json});'
+                'if(location.hash==="#expansion")return;'
+                'if(!location.hash)window.__JT_DEFER_CHRON__=true;'
+                'window.__JT_SKIP_P2__=function(s){var fn=String(s).split("?")[0].split("/").pop();return p2Set.has(fn);};'
+                'window.__JT_DEFERRED_P2_URLS__=p2Urls;'
+                'function gunzipJson(u){return fetch(u).then(function(r){if(!r.ok)throw Error("HTTP "+r.status);'
+                'if(r.body&&typeof DecompressionStream!=="undefined"){return new Response(r.body.pipeThrough(new DecompressionStream("gzip"))).json();}'
+                'return r.arrayBuffer().then(function(ab){var b=new Uint8Array(ab);var s=new Blob([b]).stream();'
+                'var d=(b[0]===31&&b[1]===139&&typeof DecompressionStream!=="undefined")?s.pipeThrough(new DecompressionStream("gzip")):s;'
+                'return new Response(d).json();});});}'
+                'window.__JT_FAST_ARCHIVE_PROMISE__=gunzipJson(fastUrl).then(function(pk){'
+                'var cols=pk.cols,dict=pk.dict,rows=pk.rows,pins=pk.cmaPins||{},n=rows.length,cl=cols.length,recs=new Array(n);'
+                'var iLoc=cols.indexOf("localImage"),iImg=cols.indexOf("imageUrl");'
+                'function dv(x){return typeof x==="string"&&x.charCodeAt(0)===1?dict[parseInt(x.slice(1),16)]:x;}'
+                'for(var i=0;i<n;i++){var rw=rows[i],rl=rw.length,o={};'
+                'for(var j=0;j<rl;j++){var v=rw[j];if(v===null)continue;'
+                'if(typeof v==="string"&&v.charCodeAt(0)===1)v=dict[parseInt(v.slice(1),16)];'
+                'else if(v===-1)v=iLoc>=0&&iLoc<rl?dv(rw[iLoc]):undefined;'
+                'else if(v===-2)v=iImg>=0&&iImg<rl?dv(rw[iImg]):undefined;'
+                'o[cols[j]]=v;}'
+                'if(o.localImage&&!o.imageUrl)o.imageUrl=o.localImage;'
+                'if(pins[i])o.sourceRecordSha256=pins[i];'
+                'recs[i]=o;}'
+                'var ad=pk.meta||{};ad.records=recs;'
+                'if(window.__jtSanitizePack)window.__jtSanitizePack(ad);'
+                'return ad;});'
+                'for(var k=0;k<p1Urls.length;k++)fetch(p1Urls[k]).catch(function(){});'
+                'var fullProm=null;'
+                'window.__jtEnsureFullCatalog=function(){'
+                'if(window.__JT_FULL_MERGED__)return Promise.resolve(true);'
+                'if(fullProm)return fullProm;'
+                'var bu=window.__JT_BASE_CATALOG_URL__||"./catalog-base.json.gz";'
+                'fullProm=gunzipJson(bu).then(function(full){'
+                'var cur=(window.ARCHIVE_DATA&&window.ARCHIVE_DATA.records)||[],fr=(full&&full.records)||[];'
+                'if(cur.length===fr.length){for(var i=0;i<fr.length;i++)Object.assign(cur[i],fr[i]);}'
+                'if(window.__jtSanitizePack)window.__jtSanitizePack(window.ARCHIVE_DATA);'
+                'window.__JT_FULL_MERGED__=true;return true;}).catch(function(){return false;});'
+                'return fullProm;};'
+                'window.__jtInstallDetailHydrator=function(){'
+                '["detail","exportRecords","copyCitation"].forEach(function(fn){'
+                'var orig=window[fn];if(typeof orig!=="function"||orig.__jtWrapped)return;'
+                'var w=async function(){var a=arguments;if(!window.__JT_FULL_MERGED__)await window.__jtEnsureFullCatalog();return orig.apply(this,a);};'
+                'w.__jtWrapped=true;window[fn]=w;});};'
+                '})();</script>'
+            )
+            txt = txt.replace(ZH_SHIM, ZH_SHIM + fast_tag, 1)
 
         # 2. SSG pre-render first-screen KPIs & initial 12 cards on index.html
         if hp == site_dir / "index.html" and ssg and ssg.get("total"):
@@ -1282,7 +1547,7 @@ def optimize_zhonghua_site(site_dir: Path) -> dict:
             check_html_js_syntax(hp)
             html_modified += 1
 
-    return {"js_modified": js_modified, "html_modified": html_modified, "ssg_records": ssg.get("total") if ssg else 0}
+    return {"js_modified": js_modified, "html_modified": html_modified, "ssg_records": ssg.get("total") if ssg else 0, "pruned_chunks": pruned_chunks, "fast_catalog_bytes": fast_cat["fast_bytes"] if fast_cat else 0}
 
 
 def sync_zhonghua(site_dir: Path, auto_push: bool = True) -> dict:

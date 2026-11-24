@@ -44,7 +44,7 @@ function chronoOption(node,label=node.label,whole=false){
  return '<button class="chron-option '+(whole?'whole ':'')+(chosen?'selected':'')+'" data-chronology="'+esc(node.id)+'" aria-pressed="'+chosen+'"><span>'+esc(label)+'<small>'+esc(node.dateLabel||chronoYears(node.start,node.end)||node.dateText||'起止未定')+(node.certainty==='secondary-chronology'?' · 补充年表':'')+'</small></span><span class="chron-count">'+(node.parentEra==='唐'?count+' 图':count?count+' 图':hasTangDossier?'纪年档案':'待补充')+'</span></button>';
 }
 function renderChronology(){
- if(!chronologyIndex)return;
+ if(!chronologyIndex||(typeof window!=='undefined'&&window.__JT_DEFER_CHRON__))return;
  const q=chronologySearch, groups={'史前':'文明起源','秦':'统一与分合','隋':'隋唐与五代','辽':'宋辽金夏 · 并行政权','元':'元明清'};
  const html=chronologyGroups.map(g=>{
   const rootMatch=!!q&&ChronologyCore.normalize(g.name).includes(ChronologyCore.normalize(q));
