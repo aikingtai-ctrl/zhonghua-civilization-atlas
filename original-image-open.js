@@ -27,12 +27,14 @@
     byId = new Map();
     byPreview = new Map();
     for (const row of records()) {
+      if (!row) continue;
       const original = row.originalImageUrl || row.imageUrl;
       if (row.displayMode === 'source-only' || !/^https?:\/\//i.test(original || '')) continue;
       if (!byId.has(row.id)) byId.set(row.id, original);
       for (const preview of [row.localImage, row.previewUrl, row.imageUrl]) {
         if (!preview) continue;
-        const key = new URL(preview, location.href).href;
+        let key;
+        try { key = new URL(preview, location.href).href; } catch { continue; }
         if (!byPreview.has(key)) byPreview.set(key, original);
         else if (byPreview.get(key) !== original) byPreview.set(key, null);
       }
@@ -44,9 +46,10 @@
     const image = event.target.closest('img') || button?.querySelector('img');
     if (!image) return;
     if (image.closest('a[href]')) return;
-    index();
+    const direct = image.getAttribute('data-original-image');
+    if (!/^https?:\/\//i.test(direct || '')) index();
     const id = image.closest('[data-detail]')?.dataset.detail;
-    const original = byId.get(id) || byPreview.get(image.src);
+    const original = /^https?:\/\//i.test(direct || '') ? direct : byId.get(id) || byPreview.get(image.src);
     if (!original) return;
     event.preventDefault();
     event.stopImmediatePropagation();

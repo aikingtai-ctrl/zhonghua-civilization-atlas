@@ -45,6 +45,7 @@ window.initHeroCarousel = function (records, showDetail) {
     panel.setAttribute('aria-hidden', String(i !== 0));
     const image = document.createElement('img');
     image.alt = `${shortEra(record)} · ${record.title}`;
+    image.dataset.originalImage = record.originalImageUrl || record.imageUrl;
     image.referrerPolicy = 'no-referrer';
     image.decoding = 'async';
     image.draggable = false;
